@@ -1,0 +1,14 @@
+THIS CODE MAY NOT WORK!
+
+Please see also the pre-merge in 
+
+- port all tabs to 4 empty spaces (done SS, KT) 
+- port all print statements to python3.0 (done SS, KT)
+
+   -> AF (atomic forces) do not work in flosic_os.py
+   -> double check indents in flosic_scf.py 
+
+- please read all comments (started SS) 
+- fforce.dat is only written while debug = True, because of automatic testing   
+
+- compile the newest FG-NRLMOL version and check all nrl2py and py2nrl 
