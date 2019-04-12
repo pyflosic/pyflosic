@@ -1,0 +1,4 @@
+For usage of the ase-nrlmol-calculator as real calculator you must specify the path to your NRLMOL excuteable. 
+or a serial job you might use a "run.sh" script, you can also use a job script to run on a cluster.
+
+Please see the "run.sh" file in this directory and adjust the paths and especially the "ASE_NRLMOL_COMMAND" export command. 
