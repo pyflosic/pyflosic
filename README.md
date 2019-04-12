@@ -17,14 +17,14 @@ You need a working pyscf installation on your system.
 ## Note:heavy_exclamation_mark:
 Please note that code is in the open beta testing phase now. If you determine any problem please dont hesitate to ask one of the developers.      
 
+## Authors 
+The development of pyflosic started within the master thesis of Lenz Fiedler. Over the last year we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends etc.) and Torsten Hahn (verious speed up techniques). Our main testers are Kai Trepte and Sebastian Schwalbe. Our overall theoretical guideline and head of descions is Prof. Jens Kortus. 
+
 * Lenz Fiedler 
 * Sebastian Schwalbe (theonov13@gmail.com)  
 * Torsten Hahn  
 * Kai Trepte (trept1k@cmich.edu) 
 * Jens Kortus 
-
-## Authors 
-The development of pyflosic started within the master thesis of Lenz Fiedler. Over the last year we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends etc.) and Torsten Hahn (verious speed up techniques). Our main testers are Kai Trepte and Sebastian Schwalbe. Our overall theoretical guideline and head of descions is Prof. Jens Kortus. 
 
 ## Citation
 If you use the pyflosic within a sienfific article or contribution please cite following article. 
