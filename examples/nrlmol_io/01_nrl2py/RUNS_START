@@ -1,0 +1,3 @@
+    0     1            ITBEG, NCALC
+    4     4            START: 0=SCR.NUC, 1=HAM, 2=POT, 3=LSF, 4=WFUNC
+    0                  START HAMILTONIAN IS INTERPOLATED: 0=NO, 1=YES

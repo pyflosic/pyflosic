@@ -1,0 +1,93 @@
+  
+  SUMMARY OF BASIS SET:
+  NUMBER OF CONTRACTED FUNCTION SETS:           2
+  
+  FUNCTION SET:           1
+ FS:  1 IP:  1 POSITION:       0.000000       0.000000       2.206601
+ FS:  1 IP:  2 POSITION:       0.000000       0.000000      -2.206601
+ CONTRACTED ORBITALS FOR ANGULAR TYPE S:           6
+ CONTRACTED ORBITALS FOR ANGULAR TYPE P:           5
+ CONTRACTED ORBITALS FOR ANGULAR TYPE D:           3
+ GAUSSIANS FOR FUNCTION SET:
+   0.344E+06  0.516E+05  0.118E+05  0.333E+04  0.109E+04   393.       153.    
+    63.0       27.1       11.9       5.23       2.31       1.00      0.371    
+   0.145      0.540E-01
+ CONTRACTED ORBITALS FOR ANGULAR MOMENTUM:           0
+   0.434      0.810       1.40       2.27       3.47       4.88       5.91    
+    5.48       3.05      0.633      0.109E-01  0.208E-02 -0.582E-03  0.124E-03
+  -0.282E-04  0.373E-05
+  -0.115     -0.215     -0.372     -0.606     -0.939      -1.36      -1.78    
+   -1.95      -1.53     -0.334      0.711      0.759      0.209      0.471E-02
+  -0.403E-04 -0.722E-05
+   0.330E-01  0.618E-01  0.107      0.175      0.270      0.393      0.516    
+   0.576      0.461      0.114     -0.266     -0.365     -0.173      0.131    
+   0.118      0.114E-01
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       1.00    
+    0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    1.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       1.00    
+ CONTRACTED ORBITALS FOR ANGULAR MOMENTUM:           1
+   0.189      0.340      0.605      0.972       1.54       2.26       3.15    
+    3.94       4.29       3.75       2.24      0.846      0.150      0.436E-02
+  -0.149E-03  0.106E-04
+  -0.414E-01 -0.830E-01 -0.137     -0.232     -0.353     -0.535     -0.730    
+  -0.938      -1.02     -0.927     -0.566     -0.228      0.103E-01  0.758E-01
+   0.371E-01  0.670E-02
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       1.00    
+    0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    1.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       1.00    
+ CONTRACTED ORBITALS FOR ANGULAR MOMENTUM:           2
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       1.00       0.00    
+    0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       1.00    
+    0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       0.00       0.00    
+    1.00       0.00    
+  
+  FUNCTION SET:           2
+ FS:  2 IP:  1 POSITION:       0.000000       2.632929       3.186116
+ FS:  2 IP:  2 POSITION:      -2.280183      -1.316464       3.186116
+ FS:  2 IP:  3 POSITION:       2.280183      -1.316464       3.186116
+ FS:  2 IP:  4 POSITION:       0.000000      -2.632929      -3.186116
+ FS:  2 IP:  5 POSITION:      -2.280183       1.316464      -3.186116
+ FS:  2 IP:  6 POSITION:       2.280183       1.316464      -3.186116
+ CONTRACTED ORBITALS FOR ANGULAR TYPE S:           4
+ CONTRACTED ORBITALS FOR ANGULAR TYPE P:           3
+ CONTRACTED ORBITALS FOR ANGULAR TYPE D:           1
+ GAUSSIANS FOR FUNCTION SET:
+    77.8       11.5       2.61      0.732      0.228      0.745E-01
+ CONTRACTED ORBITALS FOR ANGULAR MOMENTUM:           0
+   0.377E-01  0.704E-01  0.113      0.139      0.109      0.359E-01
+    0.00       0.00       0.00       1.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       1.00       0.00    
+    0.00       0.00       0.00       0.00       0.00       1.00    
+ CONTRACTED ORBITALS FOR ANGULAR MOMENTUM:           1
+    0.00       0.00       1.00       0.00       0.00       0.00    
+    0.00       0.00       0.00       1.00       0.00       0.00    
+    0.00       0.00       0.00       0.00       1.00       0.00    
+ CONTRACTED ORBITALS FOR ANGULAR MOMENTUM:           2
+    0.00       0.00       0.00       1.00       0.00       0.00    
+ TOTAL NUMBER OF CONTRACTED ORBITALS:         192
+  
+ REPRESENTATION:           1  HAS:         192  BASES
+ REPRESENTATION:           1  HAS:         192  BASES
+TRACE OF HAMILTONIAN:           0.000000
+ TOTAL ENERGY:   -582.26954087297975     
+TRACE OF HAMILTONIAN:        -355.253925
+ TOTAL ENERGY:   -582.26952887223956     
+TRACE OF HAMILTONIAN:        -355.252727
+ TOTAL ENERGY:   -582.26951336052230     
