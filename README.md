@@ -1,7 +1,7 @@
 ![GitHub Logo](/images/pyflosic_logo.png)
 
 
-# pyflosic :green_heart:
+# pyflosic 
 Python based Fermi-Löwdin self-interaction-correction  
 Coding language: python3 
 Licence: apache2 
