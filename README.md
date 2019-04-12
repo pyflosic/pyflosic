@@ -12,9 +12,9 @@ The self-interaction error (SIE) is one of the mayor drawbacks of one of the mos
 You need a working pyscf installation on your system. 
 
 ## Note :heavy_exclamation_mark:
-Please note that code is in the open beta testing phase now. If you determine any problem please dont hesitate to ask one of the developers.   
+Please note that code is in the open beta testing phase now. If you determine any problem please dont hesitate to ask one of the developers.      
 
--Sebastian Schwalbe (theonov13@gmail.com)   
+* Sebastian Schwalbe (theonov13@gmail.com)   
 
 ## Authors 
 The development of pyflosic started within the master thesis of Lenz Fiedler. Over the last year we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends etc.) and Torsten Hahn (verious speed up techniques). Our main testers are Kai Trepte and Sebastian Schwalbe. Our overall theoretical guideline and head of descions is Prof. Jens Kortus. 
