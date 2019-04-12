@@ -6,7 +6,7 @@ Python based Fermi-Löwdin self-interaction-correction
 Coding language: python3   
 Licence: apache2   
 
-The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitary invariant and numerical handsome method based on Fermi-Löwdin orbitlals self-interaction correction (FLO-SIC). We implemented this method using the modern PySCF electronic structure code as basis.   
+The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitary invariant and numerical feasible method based on Fermi-Löwdin orbitlals self-interaction correction (FLO-SIC). We implemented this method using the modern PySCF electronic structure code as basis.   
 
 * Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
 * Zeng-hui Yang, Mark R. Pederson, and John P. Perdew. Full self-consistency in the Fermi-orbital self-interaction correction. Physical Review A, 95(5):052505, May 2017.  
