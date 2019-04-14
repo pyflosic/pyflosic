@@ -37,4 +37,4 @@ The development of pyflosic started within the master thesis of Lenz Fiedler. Ov
 * Jens Kortus 
 
 ## Citation
-If you use the pyflosic within a sienfific article or contribution please cite the following article. 
+If you use the pyflosic within a sientific article or contribution please cite the following article. 
