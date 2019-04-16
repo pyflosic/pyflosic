@@ -38,7 +38,8 @@ Simon Liebing, M.Sc.
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
 - licence issues  
 
-Dr. Kai Trepte    
+Dr. Kai Trepte  
+email: trept1k@cmich.edu  
 - intensive code testing  
 - FOD guessing   
 - benchmarking again NRLMOL code   
