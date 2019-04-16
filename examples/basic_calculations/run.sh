@@ -14,4 +14,4 @@ cd basic_calculations
 export PYTHONPATH=$pyflosic/src/:$PYTHONPATH
 export PYTHONPATH=$pyflosic/utils/:$PYTHONPATH
 
-python3.5 $1
+python3 $1
