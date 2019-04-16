@@ -40,6 +40,8 @@ You need a working pyscf installation on your system.
 
 ## Dependencies (optional)
 
+* mathplotlib 
+* python3-tk
 * pyberny
 
 
