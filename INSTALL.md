@@ -1,5 +1,7 @@
 Date: 16.04.2019 
 
+# PySCF installation 
+
 ```bash
  $ git clone https://github.com/sunqm/pyscf  
  $ cd pyscf/lib   
@@ -13,4 +15,13 @@ and comment in the line with the newer libxc version (e.g. 4.2.3).
 ```bash 
 $ cmake .. 
 $ make 
+```
+# Python packages 
+
+```bash 
+$ pip3 install numpy 
+$ pip3 install scipy 
+$ pip3 install ase 
+$ pip3 install numba 
+$ pip3 install h5py 
 ```
