@@ -39,12 +39,6 @@ $ pip3 install numba
 $ pip3 install h5py 
 ```
 
-# Python packages (optional) 
-```bash 
-$ pip3 install matplotlib 
-$ apt-get install python3-tk
-```
-
 If you have may installed some of these packages you might to update to newer versions. 
 
 
@@ -55,6 +49,13 @@ $ pip3 install ase --upgrade
 $ pip3 install numba --upgrade
 $ pip3 install h5py --upgrade
 ```
+
+# Python packages (optional) 
+```bash 
+$ pip3 install matplotlib 
+$ apt-get install python3-tk
+```
+
 # PyFLOSIC installation 
 
 ```bash 
