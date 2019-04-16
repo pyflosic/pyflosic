@@ -1,4 +1,5 @@
 Date: 16.04.2019 
+Checked on: 
 
 # PySCF installation 
 
