@@ -11,12 +11,12 @@ The following document will guide you through the setup and show you how to get 
 #### Contents
 
 - INSTALL.md: Installation guide.
-- AUTHORS.md: The authors of Pyflosic along with contact information.
-- VERSION: The version of Pyflosic you have acquired.
-- doc/: Installation, usage, etc. are discussed there in detail. It is strongly recommended to read this before using Pyflosic.
-- src/: Contains the source files for Pyflosic.
-- examples/: Contains useful examples to get started with Pyflosic. Also shows more advanced applications of Pyflosic.
-- utils/: Utilities that are useful for Pyflosic 
+- AUTHORS.md: The authors of PyFLOSIC along with contact information.
+- VERSION: The version of PyFLOSIC you have acquired.
+- doc/: It is strongly recommended to read this before using PyFLOSIC.
+- src/: Contains the source files for PyFLOSIC.
+- examples/: Contains useful examples to get started with PyFLOSIC. 
+- utils/: Utilities that are useful for PyFLOSIC.
 
 Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
 
