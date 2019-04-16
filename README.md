@@ -4,7 +4,7 @@
 # pyflosic 
 Python-based Fermi-Löwdin orbital self-interaction-correction  
 Coding language: python3   
-Licence: apache2   
+Licence: APACHE2   
 
 The following document will guide you through the setup and show you how to get started with this Python-based FLO-SIC code.
 
@@ -17,6 +17,7 @@ The following document will guide you through the setup and show you how to get 
 - *src/*: Contains the source files for PyFLOSIC.
 - *examples/*: Contains useful examples to get started with PyFLOSIC. 
 - *utils/*: Utilities that are useful for PyFLOSIC.
+- *LICENCE*: APACHE2 licence file.
 
 Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
 
@@ -57,7 +58,7 @@ Please note that the code is in the open beta testing phase now. If you discover
 * Jakob Kraus (jakob.kraus@student.tu-freiberg.de) 
 * Jens Kortus 
 
-The development of pyflosic started with the master thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte and Sebastian Schwalbe. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
+The development of PyFLOSIC started with the master thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
 
 ## Citation
-If you use the pyflosic code for a scientific article or contribution, please cite the following article. 
+If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article. 
