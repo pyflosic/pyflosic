@@ -8,5 +8,5 @@ This directory includes serveral examples.
 | ase_pyflosic_calculator/ | ase pyflosic calculator (fixed FODs) examples | 
 | ase_pyflosic_optimizer/ | ase pyflosic optimizer (optimization of FODs) examples | 
 | automatic_guessing/ | generation of initial FODs using PyCOM | 
-| nrlmol_io | IO for the reference FG-NRLMOL code |   
+| nrlmol_io/ | IO for the reference FG-NRLMOL code |   
 
