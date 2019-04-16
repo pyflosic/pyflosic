@@ -17,6 +17,7 @@ The following document will guide you through the setup and show you how to get 
 - *src/*: Contains the source files for PyFLOSIC.
 - *examples/*: Contains useful examples to get started with PyFLOSIC. 
 - *utils/*: Utilities that are useful for PyFLOSIC.
+- *test/*: Contains a version control test.
 - *LICENCE*: APACHE2 licence file.
 
 Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
