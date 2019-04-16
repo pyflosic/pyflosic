@@ -41,8 +41,23 @@ $ pip3 install numba
 $ pip3 install h5py 
 ```
 
-If you have installed some of these packages, you might want to update to newer versions. 
+To check which verions you have installed you might can use 
 
+```bash 
+$ python3 python_package_versions.py
+```
+
+We recommand the following verions 
+
+- ase 3.17.0
+- h5py 2.9.0
+- numba 0.43.1
+- scipy 1.2.1
+- numpy 1.16.2
+- pyscf 1.6.1-1
+
+If your installed versions are different, you might want to update to newer versions. 
+Otherwise might some python WARNINGS appear in the screen log or output files. 
 
 ```bash 
 $ pip3 install numpy --upgrade
