@@ -23,6 +23,12 @@ and comment in the line with the newer libxc version (e.g. 4.2.3).
 $ cmake .. 
 $ make 
 ```
+You need to add pyscf to your PYTHONPATH enviroment variable. 
+
+```bash
+export PYTHONPATH=[path_to_pyscf]/pyscf/:$PYTHONPATH
+```
+
 # Python packages 
 
 ```bash 
@@ -48,4 +54,9 @@ $ pip3 install h5py --upgrade
 $ git clone https://github.com/pyflosic/pyflosic.git
 ```
 
-You need to add pyflosic to your PYHTONPATH enviroment variable globally or in bash/job scripts.
+You need to add pyflosic to your PYTHONPATH enviroment variable globally or in bash/job scripts.
+
+```bash
+export PYTHONPATH=[path_to_pyflosic]/pyflosic/src/:$PYTHONPATH
+export PYTHONPATH=[path_to_pyflosic]/pyflosic/utils/:$PYTHONPATH
+```
