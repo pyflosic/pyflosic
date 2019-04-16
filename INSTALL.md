@@ -2,6 +2,7 @@ Date: 16.04.2019
 Installation checked on:  
 
 - Ubuntu 18.10 (Cosmic Cuttlefish)
+- Elementary OS 0.4.1 Loki
 
 # PySCF installation 
 
