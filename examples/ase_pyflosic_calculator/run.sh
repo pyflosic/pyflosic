@@ -13,4 +13,4 @@ cd ase_pyflosic_calculator
 export PYTHONPATH=$pyflosic/src/:$PYTHONPATH
 export PYTHONPATH=$pyflosic/utils/:$PYTHONPATH
 
-python3.5 $1
+python3 $1
