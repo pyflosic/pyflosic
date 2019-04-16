@@ -15,7 +15,7 @@ The self-interaction error (SIE) is one of the mayor drawbacks of one of the mos
 ## Installation 
 You need a working pyscf installation on your system. 
 
-## Dependencies
+## Dependencies (required)
 
 * pyscf 
 * h5py 
@@ -23,6 +23,10 @@ You need a working pyscf installation on your system.
 * numpy 
 * ase 
 * numba 
+
+## Dependencies (optional)
+
+* pyberny
 
 
 ## Note:heavy_exclamation_mark:
