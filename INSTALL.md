@@ -41,7 +41,7 @@ $ pip3 install numba
 $ pip3 install h5py 
 ```
 
-If you have may installed some of these packages you might to update to newer versions. 
+If you have installed some of these packages, you might to update to newer versions. 
 
 
 ```bash 
@@ -60,7 +60,7 @@ $ pip3 install matplotlib
 $ apt-get install python3-tk
 ```
 
-Further, if you want to use the pyberny geometry optimizer you need to install it 
+Further, if you want to use the pyberny geometry optimizer, you need to install it. 
 ```bash 
 $ pip3 install -U pyberny
 ```
