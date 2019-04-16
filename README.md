@@ -22,7 +22,7 @@ Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
 
 The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the modern PySCF electronic structure code as basis.   
 
-#### Theoretical foundation  
+#### Theoretical foundations  
 * Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
 * Zeng-hui Yang, Mark R. Pederson, and John P. Perdew. Full self-consistency in the Fermi-orbital self-interaction correction. Physical Review A, 95(5):052505, May 2017.  
 
@@ -40,7 +40,7 @@ You need a working pyscf installation on your system.
 
 ## Dependencies (optional)
 
-* mathplotlib 
+* matplotlib 
 * python3-tk
 * pyberny
 
