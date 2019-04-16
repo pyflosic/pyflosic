@@ -34,6 +34,7 @@ The development of pyflosic started within the master thesis of Lenz Fiedler. Ov
 * Sebastian Schwalbe (theonov13@gmail.com)  
 * Torsten Hahn  
 * Kai Trepte (trept1k@cmich.edu) 
+* Jakob Kraus (jakob.kraus@student.tu-freiberg.de) 
 * Jens Kortus 
 
 ## Citation
