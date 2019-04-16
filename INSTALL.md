@@ -42,3 +42,10 @@ $ pip3 install ase --upgrade
 $ pip3 install numba --upgrade
 $ pip3 install h5py --upgrade
 ```
+# PyFLOSIC installation 
+
+```bash 
+$ git clone https://github.com/pyflosic/pyflosic.git
+```
+
+You need to add pyflosic to your PYHTONPATH enviroment variable globally or in bash/job scripts.
