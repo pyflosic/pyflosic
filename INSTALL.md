@@ -31,3 +31,13 @@ $ pip3 install ase
 $ pip3 install numba 
 $ pip3 install h5py 
 ```
+If you have may installed some of these packages you might to update to newer versions. 
+
+
+```bash 
+$ pip3 install numpy --upgrade
+$ pip3 install scipy --upgrade
+$ pip3 install ase --upgrade
+$ pip3 install numba --upgrade
+$ pip3 install h5py --upgrade
+```
