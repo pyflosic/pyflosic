@@ -1,5 +1,7 @@
 Date: 16.04.2019 
-Checked on: 
+Installation checked on:  
+
+- Ubuntu 18.10 (Cosmic Cuttlefish)
 
 # PySCF installation 
 
