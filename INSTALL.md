@@ -4,7 +4,7 @@ Installation checked on:
 - Ubuntu 18.10 (Cosmic Cuttlefish)
 - Elementary OS 0.4.1 Lok
 
-(Older) implemenation on different operating systems (os) can be find in the INSTALL file. 
+Another (older) implementation on different operating systems (OS) can be found in the INSTALL file. 
 
 # PySCF installation 
 
@@ -16,10 +16,10 @@ Installation checked on:
  $ vi ../CMakeLists.txt
  ```
 
-We do not recommend to use older libxc version then 4.X.Y, for instance if you are interested in 
+We do not recommend using libxc versions older than 4.X.Y if you are interested in 
 the SCAN meta-GGA. 
-Search for libxc in CMakeLists.txt (should be the 2nd entry) and comment out the line include libxc version 3.0.1 
-and comment in the line with the newer libxc version (e.g. 4.2.3). 
+Search for libxc in CMakeLists.txt (it should be the 2nd entry) and comment the line "include libxc version 3.0.1" out
+and remove the comment symbol from the line with the newer libxc version (e.g. 4.2.3).
 
 ```bash 
 $ cmake .. 
@@ -41,7 +41,7 @@ $ pip3 install numba
 $ pip3 install h5py 
 ```
 
-If you have installed some of these packages, you might to update to newer versions. 
+If you have installed some of these packages, you might want to update to newer versions. 
 
 
 ```bash 
@@ -54,7 +54,7 @@ $ pip3 install h5py --upgrade
 
 # Python packages (optional) 
 
-For visualization and plotting you might want to have the following packages. 
+For visualization and plotting, you might want to have the following packages. 
 ```bash 
 $ pip3 install matplotlib 
 $ apt-get install python3-tk
@@ -71,7 +71,7 @@ $ pip3 install -U pyberny
 $ git clone https://github.com/pyflosic/pyflosic.git
 ```
 
-You need to add pyflosic to your PYTHONPATH enviroment variable globally or in bash/job scripts.
+You need to add pyflosic to your PYTHONPATH environment variable globally or in bash/job scripts.
 
 ```bash
 export PYTHONPATH=[path_to_pyflosic]/pyflosic/src/:$PYTHONPATH
