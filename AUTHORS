@@ -1,19 +1,19 @@
-main developer: 
+main developers: 
 
 Core routines, code structure and working examples. 
 
 M. Sc. Lenz Fiedler 	
 email: fiedler.lenz@gmail.com
-				- all original core flosic rountines (flosic_os.py, flosic_scf.py) 
+				- all original core FLO-SIC rountines (flosic_os.py, flosic_scf.py) 
 				- FOD visualization (e.g. cube files and density plots)
-				- basis and advanced tests 
+				- basic and advanced tests 
 				- documentation
 				- NRLMOL2pyflosic routine  
 
 M. Sc. Sebastian Schwalbe 	
 email: schwalbe@physik.tu-freiberg.de
-				- different SIC hamiltonian (different unified hamiltonians) 
-				- objecti-oriented aspects (e.g. class design for flosic_scf.py) 
+				- different SIC Hamiltonians (different unified Hamiltonians) 
+				- object-oriented aspects (e.g. class design for flosic_scf.py) 
 				- ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py) 
 				- automatic-guessing
 				- G2-1 benchmark post-processing (see pyG21 code)  
@@ -26,7 +26,7 @@ email: hahn@physik.tu-freiberg.de
                 - linear scaling scf FLO-SIC cycle and FOD forces 
                 - MPI paralellization 
 
-co-developer: 
+co-developers: 
 
 Additional features, code testing and improvements.
 
@@ -39,7 +39,7 @@ M. Sc. Simon Liebing
                 - Licence questions 
 
 Dr. Kai Trepte 
-                - intensiv code testing
+                - intensive code testing
                 - FOD guessing 
                 - benchmarking again NRLMOL code 
                 - porting to python3 
