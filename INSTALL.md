@@ -29,7 +29,7 @@ You need to add pyscf to your PYTHONPATH enviroment variable.
 export PYTHONPATH=[path_to_pyscf]/pyscf/:$PYTHONPATH
 ```
 
-# Python packages 
+# Python packages (required)  
 
 ```bash 
 $ pip3 install numpy 
@@ -38,6 +38,13 @@ $ pip3 install ase
 $ pip3 install numba 
 $ pip3 install h5py 
 ```
+
+# Python packages (optional) 
+```bash 
+$ pip3 install matplotlib 
+$ apt-get install python3-tk
+```
+
 If you have may installed some of these packages you might to update to newer versions. 
 
 
