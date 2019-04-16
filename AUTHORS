@@ -2,7 +2,7 @@ main developers:
 
 Core routines, code structure and working examples. 
 
-M. Sc. Lenz Fiedler 	
+Lenz Fiedler,  M. Sc. 	
 email: fiedler.lenz@gmail.com
 				- all original core FLO-SIC rountines (flosic_os.py, flosic_scf.py) 
 				- FOD visualization (e.g. cube files and density plots)
@@ -10,7 +10,7 @@ email: fiedler.lenz@gmail.com
 				- documentation
 				- NRLMOL2pyflosic routine  
 
-M. Sc. Sebastian Schwalbe 	
+Sebastian Schwalbe, M. Sc.	
 email: schwalbe@physik.tu-freiberg.de
 				- different SIC Hamiltonians (different unified Hamiltonians) 
 				- object-oriented aspects (e.g. class design for flosic_scf.py) 
@@ -34,7 +34,7 @@ Prof. Dr. Jens Kortus
                 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)
                 - theoretical concepts 
 
-M. Sc. Simon Liebing
+Simon Liebing, M.Sc.
                 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)
                 - Licence questions 
 
