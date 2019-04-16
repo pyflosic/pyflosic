@@ -4,11 +4,11 @@ Core routines, code structure and working examples.
 
 Lenz Fiedler,  M. Sc.   	
 email: fiedler.lenz@gmail.com  
-				- all original core FLO-SIC rountines (flosic_os.py, flosic_scf.py)   
-				- FOD visualization (e.g. cube files and density plots)  
-				- basic and advanced tests   
-				- documentation  
-				- NRLMOL2pyflosic routine    
+- all original core FLO-SIC rountines (flosic_os.py, flosic_scf.py)   
+- FOD visualization (e.g. cube files and density plots)  
+- basic and advanced tests   
+- documentation  
+- NRLMOL2pyflosic routine    
 
 Sebastian Schwalbe, M. Sc.  	
 email: schwalbe@physik.tu-freiberg.de  
