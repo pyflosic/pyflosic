@@ -1,4 +1,4 @@
-Date: 16.04.2019 
+Date: 16.04.2019  
 Installation checked on:  
 
 - Ubuntu 18.10 (Cosmic Cuttlefish)
