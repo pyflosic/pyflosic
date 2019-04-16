@@ -2,7 +2,7 @@
 
 Core routines, code structure and working examples.   
 
-Lenz Fiedler,  M. Sc.     	
+Lenz Fiedler,  M. Sc.       	
 email: fiedler.lenz@gmail.com  
 - all original core FLO-SIC rountines (flosic_os.py, flosic_scf.py)   
 - FOD visualization (e.g. cube files and density plots)  
@@ -10,7 +10,7 @@ email: fiedler.lenz@gmail.com
 - documentation  
 - NRLMOL2pyflosic routine    
 
-Sebastian Schwalbe, M. Sc.  	
+Sebastian Schwalbe, M. Sc.    	
 email: schwalbe@physik.tu-freiberg.de  
 - different SIC Hamiltonians (different unified Hamiltonians)   
 - object-oriented aspects (e.g. class design for flosic_scf.py)   
