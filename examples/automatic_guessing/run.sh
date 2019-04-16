@@ -12,4 +12,4 @@ cd automatic_guessing
 export PYTHONPATH=$pyflosic/src/:$PYTHONPATH
 export PYTHONPATH=$pyflosic/utils/:$PYTHONPATH
 
-python $1
+python3 $1
