@@ -1,7 +1,7 @@
 ![GitHub Logo](/images/pyflosic_logo.png)
 
 
-# pyflosic 
+# PyFLOSIC 
 Python-based Fermi-Löwdin orbital self-interaction-correction  
 Coding language: python3   
 Licence: APACHE2   
