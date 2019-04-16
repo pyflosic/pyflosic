@@ -11,7 +11,7 @@ email: fiedler.lenz@gmail.com
 - NRLMOL2pyflosic routine    
 
 Sebastian Schwalbe, M. Sc.  
-email: schwalbe@physik.tu-freiberg.de  
+email: theonov13@gmail.com 
 - different SIC Hamiltonians (different unified Hamiltonians)   
 - object-oriented aspects (e.g. class design for flosic_scf.py)   
 - ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py)   
