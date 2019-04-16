@@ -10,7 +10,7 @@ The following document will guide you through the setup and show you how to get 
 
 #### Contents
 
-- INSTALL.md: Installation guide in Markdown (md) language. For older installations see INSTALL_OLD  
+- *INSTALL.md*: Installation guide in Markdown (md) language. For older installations see INSTALL_OLD.  
 - AUTHORS.md: The authors of PyFLOSIC along with contact information.
 - VERSION.md: The version of PyFLOSIC you have acquired.
 - doc/: It is strongly recommended to read this before using PyFLOSIC.
