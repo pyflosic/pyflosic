@@ -51,9 +51,16 @@ $ pip3 install h5py --upgrade
 ```
 
 # Python packages (optional) 
+
+For visualization and plotting you might want to have the following packages. 
 ```bash 
 $ pip3 install matplotlib 
 $ apt-get install python3-tk
+```
+
+Further, if you want to use the pyberny geometry optimizer you need to install it 
+```bash 
+$ pip3 install -U pyberny
 ```
 
 # PyFLOSIC installation 
