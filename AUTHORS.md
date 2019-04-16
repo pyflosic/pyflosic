@@ -10,7 +10,7 @@ email: fiedler.lenz@gmail.com
 - documentation  
 - NRLMOL2pyflosic routine    
 
-Sebastian Schwalbe, M. Sc.  
+#### Sebastian Schwalbe, M. Sc.  
 email: theonov13@gmail.com 
 - different SIC Hamiltonians (different unified Hamiltonians)   
 - object-oriented aspects (e.g. class design for flosic_scf.py)   
@@ -20,7 +20,7 @@ email: theonov13@gmail.com
 - DFO basis set (pyscf interface and testing with various codes)    
 - pyflosic2NRLMOL routine (see pyNRLMOL code)   
 
-Dr. Torsten Hahn      
+#### Torsten Hahn, PhD     
 email: hahn@physik.tu-freiberg.de     
 - FOD forces   
 - linearly scaling FLO-SIC SCF cycle and FOD forces   
@@ -30,15 +30,15 @@ email: hahn@physik.tu-freiberg.de
 
 Additional features, code testing and improvements.  
 
-Prof. Dr. Jens Kortus    
+#### Prof. Jens Kortus    
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
 - theoretical concepts   
 
-Simon Liebing, M.Sc.    
+#### Simon Liebing, M.Sc.    
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
 - licence issues  
 
-Dr. Kai Trepte  
+#### Kai Trepte, PhD  
 email: trept1k@cmich.edu  
 - intensive code testing  
 - FOD guessing   
