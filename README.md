@@ -2,7 +2,7 @@
 
 
 # pyflosic 
-Python based Fermi-Löwdin self-interaction-correction  
+Python based Fermi-Löwdin orbital self-interaction-correction  
 Coding language: python3   
 Licence: apache2   
 
