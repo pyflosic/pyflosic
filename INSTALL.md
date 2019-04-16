@@ -30,6 +30,7 @@ You need to add pyscf to your PYTHONPATH enviroment variable.
 ```bash
 export PYTHONPATH=[path_to_pyscf]/pyscf/:$PYTHONPATH
 ```
+Note: The variable path_to_pyscf describes the absolute path pointing towards the pyscf folder (not including the pyscf folder itself). 
 
 # Python packages (required)  
 
@@ -92,3 +93,4 @@ You need to add pyflosic to your PYTHONPATH environment variable globally or in 
 export PYTHONPATH=[path_to_pyflosic]/pyflosic/src/:$PYTHONPATH
 export PYTHONPATH=[path_to_pyflosic]/pyflosic/utils/:$PYTHONPATH
 ```
+Note: The variable path_to_pyflosic describes the absolute path pointing towards the pyflosic folder (not including the pyflosic folder itself). 
