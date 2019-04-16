@@ -22,6 +22,7 @@ You need a working pyscf installation on your system.
 * scipy 
 * numpy 
 * ase 
+* numba 
 
 
 ## Note:heavy_exclamation_mark:
