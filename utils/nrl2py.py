@@ -236,7 +236,7 @@ def nrl_to_py(path='./'):
     if pyflosic_path != None:
         run_2.write("export PYTHONPATH="+pyflosic_path+":$PYTHONPATH\n")
     run_2.write("\n")
-    run_2.write("python run.py\n")
+    run_2.write("python3 run.py\n")
     run_2.close()
     print('Your PySCF / Pyflosic calculation files can be found in '+path+'run_pyflosic.')
     return
