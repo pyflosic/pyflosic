@@ -331,8 +331,8 @@ class FLOSIC(uhf.UHF):
         if fixed_vsic is not None:
             self.fixed_vsic = fixed_vsic
         
-        
-        print('fixed_vsic', fixed_vsic)
+        ## SS 
+        # print('fixed_vsic', fixed_vsic)
         #sys.exit()
         self.homo_flosic = 0.0 # Will hold the FLO-SIC HOMO value.
         self.esic = 0.0 # Will hold the total energy correction.
