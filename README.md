@@ -54,10 +54,10 @@ Please note that the code is in the open beta testing phase now. If you discover
 
 * Lenz Fiedler 
 * Sebastian Schwalbe (theonov13@gmail.com)  
-* Torsten Hahn  
+* Torsten Hahn (torstenhahn@fastmail.fm)
 * Kai Trepte (trept1k@cmich.edu) 
 * Jakob Kraus (jakob.kraus@student.tu-freiberg.de) 
-* Jens Kortus 
+* Jens Kortus (Jens.Kortus@physik.tu-freiberg.de)
 
 The development of PyFLOSIC started with the master thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
 
