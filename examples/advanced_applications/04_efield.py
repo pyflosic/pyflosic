@@ -62,10 +62,9 @@ alpha_sic = (sic_mu1 - sic_mu0)/(-0.001)
 # NOTE: We need to convert to atomic units.
 
 
-print('Polarizability of H4 (DFT):',alpha_dft*0.393456)
-print('Polarizability of H4 (FLO-SIC):',alpha_sic*0.393456)
-print('Polarizability of H4 (Reference Value):',29.5)
-print('These results should be: ',37.2707068494,34.0331661325)
+print('Polarizability of H4 (DFT): %0.1f (should be %0.1f)'  %(alpha_dft*0.393456,37.2707068494))
+print('Polarizability of H4 (FLO-SIC): %0.1f (should be %0.1f)' % (alpha_sic*0.393456,34.0331661325))
+print('Polarizability of H4 (Reference Value): %0.1f' %(29.5))
 
 
 
