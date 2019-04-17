@@ -130,3 +130,15 @@ XXXXXXXXXXXXXXXXXXXXXXXXXX
 1. Copy the content of pyflosic/src to an arbitrary directory dir.
 2. Update the PYTHONPATH variable on your system with export PYTHONPATH=/path/to
 /dir/:$PYTHONPATH.
+
+
+---- Additional packages ----
+
+Install pyberny via:
+
+pip3 install -U pyberny
+
+
+Pyberny is a package for optimizing nuclear geometries. In order to execute 05_pyberny_nuclei_optimization.py in the folder
+pyflosic/examples/ase_pyflosic_optimizer, the pyberny package must be installed. 
+

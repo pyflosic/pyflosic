@@ -1,20 +1,12 @@
-This directory includes serveral examples starting with basic ones  
 
-- basic_calculations (easy) 
+This directory includes serveral examples.
 
-going to more advanced examples  
+| file 	| description |  
+| ------------- |:-------------:|
+| basic_calculations/ | basic examples | 
+| advanced_applications/ | more advanced examples | 
+| ase_pyflosic_calculator/ | ase pyflosic calculator (fixed FODs) examples | 
+| ase_pyflosic_optimizer/ | ase pyflosic optimizer (optimization of FODs) examples | 
+| automatic_guessing/ | generation of initial FODs using PyCOM | 
+| nrlmol_io/ | IO for the reference FG-NRLMOL code |   
 
-- advanced_applications (more advanced)
-
-explaing the ase calculator and optimizer  
-
-- ase_pyflosic_calculator (more advanced)
-- ase_pyflosic_optimizer (more advanced)
-
-showing how to generate intial FODs  
-
-- automatic_guessing (easy) 
-
-and some IO for the reference FG-NRLMOL code (you need FG-NRLMOL to execute these examples) 
-
-- nrlmol_io (more advanced)
