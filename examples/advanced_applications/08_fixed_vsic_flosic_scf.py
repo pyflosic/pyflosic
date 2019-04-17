@@ -61,7 +61,7 @@ print('Etot with regular SCF solver (Hartree) = ',e1)
 print('Duration for SCF cycle with regular SCF solver (in s):',delta_t1)
 print('Etot with fixed VSIC (Hartree) = ',e2)
 print('Duration for SCF cycle with fixed VSIC (in s):',delta_t2)
-print('The magnitude of these values depend on your system, but the second one should be significantly smaller.')
+print('The magnitudes of these values depend on the power of your CPU and the number of processes that are running on your system simultaneously. Ideally, the second value should be significantly smaller.')
 
 
 
