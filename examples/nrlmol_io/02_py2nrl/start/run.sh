@@ -23,4 +23,4 @@ cd nrlmol_io/02_py2nrl/
 export PYTHONPATH=$pyflosic/src/:$PYTHONPATH
 export PYTHONPATH=$pyflosic/utils/:$PYTHONPATH
 
-python $1
+python3 $1
