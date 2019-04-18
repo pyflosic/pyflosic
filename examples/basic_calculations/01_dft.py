@@ -52,5 +52,5 @@ total_energy = dft_object.kernel()
 
 # Output. If both lines vary a lot, something is wrong.
 
-print('Total energy of H2 (DFT): ',total_energy)
-print('This result should be: ',-1.13634167738585)
+print('Total energy of H2 (DFT): %0.5f (should be %0.5f)' % (total_energy,-1.13634167738585))
+
