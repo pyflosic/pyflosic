@@ -128,7 +128,7 @@ S2_HS = 2.
 
 J_SIC = calc_J1(E_LS_SIC,E_HS_SIC,S2_LS,S2_HS)
 J_DFT = calc_J1(E_LS_DFT,E_HS_DFT,S2_LS,S2_HS)
-print('J of HHeH (DFT): %.0f' % J_DFT)
-print('J of HHeH (FLO-SIC): %.0f' % J_SIC)
-print('These results should be:',-164,-51)
+print('J of HHeH (DFT): %.0f (should be %.0f)' % (J_DFT,-164.300632216))
+print('J of HHeH (FLO-SIC): %.0f (should be %.0f)' % (J_SIC,-50.72702195911))
+
 
