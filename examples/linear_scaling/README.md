@@ -9,7 +9,7 @@ The FODs are optimized within the SCF cycle (FOD In-SCF optimization).
 * in the OPT_FRMORB.log not the total SIC corrected energy is given, instead the SIC energy 
 itself is monitored 
 
-This calculations might take serveral minutes (5 - 10 mins depending on your local machine). 
+This calculations might take serveral minutes (5 - 10 mins depending on your local machine).   
 To perform the calculation use following command:  
 
 ```bash 
