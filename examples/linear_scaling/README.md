@@ -1,6 +1,6 @@
 # Note: O(N) method, linear scaling 
 
-This method is different from the orginal Pederson FLO-SIC method. 
+This method is different from the orginal Pederson FLO-SIC method.  
 The O(N) method is based on the sparsity of the density matrix based on localization.   
 The FODs are optimized within the SCF cycle (FOD In-SCF optimization).   
 
