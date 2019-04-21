@@ -1,7 +1,7 @@
 # Note: O(N) method, linear scaling 
 
-This method is different from the orginal Pederson FLO-SIC method. 
-The FODs are optimized within the SCF cycle (FOD In-SCF optimization). 
+This method is different from the orginal Pederson FLO-SIC method.  
+The FODs are optimized within the SCF cycle (FOD In-SCF optimization).   
 
 * FODs are optimized for spin up/down separately
   * trajectory for spin up: optout_0.xyz
@@ -10,7 +10,7 @@ The FODs are optimized within the SCF cycle (FOD In-SCF optimization).
 itself is monitored 
 
 This calculations might take serveral minutes (5 - 10 mins depending on your local machine). 
-To perform the calculation use following command: 
+To perform the calculation use following command:  
 
 ```bash 
 bash run.sh 01_C_atom_ON.py
