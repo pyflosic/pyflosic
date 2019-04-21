@@ -60,8 +60,13 @@ e_corr_sicxc = etot_sicxc - etot_dftxc # Correction of total energy by FLO-SIC.
 
 # With this we can output the energy contributions.
 
-print('SIC exchange energy:',exsic)
-print('SIC correlation energy:',ecsic)
-print('FLO-SIC correction to total energy (exchange only):',e_corr_sicx)
-print('FLO-SIC correction to total energy (exchange-correlation):',e_corr_sicxc)
-print('These results should be: ',-1.5234121806,-0.156736206467,-0.244190749868,-0.165851286945)
+print('SIC exchange energy: %0.5f (should be %0.5f)' % (exsic,-1.5234121806))
+print('SIC correlation energy: %0.5f (should be %0.5f)' % (ecsic,-0.156736206467))
+print('FLO-SIC correction to total energy (exchange only): %0.5f (should be %0.5f)' % (e_corr_sicx,-0.244190749868))
+print('FLO-SIC correction to total energy (exchange-correlation): %0.5f (should be %0.5f)' % (e_corr_sicxc,-0.165851286945))
+
+
+
+
+
+

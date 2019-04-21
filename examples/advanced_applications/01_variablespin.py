@@ -65,8 +65,7 @@ etot_var = sic_variable.kernel()
 # Output the results.
 # If everything is correct, the variable spin result should be the same as with spin 2, as sic_occ_ should have correctly identified the need to change the spin configuration.
 
-print('Total energy of H2 with spin 0 (FLO-SIC SCF): ',etot_0)
-print('Total energy of H2 with spin 2 (FLO-SIC SCF): ',etot_2)
-print('Total energy of H2 with variable spin (FLO-SIC SCF): ',etot_var)
-print('These results should be: ',-0.723760417129,-0.932966725136,-0.932966725136)
+print('Total energy of H2 with spin 0 (FLO-SIC SCF): %0.5f (should be %0.5f)' %(etot_0,-0.723760417129))
+print('Total energy of H2 with spin 2 (FLO-SIC SCF): %0.5f (should be %0.5f)' %(etot_2,-0.932966725136))
+print('Total energy of H2 with variable spin (FLO-SIC SCF): %0.5f (should be %0.5f)' %(etot_var,-0.932966725136))
 

@@ -50,7 +50,7 @@ duration_scanner = end_scanner - start_scanner
 
 print('Duration for SCF cycle with regular SCF solver (in s):',duration_regular)
 print('Duration for SCF cycle with second order SCF solver (in s):',duration_scanner)
-print('The magnitude of these values depend on your system, but the second one should be significantly smaller.')
+print('The magnitudes of these values depend on the power of your CPU and the number of processes that are running on your system simultaneously. Ideally, the second value should be significantly smaller.')
 
 
 

@@ -54,6 +54,6 @@ homo_flosic = sic_object.homo_flosic
 
 # Output the results.
 
-print('Total energy of H2 (FLO-SIC SCF): ',total_energy_sic)
-print('HOMO energy eigenvalue of H2 (FLO-SIC SCF): ',homo_flosic)
-print('These results should be: ',-1.18118689724,-0.623425516328)
+print('Total energy of H2 (FLO-SIC SCF): %0.5f (should be %0.5f)' % (total_energy_sic,-1.18118689724))
+print('HOMO energy eigenvalue of H2 (FLO-SIC SCF): %0.5f (should be %0.5f)' % (homo_flosic,-0.623425516328))
+

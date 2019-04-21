@@ -77,7 +77,7 @@ flosic_values_2 = flosic(mol,dft_object,fod1,fod2)
 
 print("ESIC: {}".format(flosic_values_1['etot_sic']-dft_energy))
 
-print('Total energy of H2 (DFT): ',dft_energy)
-print('Total energy of H2 (FLO-SIC FULL): ',flosic_values_1['etot_sic'])
-print('Total energy of H2 (FLO-SIC POST-PROCESSING): ',flosic_values_2['etot_sic'])
-print('These results should be: ',-1.13634167738585,-1.18032726019,-1.18032726019)
+print('Total energy of H2 (DFT): %0.5f (should be %0.5f)' % (dft_energy,-1.13634167738585))
+print('Total energy of H2 (FLO-SIC FULL): %0.5f (should be %0.5f) ' % (flosic_values_1['etot_sic'],-1.18032726019))
+print('Total energy of H2 (FLO-SIC POST-PROCESSING): % 0.5f (should be %0.5f) ' % (flosic_values_2['etot_sic'],-1.18032726019))
+

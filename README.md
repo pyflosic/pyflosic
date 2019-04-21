@@ -1,22 +1,24 @@
 ![GitHub Logo](/images/pyflosic_logo.png)
 
 
-# pyflosic 
+# PyFLOSIC 
 Python-based Fermi-Löwdin orbital self-interaction-correction  
 Coding language: python3   
-Licence: apache2   
+Licence: APACHE2   
 
 The following document will guide you through the setup and show you how to get started with this Python-based FLO-SIC code.
 
 #### Contents
 
-- INSTALL.md: Installation guide.
-- AUTHORS.md: The authors of Pyflosic along with contact information.
-- VERSION: The version of Pyflosic you have acquired.
-- doc/: Installation, usage, etc. are discussed there in detail. It is strongly recommended to read this before using Pyflosic.
-- src/: Contains the source files for Pyflosic.
-- examples/: Contains useful examples to get started with Pyflosic. Also shows more advanced applications of Pyflosic.
-- utils/: Utilities that are useful for Pyflosic 
+- *INSTALL.md*: Installation guide in Markdown (md) language. For older installations see INSTALL_OLD.  
+- *AUTHORS.md*: The authors of PyFLOSIC along with contact information.
+- *VERSION.md*: The version of PyFLOSIC you have acquired.
+- *doc/*: It is strongly recommended to read this before using PyFLOSIC.
+- *src/*: Contains the source files for PyFLOSIC.
+- *examples/*: Contains useful examples to get started with PyFLOSIC. 
+- *utils/*: Utilities that are useful for PyFLOSIC.
+- *test/*: Contains a version control test.
+- *LICENCE*: APACHE2 licence file.
 
 Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
 
@@ -30,13 +32,14 @@ The self-interaction error (SIE) is one of the mayor drawbacks of one of the mos
 You need a working pyscf installation on your system. 
 
 ## Dependencies (required)
+We recommend the following package versions. 
 
-* pyscf 
-* h5py 
-* scipy 
-* numpy 
-* ase 
-* numba 
+* ase 3.17.0
+* h5py 2.9.0
+* numba 0.43.1
+* scipy 1.2.1
+* numpy 1.16.2
+* pyscf 1.6.1-1
 
 ## Dependencies (optional)
 
@@ -52,12 +55,12 @@ Please note that the code is in the open beta testing phase now. If you discover
 
 * Lenz Fiedler 
 * Sebastian Schwalbe (theonov13@gmail.com)  
-* Torsten Hahn  
+* Torsten Hahn (torstenhahn@fastmail.fm)
 * Kai Trepte (trept1k@cmich.edu) 
 * Jakob Kraus (jakob.kraus@student.tu-freiberg.de) 
-* Jens Kortus 
+* Jens Kortus (Jens.Kortus@physik.tu-freiberg.de)
 
-The development of pyflosic started with the master thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte and Sebastian Schwalbe. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
+The development of PyFLOSIC started with the master thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
 
 ## Citation
-If you use the pyflosic code for a scientific article or contribution, please cite the following article. 
+If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article. 

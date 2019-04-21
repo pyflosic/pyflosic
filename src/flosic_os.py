@@ -821,9 +821,13 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
         print(dm_flo)
     
     # Now that we got all the contributions, build the SIC energy.
-    esic_flo = ecoul_sic_flo + exc_sic_flo
-    print("Total ESIC = {:9.6f}".format(esic_flo))
-    etot_sic_flo = etot_ks - esic_flo
+    # changed by SS
+    # esic_flo = ecoul_sic_flo + exc_sic_flo
+    # print("Total ESIC = {:9.6f}".format(esic_flo))
+    # etot_sic_flo = etot_ks - esic_flo
+    esic_flo = -1*(ecoul_sic_flo + exc_sic_flo)
+    print("ESIC = {:9.6f}".format(esic_flo))
+    etot_sic_flo = etot_ks + esic_flo
 
     # Next step is the energy eigenvalue correction / SIC Hamiltonian.
     # First, initialize all variables.
