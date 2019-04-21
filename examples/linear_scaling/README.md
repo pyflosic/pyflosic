@@ -1,6 +1,7 @@
 # Note: O(N) method, linear scaling 
 
-This method is different from the orginal Pederson FLO-SIC method.  
+This method is different from the orginal Pederson FLO-SIC method. 
+The O(N) method is based on the sparsity of the density matrix based on localization.   
 The FODs are optimized within the SCF cycle (FOD In-SCF optimization).   
 
 * FODs are optimized for spin up/down separately
@@ -8,6 +9,7 @@ The FODs are optimized within the SCF cycle (FOD In-SCF optimization).
   * trajectory for spin down: optout_1.xyz 
 * in the OPT_FRMORB.log not the total SIC corrected energy is given, instead the SIC energy 
 itself is monitored 
+
 
 This calculations might take serveral minutes (5 - 10 mins depending on your local machine).   
 To perform the calculation use following command:  
