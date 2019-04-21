@@ -1,8 +1,11 @@
-#Note: O(N) method, linear scaling 
+# Note: O(N) method, linear scaling 
+
 This method is different from the orginal Pederson FLO-SIC method. 
 The FODs are optimized within the SCF cycle (FOD In-SCF optimization). 
 
-* FODs are optimized for spin up/down separately 
+* FODs are optimized for spin up/down separately
+  * trajectory for spin up: optout_0.xyz
+  * trajectory for spin down: optout_1.xyz 
 * in the OPT_FRMORB.log not the total SIC corrected energy is given, instead the SIC energy 
 itself is monitored 
 
