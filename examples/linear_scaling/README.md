@@ -18,7 +18,11 @@ To perform the calculation use following command:
 bash run.sh 01_C_atom_ON.py
 ```
 
-To access the final O(N) optimized FODs use the following command: 
+To collect the final O(N) optimized FODs in one .xyz file, use the following command: 
 ```bash
-python get_final_ON_xyz.py -nuc C.xyz -fod1 optout_0.xyz -fod2 optout_1.xyz 
+python3 get_final_ON_xyz.py -nuc C.xyz -fod1 optout_0.xyz -fod2 optout_1.xyz 
+```
+To look at the final O(N) optimized FODs, perform the previous command and then type:
+```bash
+ase gui final_ON.xyz
 ```
