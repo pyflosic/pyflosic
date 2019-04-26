@@ -12,7 +12,7 @@ Another (older) implementation on different operating systems (OS) can be found 
 
 ```bash
  $ git clone https://github.com/sunqm/pyscf  
- $ cd pyscf/lib   
+ $ cd pyscf/pyscf/lib   
  $ mkdir build   
  $ cd build 
  $ vi ../CMakeLists.txt
