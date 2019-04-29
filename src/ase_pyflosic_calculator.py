@@ -303,7 +303,7 @@ class PYFLOSIC(FileIOCalculator):
             e = mf.kernel()
             self.mf = mf 
             self.results['energy'] = e*Ha
-            self.results['dipole'] = dipole = mf.dip_moment() 
+            self.results['dipole'] = dipole = mf.dip_moment(verbose=0) 
             self.results['evalues'] = mf.mo_energy
         if self.mode == 'flosic-os':
             # FLOSIC SCF mode 
