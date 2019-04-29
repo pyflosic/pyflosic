@@ -198,7 +198,7 @@ class PYFLOSIC(FileIOCalculator):
             #	gf = uks.Gradients(self.mf)
             #        forces = gf.kernel()
             gf = uks.Gradients(self.mf)
-            forces = gf.kernel()
+            forces = gf.kernel()*(Ha/Bohr)
             print(forces)
         		
         if self.mode == 'flosic-os' or self.mode == 'flosic-scf':
