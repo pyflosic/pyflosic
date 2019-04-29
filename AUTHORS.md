@@ -34,7 +34,7 @@ Additional features, code testing and improvements.
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
 - theoretical concepts   
 
-#### Simon Liebing, M.Sc.    
+#### Simon Liebing, M. Sc.    
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
 - licence issues  
 
@@ -45,7 +45,7 @@ email: trept1k@cmich.edu
 - benchmarking again NRLMOL code   
 - porting to python3   
 
-#### Jakob Kraus, B.Sc.
+#### Jakob Kraus, B. Sc.
 email: jakob.kraus@student.tu-freiberg.de
 - code testing
 - application to large molecules
