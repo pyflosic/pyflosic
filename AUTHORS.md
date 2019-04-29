@@ -44,3 +44,9 @@ email: trept1k@cmich.edu
 - FOD guessing   
 - benchmarking again NRLMOL code   
 - porting to python3   
+
+#### Jakob Kraus, B.Sc.
+email: jakob.kraus@student.tu-freiberg.de
+- code testing
+- application to large molecules
+- combination with solvation models
