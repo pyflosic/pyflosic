@@ -199,7 +199,7 @@ class PYFLOSIC(FileIOCalculator):
             #        forces = gf.kernel()
             gf = uks.Gradients(self.mf)
             forces = gf.kernel()*(Ha/Bohr)
-            print(forces)
+            #print(forces)
         		
         if self.mode == 'flosic-os' or self.mode == 'flosic-scf':
             [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(self.atoms) 
