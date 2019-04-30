@@ -17,7 +17,11 @@ To perform the calculation use the following command
 bash run.sh 01_C_atom_ON.py
 ```
 Note: If your are not using the recommended run.sh file, please make sure you added 
-the pyflosic/utils and pyflosic/src to your PYTHONPATH environment variable. 
+the pyflosic/utils and pyflosic/src to your PYTHONPATH environment variable. E.g.
+```bash 
+export PYTHONPATH=$pyflosic/src/:$PYTHONPATH
+export PYTHONPATH=$pyflosic/utils/:$PYTHONPATH
+```
 
 To collect the final O(N) optimized FODs in one .xyz file (named final_ON.xyz), use the following command 
 ```bash
