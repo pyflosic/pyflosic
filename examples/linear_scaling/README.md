@@ -7,8 +7,7 @@ The FODs are optimized within the SCF cycle (FOD In-SCF optimization).
 * FODs are optimized for spin up/down separately
   * trajectory for spin up:   optout_0.xyz
   * trajectory for spin down: optout_1.xyz 
-* In the OPT_FRMORB.log not the total SIC corrected energy is given, but the SIC energy 
-itself is monitored 
+* In the OPT_FRMORB.log the SIC energy itself is monitored and not the total SIC corrected energy.
 
 
 This calculation might take several minutes (5 - 10 mins depending on your local machine).   
