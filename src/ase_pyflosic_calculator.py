@@ -185,6 +185,7 @@ class PYFLOSIC(FileIOCalculator):
                 nuclei = ase2pyscf(nuclei)
                 mol = gto.M(atom=nuclei, basis=self.basis,spin=self.spin,charge=self.charge)
                 mf = scf.UKS(mol)
+                mf.xc = self.xc 
                 if self.xc == 'LDA,PW' or self.xc == 'PBE,PBE':
                     # The 2nd order scf cycle (Newton) speed up calculations,  
                     # but does not work for MGGAs like SCAN,SCAN.   
@@ -295,6 +296,7 @@ class PYFLOSIC(FileIOCalculator):
             nuclei = ase2pyscf(nuclei)
             mol = gto.M(atom=nuclei, basis=self.basis,spin=self.spin,charge=self.charge)
             mf = scf.UKS(mol)
+            mf.xc = self.xc 
             # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
             mf.verbose = self.verbose
             mf.max_cycle = self.max_cycle
