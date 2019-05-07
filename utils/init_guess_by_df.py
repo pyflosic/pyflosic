@@ -12,14 +12,14 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-"""Program to generate an initial guess of FOD's for FLOSIC calculations by density fitting of Fermi-orbitals.
+"""Program to generate an initial guess of FODs for FLOSIC calculations by density fitting of Fermi-orbitals.
 
 The script calculates Foster-Boys (FB) orbitals upon an ordinary
-DFT calculation. After doing so, Fermi-orbitals (FO) are build by fitting
+DFT calculation. After doing so, Fermi-orbitals (FO) are built by fitting
 the reference  position a_i to make the difference ||rho_FB - rho_FO||^2
 minimal.
 Contrary to other approaches, this method works suitable well with
-3d-transition metals (in case PBE-DFT give a reasonable solution).
+3d-transition metals (in case PBE-DFT gives a reasonable solution).
 
 Examples:
     Typically you run the script directly from the commandline (assuming
