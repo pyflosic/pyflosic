@@ -65,6 +65,6 @@ The development of PyFLOSIC started with the master thesis of Lenz Fiedler. Over
 ## Citation
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article. 
 
-* PyFLOSIC - Python based Fermi-Löwdin orbital self-interaction correction  
+* **PyFLOSIC - Python based Fermi-Löwdin orbital self-interaction correction**  
   S. Sebastian, L. Fiedler. T. Hahn, K. Trepte, J. Kraus, J. Kortus  
   arXiv e-prints, Physics - Computational Physics, 2019, arXiv:1905.02631  
