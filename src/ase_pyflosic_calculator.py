@@ -157,9 +157,9 @@ class PYFLOSIC(FileIOCalculator):
         FileIOCalculator.write_input(self, atoms, properties, system_changes)
         self.initialize(atoms)
         
-    def get_energy(self):
+    def get_energy(self,atoms):
         # get the energy from the results dict 
-        if self.calculation_required(self.atoms,['energy']):
+        if self.calculation_required(atoms,['energy']):
             self.calculate(self.atoms)
         if self.fopt == 'lij':
             res = force_max_lij(self.lambda_ij)
