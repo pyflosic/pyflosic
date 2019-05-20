@@ -273,7 +273,7 @@ class PYFLOSIC(FileIOCalculator):
     def get_fodforces(self, atoms):
         self.atoms = atoms
         # FOD forces
-        if self.calculation_required(atoms,'fodforces'):
+        if self.calculation_required(atoms,['fodforces']):
             self.get_potential_energy(atoms)
         self.fodforces = self.results['fodforces'] 
         return self.fodforces 
