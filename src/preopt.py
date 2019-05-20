@@ -417,7 +417,12 @@ class FO(object):
 
         fpos = np.array([fpos])
 
-        ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1]
+        # ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1]
+        try:
+            ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+        except IndexError:
+            # there are no electrons (hopefully)
+            ksocc = 0
         #print("ksocc: {0}".format(ksocc))
 
         ao = numint.eval_ao(self.mol,fpos)
@@ -1195,7 +1200,12 @@ class FLO(object):
 
         # check wheter or not we are going to use shell
         # restricted FLO's
-        self.ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+        # self.ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+        try:
+            ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+        except IndexError:
+            # there are no electrons (hopefully)
+            ksocc = 0
         nksocc = self.ksocc
         #print(nksocc)
         if self.ks_idx is not None: nksocc = len(self.ks_idx)
@@ -1635,7 +1645,12 @@ class FLOShell(FLO):
         # this is a critical point where we should find out how to
         # obtain a more reliable measure for the total
         # number of electrons in the system
-        ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+        # ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+        try:
+            ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+        except IndexError:
+            # there are no electrons (hopefully)
+            ksocc = 0
         self.ksocc = ksocc
         self.nks = self.mf.mo_occ[self.s].shape[0]
         # nbas is better, use that from now on
@@ -1716,7 +1731,12 @@ def dynamic_rdmc(mo_coeff, mo_occ):
 
 def fo(mf, fod, s=0):
     """docstring for fo"""
-    ksocc = np.where(mf.mo_occ[s] > 1e-6)[0][-1] + 1
+    #ksocc = np.where(mf.mo_occ[s] > 1e-6)[0][-1] + 1
+    try:
+        ksocc = np.where(self.mf.mo_occ[self.s] > 1e-6)[0][-1] + 1
+    except IndexError:
+        # there are no electrons (hopefully)
+        ksocc = 0
     #print("ksocc: {0}".format(ksocc))
     #print np.where(self.mf.mo_occ[self.s] > 1e-6)
     mol = mf.mol
