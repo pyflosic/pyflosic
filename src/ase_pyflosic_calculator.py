@@ -157,9 +157,9 @@ class PYFLOSIC(FileIOCalculator):
         FileIOCalculator.write_input(self, atoms, properties, system_changes)
         self.initialize(atoms)
         
-    def get_energy(self,atoms):
+    def get_energy(self):
         # get the energy from the results dict 
-        if self.calculation_required(atoms,['energy']):
+        if self.calculation_required(self.atoms,'energy'):
             self.calculate(self.atoms)
         if self.fopt == 'lij':
             res = force_max_lij(self.lambda_ij)
@@ -258,7 +258,7 @@ class PYFLOSIC(FileIOCalculator):
 
     def get_potential_energy(self, atoms, force_consistent=False):
         # calculate total energy if required 
-        if self.calculation_required(atoms,['energy']):
+        if self.calculation_required(atoms,'energy'):
             self.calculate(atoms)
         self.energy = self.results['energy']
         if self.fopt == 'lij':
@@ -273,7 +273,7 @@ class PYFLOSIC(FileIOCalculator):
     def get_fodforces(self, atoms):
         self.atoms = atoms
         # FOD forces
-        if self.calculation_required(atoms,['fodforces']):
+        if self.calculation_required(atoms,'fodforces'):
             self.get_potential_energy(atoms)
         self.fodforces = self.results['fodforces'] 
         return self.fodforces 
