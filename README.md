@@ -53,7 +53,7 @@ Please note that the code is in the open beta testing phase now. If you discover
 
 ## Authors 
 
-* Lenz Fiedler 
+* Lenz Fiedler (fiedler.lenz@gmail.com)
 * Sebastian Schwalbe (theonov13@gmail.com)  
 * Torsten Hahn (torstenhahn@fastmail.fm)
 * Kai Trepte (trept1k@cmich.edu) 
