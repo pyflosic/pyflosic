@@ -1,4 +1,5 @@
-#   Copyright 2019 PyFLOSIC developers
+#2019 PyFLOSIC developers
+           
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -32,7 +33,7 @@ except:
 import copy
 from flosic_os import xyz_to_nuclei_fod,ase2pyscf,flosic 
 from flosic_scf import FLOSIC
-from ase.calculators.calculator import Calculator, all_changes
+from ase.calculators.calculator import Calculator, all_changes, compare_atoms
 
 def force_max_lij(lambda_ij):
     # 
@@ -68,13 +69,12 @@ class PYFLOSIC(FileIOCalculator):
         Notes: ase.calculators -> units [eV,Angstroem,eV/Angstroem]
     	   pyflosic	   -> units [Ha,Bohr,Ha/Bohr] 		                
     """
-    implemented_properties = ['energy', 'forces','fodforces','evalues']
+    implemented_properties = ['energy', 'forces','fodforces','dipole','evalues']
     PYFLOSIC_CMD = os.environ.get('ASE_PYFLOSIC_COMMAND')
     command =  PYFLOSIC_CMD
 
     # Note: If you need to add keywords, please also add them in valid_args 
     default_parameters = dict(
-        atoms = None,           # ase atoms object nuclei 
         fod1 = None,            # ase atoms object FODs spin channel 1 
         fod2 = None,            # ase atoms objects FODs spin channnel 2 
         mol= None,              # PySCF mole object 
@@ -82,7 +82,7 @@ class PYFLOSIC(FileIOCalculator):
         spin = None,            # 2s = spin of the system 
         basis = None,           # basis set 
         ecp = None,             # only needed if ecp basis set is used 
-        xc = 'lda,pw',          # exchange correlation potential 
+        xc = 'LDA,PW',          # exchange correlation potential 
         mode = 'flosic-os',     # calculation modus 
         efield=None,            # applying a efield 
         max_cycle = 300,        # maximum scf cycles 
@@ -116,16 +116,17 @@ class PYFLOSIC(FileIOCalculator):
                 setattr(self, arg, val)
             else:
                 raise RuntimeError('unknown keyword arg "%s" : not in %s'% (arg, valid_args))
-        self.results['fodforces'] = None      
-        self.set_atoms(atoms) 
+        
+        self.set_atoms(atoms)
+        
 
-    def initialize(self,atoms=None,properties=['energy'],system_changes=['positions']):
-        #Calculator.calculate(self,atoms,properties,system_changes) 
-        self.atoms = atoms 
+    def initialize(self,atoms=None,properties=['energy'],system_changes=all_changes):
+        self.atoms = atoms.copy()
 
     def set_atoms(self, atoms):
-        #self.atoms = copy.deepcopy(atoms)
-        self.atoms = atoms
+        if self.atoms != atoms:
+            self.atoms = atoms.copy()
+            self.results = {}       
 
     def get_atoms(self):
         if self.atoms is None:
@@ -133,7 +134,6 @@ class PYFLOSIC(FileIOCalculator):
         atoms = self.atoms.copy()
         atoms.calc = self
         return atoms
-        #return FileIOCalculator.get_atoms(self)
 
     def set_label(self, label):
         self.label = label
@@ -141,11 +141,16 @@ class PYFLOSIC(FileIOCalculator):
         self.prefix = ''
         self.out = os.path.join(label, 'pyflosic.out')
 
-    def check_state(self, atoms):
-        system_changes = FileIOCalculator.check_state(self, atoms)
+    def check_state(self, atoms,tol=1e-15):
+        if atoms is  None:
+            system_changes = []
+        else:
+            system_changes = compare_atoms(self.atoms, atoms)
+        
         # Ignore boundary conditions until now 
         if 'pbc' in system_changes:
             system_changes.remove('pbc')
+        
         return system_changes
 
     def set(self, **kwargs):
@@ -157,97 +162,83 @@ class PYFLOSIC(FileIOCalculator):
         FileIOCalculator.write_input(self, atoms, properties, system_changes)
         self.initialize(atoms)
         
-    def get_energy(self):
-        # get the energy from the results dict 
-        if self.calculation_required(self.atoms,'energy'):
-            self.calculate(self.atoms)
-        if self.fopt == 'lij':
-            res = force_max_lij(self.lambda_ij)
-        if self.fopt == 'force':
-            res = self.results['energy']
-        if self.fopt == 'esic-force':
-            res = self.results['esic']
-        return res 
+    def get_energy(self,atoms=None):
+        return self.get_potential_energy(atoms) 
 
-    def get_forces(self,atoms=None): 
-        if atoms != None:
-            self.atoms  = atoms
-        # get nuclei and FOD forces 
-        # calculates forces if required 
-        if self.atoms == None:                                                             
-            self.atoms = atoms  	
-        # Note: The gradients for UKS are only available in the dev branch of pyscf. 
+    '''
+
+    def calculate_forces(self,atoms=None,properties = ['forces'],system_changes = all_changes): 
+        if atoms == None:
+            atoms = self.get_atoms()
+        else:
+            self.set_atoms(atoms)
         if self.mode == 'dft' or self.mode == 'both':
             from pyscf.grad import uks
-            if self.mf == None:
-                from pyscf import gto, scf, dft
-                [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(self.atoms)
-                nuclei = ase2pyscf(nuclei)
-                mol = gto.M(atom=nuclei, basis=self.basis,spin=self.spin,charge=self.charge)
-                mf = scf.UKS(mol)
-                mf.xc = self.xc 
-                if self.xc == 'LDA,PW' or self.xc == 'PBE,PBE':
-                    # The 2nd order scf cycle (Newton) speed up calculations,  
+            from pyscf import gto, scf
+            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
+            mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
+            mf = scf.UKS(mol)
+            mf.xc = self.xc 
+            if self.xc == 'LDA,PW' or self.xc == 'PBE,PBE':
+                # The 2nd order scf cycle (Newton) speed up calculations,  
                     # but does not work for MGGAs like SCAN,SCAN.   
-                    mf = mf.as_scanner()
-                    mf = mf.newton()
-                mf.kernel()
-                self.mf = mf
-                gf = uks.Gradients(mf)
-                forces = gf.kernel()
-            #if self.mf != None:
-            #	gf = uks.Gradients(self.mf)
-            #        forces = gf.kernel()
+                mf = mf.as_scanner()
+                mf = mf.newton()
+            mf.verbose = self.verbose
+            mf.max_cycle = self.max_cycle
+            mf.conv_tol = self.conv_tol
+            mf.grids.level = self.grid
+            mf.kernel()
+            self.mf = mf
             gf = uks.Gradients(self.mf)
+            gf.verbose = self.verbose
             forces = gf.kernel()*(Ha/Bohr)
-            #print(forces)
-        		
-        if self.mode == 'flosic-os' or self.mode == 'flosic-scf':
-            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(self.atoms) 
-            forces = np.zeros_like(nuclei.get_positions()) 
-        
+            forces = -1*forces
+            forces = forces.tolist()
+            
         if self.mode == 'dft':
             # mode for nuclei only optimization (fods fixed) 
-            forces = forces.tolist()
             totalforces = []
             totalforces.extend(forces)
-            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(self.atoms)
+            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
             fod1forces = np.zeros_like(fod1.get_positions())
             fod2forces = np.zeros_like(fod2.get_positions())
+            fod1forces = fod1forces.tolist()
+            fod2forces = fod2forces.tolist()
             totalforces.extend(fod1forces)
             totalforces.extend(fod2forces)
             totalforces = np.array(totalforces)
-            # pyscf gives the gradient not the force 
-            totalforces = -1*totalforces 
-        
-        if self.mode == 'flosic-os' or self.mode == 'flosic-scf':
-            # mode for FOD only optimization (nuclei fixed) 
-            if self.results['fodforces'] is None:
-                fodforces = self.get_fodforces(self.atoms)
-            fodforces = self.results['fodforces']
-            # fix nuclei with zeroing the forces
-            forces = forces 	
-            forces = forces.tolist()
-            totalforces = []
-            totalforces.extend(forces)
-            totalforces.extend(fodforces)
-            totalforces = np.array(totalforces)
-        
+       
         if self.mode == 'both':
             # mode for both (nuclei+fods) optimzation 
-            if self.results['fodforces'] is None:
-                fodforces = self.get_fodforces(self.atoms)
-            fodforces = self.results['fodforces']
-            forces = forces.tolist()
+            fodforces = self.get_fodforces(atoms)
+            fodforces = fodforces.tolist()
             totalforces = []
             totalforces.extend(forces)
             totalforces.extend(fodforces)
             totalforces = np.array(totalforces)
         
-        return totalforces
+        
+        if self.mode == 'flosic-os' or self.mode == 'flosic-scf':
+            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms) 
+            forces = np.zeros_like(nuclei.get_positions()) 
+            fodforces = self.get_fodforces(atoms)
+            forces = forces.tolist()
+            fodforces = fodforces.tolist()
+            totalforces = []
+            totalforces.extend(forces)
+            totalforces.extend(fodforces)
+            totalforces = np.array(totalforces)
+        
+
+        
+        self.results['forces'] = totalforces
+            
+    '''
 
     def calculation_required(self, atoms, properties):
         # checks of some properties need to be calculated or not 
+        assert not isinstance(properties, str)
         system_changes = self.check_state(atoms)
         if system_changes:
             return True
@@ -256,45 +247,55 @@ class PYFLOSIC(FileIOCalculator):
                 return True
         return False
 
-    def get_potential_energy(self, atoms, force_consistent=False):
+    def get_potential_energy(self, atoms=None, force_consistent = False):
         # calculate total energy if required 
-        if self.calculation_required(atoms,'energy'):
+        if self.calculation_required(atoms,['energy']):
             self.calculate(atoms)
-        self.energy = self.results['energy']
         if self.fopt == 'lij':
             # res = force_max_lij(self.lambda_ij)
-            res = self.results['energy']
+            res = self.results['energy'].copy()
         if self.fopt == 'force':
-            res = self.results['energy']
+            res = self.results['energy'].copy()
         if self.fopt == 'esic-force':
-            res = self.results['esic']
+            res = self.results['esic'].copy()
         return res 
 
-    def get_fodforces(self, atoms):
-        self.atoms = atoms
-        # FOD forces
-        if self.calculation_required(atoms,'fodforces'):
-            self.get_potential_energy(atoms)
-        self.fodforces = self.results['fodforces'] 
+    def get_forces(self, atoms=None):
+        if self.calculation_required(atoms,['forces']):
+            self.calculate(atoms)
+        self.forces = self.results['forces'].copy()
+        return self.forces
+
+    def get_fodforces(self, atoms=None):
+        if self.calculation_required(atoms,['fodforces']):
+            self.calculate(atoms)
+        self.fodforces = self.results['fodforces'].copy() 
         return self.fodforces 
 	
-    def get_dipole_moment(self):
-        return self.results['dipole']
+    def get_dipole_moment(self,atoms=None):
+        if self.calculation_required(atoms,['dipole']):
+            self.calculate(atoms)
+        self.dipole_moment = self.results['dipole'].copy()
+        return self.dipole_moment
 
-    def get_evalues(self):
-        return self.results['evalues']
+    def get_evalues(self,atoms=None):
+        if self.calculation_required(atoms,['evalues']):
+            self.calculate(atoms)
+        self.evalues = self.results['evalues'].copy()
+        return self.evalues
 
-    def calculate(self, atoms, properties=['energy'], system_changes=['positions']):
+    def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces'], system_changes = all_changes):
         self.num_iter += 1 
-        atoms = self.get_atoms()
-        self.atoms  = atoms
-        Calculator.calculate(self, atoms, properties, system_changes)
+        if atoms == None:
+            atoms = self.get_atoms()
+        else:
+            self.set_atoms(atoms)
         if self.mode == 'dft':
             # DFT only mode 
-            from pyscf import gto, scf, grad, dft
-            [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(self.atoms)
-            nuclei = ase2pyscf(nuclei)
-            mol = gto.M(atom=nuclei, basis=self.basis,spin=self.spin,charge=self.charge)
+            from pyscf import gto, scf
+            from pyscf.grad import uks
+            [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
+            mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
             mf = scf.UKS(mol)
             mf.xc = self.xc 
             # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
@@ -305,18 +306,36 @@ class PYFLOSIC(FileIOCalculator):
             e = mf.kernel()
             self.mf = mf 
             self.results['energy'] = e*Ha
-            self.results['dipole'] = dipole = mf.dip_moment(verbose=0) 
-            self.results['evalues'] = mf.mo_energy
+            self.results['dipole'] = self.mf.dip_moment(verbose=0) 
+            self.results['evalues'] = self.mf.mo_energy*Ha
+            self.results['fodforces'] = None
+            gf = uks.Gradients(self.mf)
+            gf.verbose = self.verbose
+            forces = gf.kernel()*(Ha/Bohr)
+            forces = -1*forces
+            forces = forces.tolist()
+            totalforces = []
+            totalforces.extend(forces)
+            fod1forces = np.zeros_like(fod1.get_positions())
+            fod2forces = np.zeros_like(fod2.get_positions())
+            fod1forces = fod1forces.tolist()
+            fod2forces = fod2forces.tolist()
+            totalforces.extend(fod1forces)
+            totalforces.extend(fod2forces)
+            totalforces = np.array(totalforces)
+            self.results['forces'] = totalforces
+            
         if self.mode == 'flosic-os':
             # FLOSIC SCF mode 
             from pyscf import gto,scf
-            [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(self.atoms)
+            [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             # FLOSIC one shot mode 
             #mf = flosic(self.atoms,charge=self.charge,spin=self.spin,xc=self.xc,basis=self.basis,debug=False,verbose=self.verbose)
             # Effective core potentials need so special treatment. 
             if self.ecp == None:
                 if self.ghost == False:
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
+                
                 if self.ghost == True:
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
                     mol.basis ={'default':self.basis,'GHOST1':gto.basis.load('sto3g', 'H'),'GHOST2':gto.basis.load('sto3g', 'H')}
@@ -343,21 +362,19 @@ class PYFLOSIC(FileIOCalculator):
             mf.grids.level = self.grid
             e = mf.kernel()
             self.mf = mf
-            mf = flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,calc_forces=True)
+            mf = flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,l_ij = self.l_ij, ods = self.ods, fixed_vsic = self.fixed_vsic, calc_forces=True,ham_sic = self.ham_sic)
             self.results['energy']= mf['etot_sic']*Ha
-            # unit conversion from Ha/Bohr to eV/Ang 
-            #self.results['fodforces'] = -1*mf['fforces']/(Ha/Bohr) 
             self.results['fodforces'] = -1*mf['fforces']*(Ha/Bohr) 
             print('Analytical FOD force [Ha/Bohr]')
-            print(mf['fforces'])
+            print(-1*mf['fforces'])
             print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((mf['fforces']**2).sum(axis=1).max()))
             self.results['dipole'] = mf['dipole']
-            self.results['evalues'] = mf['evalues']
-        if self.mode == 'flosic-scf':
+            self.results['evalues'] = mf['evalues']*Ha
+        if self.mode == 'flosic-scf' or self.mode == 'both':
             #if self.mf is None:
             # FLOSIC SCF mode 
             from pyscf import gto
-            [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(self.atoms)
+            [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             # Effective core potentials need so special treatment. 
             if self.ecp == None:
                 if self.ghost == False: 
@@ -395,36 +412,13 @@ class PYFLOSIC(FileIOCalculator):
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
-            mf.grids.level = self.grid
             e = mf.kernel()
-            self.mf = mf 
+            self.mf = mf
             # Return some results to the pyflosic_ase_caculator object. 
             self.results['esic'] = mf.esic*Ha
             self.results['energy'] = e*Ha
-            self.results['fixed_vsic'] = mf.fixed_vsic  
+            self.results['fixed_vsic'] = self.mf.fixed_vsic  
             
-           # if self.mf is not None:
-           #     from pyscf import gto
-           #     [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(self.atoms)
-           #     # Effective core potentials need so special treatment. 
-           #     if self.ecp == None:
-           #         if self.ghost == False:
-           #             mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
-           #         if self.ghost == True:
-           #             mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
-           #             mol.basis ={'default':self.basis,'GHOST1':gto.basis.load('sto3g', 'H'),'GHOST2':gto.basis.load('sto3g', 'H')}
-           #     if self.ecp != None:
-           #         mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp)
-           #     self.mf.num_iter = self.num_iter 
-           #     self.mf.max_cycle = self.max_cycle 
-           #     self.mf.mol = mol
-           #     self.mf.fod1 = fod1
-           #     self.mf.fod2 = fod2
-           #     e = self.mf.kernel()
-           #     # Return some results to the pyflosic_ase_caculator object. 
-           #     self.results['esic'] = self.mf.esic*Ha
-           #     self.results['energy'] = e*Ha
-           #     self.results['fixed_vsic'] = self.mf.fixed_vsic
            # 
             if self.fopt == 'force' or self.fopt == 'esic-force':
                 # 
@@ -463,7 +457,7 @@ class PYFLOSIC(FileIOCalculator):
                     # Try to calculate the FOD forces from the differences 
                     # of SIC eigenvalues 
                     #
-                    evalues_old = self.results['evalues']
+                    evalues_old = self.results['evalues']/Ha
                     print(evalues_old)
                     evalues_new = self.mf.evalues
                     print(evalues_new)
@@ -493,10 +487,19 @@ class PYFLOSIC(FileIOCalculator):
                     print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((fforces**2).sum(axis=1).max()))
 
             self.results['dipole'] =  self.mf.dip_moment()
-            self.results['evalues'] = self.mf.evalues
+            self.results['evalues'] = self.mf.evalues*Ha
+
+        if self.mode == 'flosic-scf' or self.mode == 'flosic-os':
+            totalforces = []
+            forces = np.zeros_like(nuclei.get_positions()) 
+            fodforces = self.results['fodforces'].copy()
+            forces = forces.tolist()
+            fodforces = fodforces.tolist()
+            totalforces.extend(forces)
+            totalforces.extend(fodforces)
+            totalforces = np.array(totalforces)
+            self.results['forces'] = totalforces
         	
-        if atoms is not None:
-            self.atoms = atoms.copy()	
 
 class BasicFLOSICC(Calculator):
     '''Interface to use ase.optimize methods in an easy way within the
