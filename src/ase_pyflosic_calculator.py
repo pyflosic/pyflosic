@@ -165,77 +165,6 @@ class PYFLOSIC(FileIOCalculator):
     def get_energy(self,atoms=None):
         return self.get_potential_energy(atoms) 
 
-    '''
-
-    def calculate_forces(self,atoms=None,properties = ['forces'],system_changes = all_changes): 
-        if atoms == None:
-            atoms = self.get_atoms()
-        else:
-            self.set_atoms(atoms)
-        if self.mode == 'dft' or self.mode == 'both':
-            from pyscf.grad import uks
-            from pyscf import gto, scf
-            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
-            mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
-            mf = scf.UKS(mol)
-            mf.xc = self.xc 
-            if self.xc == 'LDA,PW' or self.xc == 'PBE,PBE':
-                # The 2nd order scf cycle (Newton) speed up calculations,  
-                    # but does not work for MGGAs like SCAN,SCAN.   
-                mf = mf.as_scanner()
-                mf = mf.newton()
-            mf.verbose = self.verbose
-            mf.max_cycle = self.max_cycle
-            mf.conv_tol = self.conv_tol
-            mf.grids.level = self.grid
-            mf.kernel()
-            self.mf = mf
-            gf = uks.Gradients(self.mf)
-            gf.verbose = self.verbose
-            forces = gf.kernel()*(Ha/Bohr)
-            forces = -1*forces
-            forces = forces.tolist()
-            
-        if self.mode == 'dft':
-            # mode for nuclei only optimization (fods fixed) 
-            totalforces = []
-            totalforces.extend(forces)
-            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
-            fod1forces = np.zeros_like(fod1.get_positions())
-            fod2forces = np.zeros_like(fod2.get_positions())
-            fod1forces = fod1forces.tolist()
-            fod2forces = fod2forces.tolist()
-            totalforces.extend(fod1forces)
-            totalforces.extend(fod2forces)
-            totalforces = np.array(totalforces)
-       
-        if self.mode == 'both':
-            # mode for both (nuclei+fods) optimzation 
-            fodforces = self.get_fodforces(atoms)
-            fodforces = fodforces.tolist()
-            totalforces = []
-            totalforces.extend(forces)
-            totalforces.extend(fodforces)
-            totalforces = np.array(totalforces)
-        
-        
-        if self.mode == 'flosic-os' or self.mode == 'flosic-scf':
-            [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms) 
-            forces = np.zeros_like(nuclei.get_positions()) 
-            fodforces = self.get_fodforces(atoms)
-            forces = forces.tolist()
-            fodforces = fodforces.tolist()
-            totalforces = []
-            totalforces.extend(forces)
-            totalforces.extend(fodforces)
-            totalforces = np.array(totalforces)
-        
-
-        
-        self.results['forces'] = totalforces
-            
-    '''
-
     def calculation_required(self, atoms, properties):
         # checks of some properties need to be calculated or not 
         assert not isinstance(properties, str)
@@ -307,7 +236,7 @@ class PYFLOSIC(FileIOCalculator):
             self.mf = mf 
             self.results['energy'] = e*Ha
             self.results['dipole'] = self.mf.dip_moment(verbose=0) 
-            self.results['evalues'] = self.mf.mo_energy*Ha
+            self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
             self.results['fodforces'] = None
             gf = uks.Gradients(self.mf)
             gf.verbose = self.verbose
@@ -487,9 +416,9 @@ class PYFLOSIC(FileIOCalculator):
                     print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((fforces**2).sum(axis=1).max()))
 
             self.results['dipole'] =  self.mf.dip_moment()
-            self.results['evalues'] = self.mf.evalues*Ha
+            self.results['evalues'] = np.array(self.mf.evalues)*Ha
 
-        if self.mode == 'flosic-scf' or self.mode == 'flosic-os':
+        if self.mode == 'flosic-scf' or self.mode == 'flosic-os' or self.mode =='both':
             totalforces = []
             forces = np.zeros_like(nuclei.get_positions()) 
             fodforces = self.results['fodforces'].copy()
