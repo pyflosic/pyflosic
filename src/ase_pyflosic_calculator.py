@@ -232,6 +232,9 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
+            if self.use_newton == True and self.xc != 'SCAN,SCAN':
+                mf = mf.as_scanner()
+                mf = mf.newton()
             e = mf.kernel()
             self.mf = mf 
             self.results['energy'] = e*Ha
@@ -283,7 +286,7 @@ class PYFLOSIC(FileIOCalculator):
             if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
-            if self.use_newton == True:
+            if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
             mf.max_cycle = self.max_cycle
@@ -336,7 +339,7 @@ class PYFLOSIC(FileIOCalculator):
             if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
-            if self.use_newton == True:
+            if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
