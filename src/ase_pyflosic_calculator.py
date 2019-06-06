@@ -235,8 +235,8 @@ class PYFLOSIC(FileIOCalculator):
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
-            e = mf.kernel()
-            self.mf = mf 
+            self.mf = mf
+            e = self.mf.kernel()
             self.results['energy'] = e*Ha
             self.results['dipole'] = self.mf.dip_moment(verbose=0) 
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
@@ -292,9 +292,9 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
-            e = mf.kernel()
             self.mf = mf
-            mf = flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,l_ij = self.l_ij, ods = self.ods, fixed_vsic = self.fixed_vsic, calc_forces=True,ham_sic = self.ham_sic)
+            e = self.mf.kernel()
+            mf = flosic(mol,self.mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,l_ij = self.l_ij, ods = self.ods, fixed_vsic = self.fixed_vsic, calc_forces=True,ham_sic = self.ham_sic)
             self.results['energy']= mf['etot_sic']*Ha
             self.results['fodforces'] = -1*mf['fforces']*(Ha/Bohr) 
             print('Analytical FOD force [Ha/Bohr]')
@@ -344,10 +344,10 @@ class PYFLOSIC(FileIOCalculator):
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
-            e = mf.kernel()
             self.mf = mf
+            e = self.mf.kernel()
             # Return some results to the pyflosic_ase_caculator object. 
-            self.results['esic'] = mf.esic*Ha
+            self.results['esic'] = self.mf.esic*Ha
             self.results['energy'] = e*Ha
             self.results['fixed_vsic'] = self.mf.fixed_vsic  
             
