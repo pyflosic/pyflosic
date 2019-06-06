@@ -17,7 +17,7 @@
 # task:  	optimzation of FOD positions/electronic geometry 
 # todo:		spearate core functions and tests
  
-from ase.optimize import LBFGS, BFGS, BFGSLineSearch, FIRE, MDMin
+from ase.optimize import LBFGS, BFGS, BFGSLineSearch, LBFGSLineSearch, FIRE, GPMin
 from ase.optimize.sciopt import SciPyFminCG
 from ase_pyflosic_calculator import PYFLOSIC
 from flosic_os import xyz_to_nuclei_fod,ase2pyscf
@@ -82,7 +82,7 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,l
     # Assign the ase-calculator to the ase-atoms object. 
     atoms.set_calculator(calc)
 	
-    # Select the wisehd ase-optimizer. 
+    # Select the desired ase-optimizer. 
     if opt == 'FIRE':
         dyn = FIRE(atoms,
                    logfile=label+'.log',
@@ -106,8 +106,14 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,l
                    trajectory=label+'.traj',
                    maxstep=maxstep)
 	
-    if opt == 'LineSearch':
+    if opt == 'BFGSLineSearch':
         dyn = BFGSLineSearch(atoms,
+                             logfile=label+'.log',
+                             trajectory=label+'.traj',
+                             maxstep=maxstep)
+                             #force_consistent = force_consistent)
+    if opt == 'LBFGSLineSearch':
+        dyn = LBFGSLineSearch(atoms,
                              logfile=label+'.log',
                              trajectory=label+'.traj',
                              maxstep=maxstep)
@@ -122,7 +128,6 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,l
                           master=None)
                           #force_consistent=force_consistent)
     if opt == 'GPMin':
-        from ase.optimize import GPMin 
         dyn = GPMin(atoms,
                     logfile=label+'.log',
                     trajectory=label+'.traj',
