@@ -243,6 +243,7 @@ class PYFLOSIC(FileIOCalculator):
             self.results['fodforces'] = None
             gf = uks.Gradients(self.mf)
             gf.verbose = self.verbose
+            gf.grid_response = True
             forces = gf.kernel()*(Ha/Bohr)
             forces = -1*forces
             forces = forces.tolist()
