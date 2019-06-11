@@ -52,7 +52,20 @@ class ON(object):
         self.is_init = True
         self.add_ghosts = False
         self.nshell = 2
-        #print(self.grid_level)
+        #print(self.mol)
+        
+        _verb = self.mol.verbose
+        self.mol.verbose = 0
+        print('grid_level', grid_level)
+        self._mf = dft.UKS(mol)
+        self._mf.grids.level = grid_level
+        self._mf.max_cycle = 0
+        self._mf.kernel()
+        self.mol.verbose = _verb
+        
+        print(self._mf.grids.coords.shape)
+        print(self._mf.grids.weights.shape)
+        
         #sys.exit()
         
     def build(self):
@@ -317,25 +330,22 @@ class ON(object):
         
         b = self.mol.basis
         
-        #print(mstr)
-        #print("{0} {1}".format(fodid,b))
-        
-        #sys.exit()
         
         try:
             onmol =  gto.M(atom=mstr,basis=b)
         except RuntimeError:
             onmol =  gto.M(atom=mstr, basis=b, spin=1)
         onmol.verbose=0
-        onmol.max_memory=1000
+        onmol.max_memory=self.mol.max_memory/2
+        if onmol.max_memory < 1000:
+            onmol.max_memory = 1000
         #print(onmol.atom)
         # build the meshes
         if ongrid is None:
-            _mdft = dft.UKS(onmol)
-            _mdft.max_cycle = 0
-            _mdft.grids.level = level
-            _mdft.kernel()
-            ongrid = copy.copy(_mdft.grids)
+            ongrid = dft.gen_grid.Grids(onmol)
+            ongrid.level=self.grid_level
+            ongrid.build()
+            #print(">> Grid: ", ongrid.size)
         else:
             print('     (mesh was already generated for fod {})'.format(pmshid))
         #ongrid = dft.gen_grid.Grids(onmol)
@@ -498,6 +508,9 @@ class ON(object):
                 print('{:4d} {:4d} : {:7d} {:7d}    {}'.format(s,j,nonmsh,nbas, onat))
         print('    ----------------')
         _nbas = float(_nbas)/(np.sum(self.nfod))
+        ##
+        #print(np.sum(self.nfod))
+        #sys.exit()
         _tnbas = self.mol.aoslice_by_atom()[-1,-1]
         _nmshs = float(_nmshs)/(np.sum(self.nfod))
         #print(_tnbas)
