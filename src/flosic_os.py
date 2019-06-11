@@ -422,11 +422,10 @@ def get_fermi_forces(nspin, pflo):
     
     # get the forces from each FLO object
     
-    
     ff = list()
     for s in range(nspin):
         ff.extend(pflo[s].get_desic_dai().tolist())
-
+    
     return np.reshape(np.array(ff),(-1,3))
 
 # This outputs the forces in the same format as NRMOL.
@@ -654,7 +653,7 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
                             dyn = BFGS(atoms=fod,
                                 logfile='OPT_FRMORB.log',
                                 #downhill_check=True,
-                                maxstep=0.004
+                                maxstep=mf.FLOSIC.opt_init_mxstep
                             )
   
                             dyn.attach(_writexyz, interval=1)
@@ -668,7 +667,7 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
                         dyn = BFGS(atoms=fod,
                             logfile='OPT_FRMORB.log',
                             #downhill_check=True,
-                            maxstep=0.01
+                            maxstep=mf.FLOSIC.opt_mxstep
                         )
                         dyn.attach(_writexyz, interval=1)
                         dyn.run(fmax=_fmax,steps=299)
@@ -719,6 +718,7 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
     ket = np.zeros((nks,1), dtype=datatype)
     bra = np.zeros((1,nks), dtype=datatype)
     
+    _desic = [9999.0, 9999.0]
     # this is the main loop that goes over each Fermi-orbital
     for s in range(0,nspin):
         lfod = fod1
@@ -738,12 +738,14 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
             # the fod positions of the base class may have changed,
             # if so, update the FLO objects positions as well
             pdiff = np.linalg.norm(lfod.positions - pflo[s].fod * units.Bohr)
-            #print('>> pdiff', pdiff)
+            if pdiff > 1e-8:
+                mf.FLOSIC.update_vsic = True
+            print('>> pdiff', pdiff)
             if (pdiff > np.finfo(np.float64).eps):
                 #print('>> pflo position update')
                 pflo[s].fod[:,:] = lfod.positions[:,:] / units.Bohr
             # save the last vsic (if there is one) and mix a bit
-            # (improoves convergence!)
+            # (improves convergence!)
             vsic_last = None
             try:
                 if not np.isclose(np.sum(np.abs(pflo[s].vsic[j])), 0.0):
@@ -751,9 +753,23 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
                     onedm_last = pflo[s].onedm[j].copy()
             except IndexError:
                 pass
-            #print('>> fod for update_vsic', np.sum(pflo[0].fod * units.Bohr), flush=True)
-            #print(np.array_str(pflo[s].fod, precision=4, max_line_width=220))
-            pflo[s].update_vsic(uall=True)
+            
+            if mf.FLOSIC.update_vsic:
+                pflo[s].update_vsic(uall=True)
+            
+            if mf.FLOSIC.esic_last[s] is None:
+                mf.FLOSIC.esic_last[s] = pflo[s]._esictot
+            else:
+                _desic[s] = np.abs(\
+                    mf.FLOSIC.esic_last[s] - pflo[s]._esictot
+                )
+                print("_desic: {:9.6f}".format(_desic[s]))
+                if _desic[s] < mf.FLOSIC.esic_cnvg:
+                    mf.FLOSIC.update_vsic = False
+                else:
+                    mf.FLOSIC.update_vsic = True
+                mf.FLOSIC.esic_last[s] = pflo[s]._esictot
+            
         
         #print(">>> ESIC: {}".format(pflo[s]._esictot))
         

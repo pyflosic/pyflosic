@@ -273,7 +273,7 @@ class FLOSIC(uhf.UHF):
         
         # creation of an internal UKS object for handling FLO-SIC calculations.
         lib.logger.TIMER_LEVEL = 4
-        mol.verbose = 0
+        mol.verbose = 3
         calc_uks = UKS(mol)
         calc_uks.xc = self.xc
         calc_uks.max_cycle = 0
@@ -307,7 +307,10 @@ class FLOSIC(uhf.UHF):
         self.preopt_fmin        = 0.005
         self.preopt_fix1s       = True
         self.opt_init_mxstep    = 0.0050
-        self.opt_mxstep         = 0.0100
+        self.opt_mxstep         = 0.0250
+        self.esic_cnvg          = 0.0
+        self.esic_last          = [None, None]
+        self.update_vsic        = True
         
         #self.esic_per_cycle = [0.0]
         self.pflo               = None  # list of FLO objects
@@ -347,7 +350,7 @@ class FLOSIC(uhf.UHF):
             'fforces','fod2','ldax','calc_forces','is_first','debug','nuclei','AF','l_ij','ods','lambda_ij',
             'num_iter','vsic_every','fixed_vsic','ham_sic','preopt_fix1s','cesicc','nspin','opt_mxstep','preopt',
             'opt_init_mxstep','pflo','preopt_start_cycle','preopt_conv_tol','on','preopt_fmin',
-            'nfod','use_mpi'])
+            'nfod','use_mpi', 'update_vsic', 'esic_last', 'esic_cnvg'])
 
         # make sure initial mo_coeff's are in synch with the 
         # helper - subclass
@@ -369,6 +372,10 @@ class FLOSIC(uhf.UHF):
         if self.use_mpi:
             comm = MPI.COMM_WORLD
             wsize = comm.Get_size()
+            
+            nbas = self.calc_uks.mo_coeff[0].shape[0]
+            print(">>> root, nbas", nbas)
+            
             for inode in range(1,wsize):
                 comm.send('init', dest=inode, tag=11)
             
