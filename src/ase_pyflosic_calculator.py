@@ -241,22 +241,25 @@ class PYFLOSIC(FileIOCalculator):
             self.results['dipole'] = self.mf.dip_moment(verbose=0) 
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
             self.results['fodforces'] = None
-            gf = uks.Gradients(self.mf)
-            gf.verbose = self.verbose
-            gf.grid_response = True
-            forces = gf.kernel()*(Ha/Bohr)
-            forces = -1*forces
-            forces = forces.tolist()
-            totalforces = []
-            totalforces.extend(forces)
-            fod1forces = np.zeros_like(fod1.get_positions())
-            fod2forces = np.zeros_like(fod2.get_positions())
-            fod1forces = fod1forces.tolist()
-            fod2forces = fod2forces.tolist()
-            totalforces.extend(fod1forces)
-            totalforces.extend(fod2forces)
-            totalforces = np.array(totalforces)
-            self.results['forces'] = totalforces
+            if self.xc != 'SCAN,SCAN': # no gradients for meta-GGAs!
+                gf = uks.Gradients(self.mf)
+                gf.verbose = self.verbose
+                gf.grid_response = True
+                forces = gf.kernel()*(Ha/Bohr)
+                forces = -1*forces
+                forces = forces.tolist()
+                totalforces = []
+                totalforces.extend(forces)
+                fod1forces = np.zeros_like(fod1.get_positions())
+                fod2forces = np.zeros_like(fod2.get_positions())
+                fod1forces = fod1forces.tolist()
+                fod2forces = fod2forces.tolist()
+                totalforces.extend(fod1forces)
+                totalforces.extend(fod2forces)
+                totalforces = np.array(totalforces)
+                self.results['forces'] = totalforces
+            else:
+                self.results['forces'] = None
             
         if self.mode == 'flosic-os':
             # FLOSIC SCF mode 
