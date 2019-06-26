@@ -69,7 +69,7 @@ class PYFLOSIC(FileIOCalculator):
         Notes: ase.calculators -> units [eV,Angstroem,eV/Angstroem]
     	   pyflosic	   -> units [Ha,Bohr,Ha/Bohr] 		                
     """
-    implemented_properties = ['energy', 'forces','fodforces','dipole','evalues']
+    implemented_properties = ['energy', 'forces','fodforces','dipole','evalues','homo']
     PYFLOSIC_CMD = os.environ.get('ASE_PYFLOSIC_COMMAND')
     command =  PYFLOSIC_CMD
 
@@ -213,6 +213,12 @@ class PYFLOSIC(FileIOCalculator):
         self.evalues = self.results['evalues'].copy()
         return self.evalues
 
+    def get_homo(self,atoms=None):
+        if self.calculation_required(atoms,['homo']):
+            self.calculate(atoms)
+        self.homo = self.results['homo'].copy()
+        return self.homo
+
     def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces'], system_changes = all_changes):
         self.num_iter += 1 
         if atoms == None:
@@ -240,6 +246,22 @@ class PYFLOSIC(FileIOCalculator):
             self.results['energy'] = e*Ha
             self.results['dipole'] = self.mf.dip_moment(verbose=0) 
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
+            n_up, n_dn = self.mf.mol.nelec
+            if n_up != 0 and n_dn != 0:
+                e_up = np.sort(self.results['evalues'][0])
+                e_dn = np.sort(self.results['evalues'][1])
+                homo_up = e_up[n_up-1]
+                homo_dn = e_dn[n_dn-1]
+                self.results['homo'] = max(homo_up,homo_dn)
+            elif n_up != 0:
+                e_up = np.sort(self.results['evalues'][0])
+                self.results['homo'] = e_up[n_up-1]
+            elif n_dn != 0:
+                e_dn = np.sort(self.results['evalues'][1])
+                self.results['homo'] = e_dn[n_dn-1]
+            else:
+                self.results['homo'] = None
+
             self.results['fodforces'] = None
             if self.xc != 'SCAN,SCAN': # no gradients for meta-GGAs!
                 gf = uks.Gradients(self.mf)
@@ -306,6 +328,22 @@ class PYFLOSIC(FileIOCalculator):
             print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((mf['fforces']**2).sum(axis=1).max()))
             self.results['dipole'] = mf['dipole']
             self.results['evalues'] = mf['evalues']*Ha
+            n_up, n_dn = self.mf.mol.nelec
+            if n_up != 0 and n_dn != 0:
+                e_up = np.sort(self.results['evalues'][0])
+                e_dn = np.sort(self.results['evalues'][1])
+                homo_up = e_up[n_up-1]
+                homo_dn = e_dn[n_dn-1]
+                self.results['homo'] = max(homo_up,homo_dn)
+            elif n_up != 0:
+                e_up = np.sort(self.results['evalues'][0])
+                self.results['homo'] = e_up[n_up-1]
+            elif n_dn != 0:
+                e_dn = np.sort(self.results['evalues'][1])
+                self.results['homo'] = e_dn[n_dn-1]
+            else:
+                self.results['homo'] = None
+
         if self.mode == 'flosic-scf' or self.mode == 'both':
             #if self.mf is None:
             # FLOSIC SCF mode 
@@ -424,6 +462,22 @@ class PYFLOSIC(FileIOCalculator):
 
             self.results['dipole'] =  self.mf.dip_moment()
             self.results['evalues'] = np.array(self.mf.evalues)*Ha
+            n_up, n_dn = self.mf.mol.nelec
+            if n_up != 0 and n_dn != 0:
+                e_up = np.sort(self.results['evalues'][0])
+                e_dn = np.sort(self.results['evalues'][1])
+                homo_up = e_up[n_up-1]
+                homo_dn = e_dn[n_dn-1]
+                self.results['homo'] = max(homo_up,homo_dn)
+            elif n_up != 0:
+                e_up = np.sort(self.results['evalues'][0])
+                self.results['homo'] = e_up[n_up-1]
+            elif n_dn != 0:
+                e_dn = np.sort(self.results['evalues'][1])
+                self.results['homo'] = e_dn[n_dn-1]
+            else:
+                self.results['homo'] = None
+
 
         if self.mode == 'flosic-scf' or self.mode == 'flosic-os' or self.mode =='both':
             totalforces = []
