@@ -101,7 +101,7 @@ class PYFLOSIC(FileIOCalculator):
         fixed_vsic=None,        # fixed SIC one body values Veff, Exc, Ecoul
         num_iter=0,             # scf iteration number 
         vsic_every=1,           # calculate vsic after this number on num_iter cycles 
-        ham_sic ='HOO'          # unified SIC Hamiltonian HOO or HOOOV 
+        ham_sic ='HOO',          # unified SIC Hamiltonian HOO or HOOOV 
         dm = None
         ) 
 
