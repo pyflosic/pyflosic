@@ -102,6 +102,7 @@ class PYFLOSIC(FileIOCalculator):
         num_iter=0,             # scf iteration number 
         vsic_every=1,           # calculate vsic after this number on num_iter cycles 
         ham_sic ='HOO'          # unified SIC Hamiltonian HOO or HOOOV 
+        dm = None
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -109,7 +110,7 @@ class PYFLOSIC(FileIOCalculator):
         """ Constructor """
         FileIOCalculator.__init__(self, restart, ignore_bad_restart_file,
                                   label, atoms, **kwargs)
-        valid_args = ('atoms','fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic')
+        valid_args = ('fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic','dm')
         # set any additional keyword arguments
         for arg, val in self.parameters.items():
             if arg in valid_args:
@@ -243,15 +244,15 @@ class PYFLOSIC(FileIOCalculator):
             if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
-                dm = mf.make_rdm1()
+                self.dm = mf.make_rdm1()
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
             self.mf = mf
-            if dm == None:
+            if self.dm == None:
                 e = self.mf.kernel()
             else:
-                e = self.mf.kernel(dm)
+                e = self.mf.kernel(self.dm)
             self.results['energy'] = e*Ha
             self.results['dipole'] = self.mf.dip_moment(verbose=0) 
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
@@ -312,7 +313,7 @@ class PYFLOSIC(FileIOCalculator):
             if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
-                dm = mf.make_rdm1()
+                self.dm = mf.make_rdm1()
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
@@ -320,10 +321,10 @@ class PYFLOSIC(FileIOCalculator):
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
             self.mf = mf
-            if dm == None :
+            if self.dm == None :
                 e = self.mf.kernel()
             else:
-                e = self.mf.kernel(dm)
+                e = self.mf.kernel(self.dm)
             mf = flosic(mol,self.mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,l_ij = self.l_ij, ods = self.ods, fixed_vsic = self.fixed_vsic, calc_forces=True,ham_sic = self.ham_sic)
             self.results['energy']= mf['etot_sic']*Ha
             self.results['fodforces'] = -1*mf['fforces']*(Ha/Bohr) 
@@ -378,17 +379,17 @@ class PYFLOSIC(FileIOCalculator):
             if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
-                dm = mf.make_rdm1()
+                self.dm = mf.make_rdm1()
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             self.mf = mf
-            if dm == None:
+            if self.dm == None:
                 e = self.mf.kernel()
             else:
-                e = self.mf.kernel(dm)
+                e = self.mf.kernel(self.dm)
             self.results['esic'] = self.mf.esic*Ha
             self.results['energy'] = e*Ha
             self.results['fixed_vsic'] = self.mf.fixed_vsic  
