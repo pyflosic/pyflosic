@@ -79,19 +79,19 @@ class PYFLOSIC(FileIOCalculator):
         fod2 = None,            # ase atoms objects FODs spin channnel 2 
         mol= None,              # PySCF mole object 
         charge = None,          # charge of the system 
-        spin = None,            # 2s = spin of the system 
-        basis = None,           # basis set 
+        spin = None,            # spin of the system, equal to 2S 
+        basis = None,           # basis set
         ecp = None,             # only needed if ecp basis set is used 
-        xc = 'LDA,PW',          # exchange correlation potential 
-        mode = 'flosic-os',     # calculation modus 
-        efield=None,            # applying a efield 
-        max_cycle = 300,        # maximum scf cycles 
-        conv_tol = 1e-5,        # energy threshold 
-        grid = 3,               # numerical mesh 
+        xc = 'LDA,PW',          # exchange-correlation potential - must be available in libxc 
+        mode = 'flosic-os',     # calculation method 
+        efield=None,            # perturbative electric field
+        max_cycle = 300,        # maximum number of SCF cycles 
+        conv_tol = 1e-5,        # energy convergence threshold 
+        grid = 3,               # numerical mesh (lowest: 0, highest: 9)
         ghost= False,           # ghost atoms at FOD positions 
         mf = None,              # PySCF calculation object
-        use_newton=False,       # use Newton scf cycle 
-        use_chk=False,          # restart from chk file 
+        use_newton=False,       # use the Newton SCF cycle 
+        use_chk=False,          # restart from checkpoint file 
         verbose=0,              # output verbosity 
         calc_forces=False,      # calculate FOD forces 
         debug=False,            # extra ouput for debugging purpose 
@@ -99,10 +99,10 @@ class PYFLOSIC(FileIOCalculator):
         ods=None,               # developer option: orbital damping sic 
         fopt='force',           # developer option: in use with l_ij, alternative optimization target 
         fixed_vsic=None,        # fixed SIC one body values Veff, Exc, Ecoul
-        num_iter=0,             # scf iteration number 
+        num_iter=0,             # SCF iteration number 
         vsic_every=1,           # calculate vsic after this number on num_iter cycles 
-        ham_sic ='HOO',          # unified SIC Hamiltonian HOO or HOOOV 
-        dm = None
+        ham_sic ='HOO',         # unified SIC Hamiltonian - HOO or HOOOV 
+        dm = None               # density matrix
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
