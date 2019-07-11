@@ -238,11 +238,20 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
+            if self.use_chk == True and self.use_newton == False:
+                mf.chkfile = 'pyflosic.chk'
+            if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
+                mf.init_guess = 'chk'
+                mf.update('pyflosic.chk')
+                dm = mf.make_rdm1()
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
             self.mf = mf
-            e = self.mf.kernel()
+            if dm == None:
+                e = self.mf.kernel()
+            else:
+                e = self.mf.kernel(dm)
             self.results['energy'] = e*Ha
             self.results['dipole'] = self.mf.dip_moment(verbose=0) 
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
@@ -284,12 +293,8 @@ class PYFLOSIC(FileIOCalculator):
                 self.results['forces'] = None
             
         if self.mode == 'flosic-os':
-            # FLOSIC SCF mode 
             from pyscf import gto,scf
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
-            # FLOSIC one shot mode 
-            #mf = flosic(self.atoms,charge=self.charge,spin=self.spin,xc=self.xc,basis=self.basis,debug=False,verbose=self.verbose)
-            # Effective core potentials need so special treatment. 
             if self.ecp == None:
                 if self.ghost == False:
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
@@ -301,17 +306,13 @@ class PYFLOSIC(FileIOCalculator):
                 mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp)
             mf = scf.UKS(mol)
             mf.xc = self.xc 
-            # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
             mf.verbose = self.verbose
-            # Binary output format of pyscf. 
-            # Save MOs, orbital energies, etc. 
             if self.use_chk == True and self.use_newton == False:
                 mf.chkfile = 'pyflosic.chk'
-            # Load from previous run, if exist, the checkfile. 
-            # Hopefully this will speed up the calculation.
             if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
+                dm = mf.make_rdm1()
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
@@ -319,7 +320,10 @@ class PYFLOSIC(FileIOCalculator):
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
             self.mf = mf
-            e = self.mf.kernel()
+            if dm == None :
+                e = self.mf.kernel()
+            else:
+                e = self.mf.kernel(dm)
             mf = flosic(mol,self.mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,l_ij = self.l_ij, ods = self.ods, fixed_vsic = self.fixed_vsic, calc_forces=True,ham_sic = self.ham_sic)
             self.results['energy']= mf['etot_sic']*Ha
             self.results['fodforces'] = -1*mf['fforces']*(Ha/Bohr) 
@@ -345,8 +349,6 @@ class PYFLOSIC(FileIOCalculator):
                 self.results['homo'] = None
 
         if self.mode == 'flosic-scf' or self.mode == 'both':
-            #if self.mf is None:
-            # FLOSIC SCF mode 
             from pyscf import gto
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             # Effective core potentials need so special treatment. 
@@ -370,39 +372,33 @@ class PYFLOSIC(FileIOCalculator):
                 apply_field(mol,m0,E=(0,0,0+h))
                 m0.kernel()
             mf = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,calc_forces=self.calc_forces,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
-            # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
             mf.verbose = self.verbose 
-            # Binary output format of pyscf. 
-            # Save MOs, orbital energies, etc. 
             if self.use_chk == True and self.use_newton == False:
                 mf.chkfile = 'pyflosic.chk'
-            # Load from previous run, if exist, the checkfile. 
-            # Hopefully this will speed up the calculation.
             if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
+                dm = mf.make_rdm1()
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             self.mf = mf
-            e = self.mf.kernel()
-            # Return some results to the pyflosic_ase_caculator object. 
+            if dm == None:
+                e = self.mf.kernel()
+            else:
+                e = self.mf.kernel(dm)
             self.results['esic'] = self.mf.esic*Ha
             self.results['energy'] = e*Ha
             self.results['fixed_vsic'] = self.mf.fixed_vsic  
             
-           # 
             if self.fopt == 'force' or self.fopt == 'esic-force':
                 # 
                 # The standard optimization uses 
                 # the analytical FOD forces 
                 #
                 fforces = self.mf.get_fforces()
-                #fforces = -1*fforce
-                # unit conversion Hartree/Bohr to eV/Angstroem 
-                #self.results['fodforces'] = -1*fforces*(Ha/Bohr)
                 self.results['fodforces'] = fforces*(Ha/Bohr)
                 print('Analytical FOD force [Ha/Bohr]')
                 print(fforces)
