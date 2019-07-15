@@ -20,7 +20,6 @@ from flosic_os import xyz_to_nuclei_fod,ase2pyscf
 from ase import io, units, Atoms, Atom
 from ase.utils import natural_cutoffs
 from pyscf import gto, dft
-from pyscf.dft import numint
 from flosic_scf import FLOSIC
 from ase.constraints import FixAtoms
 import sys
@@ -53,39 +52,23 @@ class ON(object):
         self.is_init = True
         self.add_ghosts = False
         self.nshell = 2
-        self.norm_fact = None
-        #print(self.mol)
-
-        _verb = self.mol.verbose
-        ##self.mol.verbose = 0
-        #self._mf = dft.UKS(mol)
-        #self._mf.grids.level = grid_level
-        #self._mf.max_cycle = 0
-        #self._mf.kernel()
-        ##self.mol.verbose = _verb
-
-        print('O(N) initialized with grid', grid_level)
-        print('(Order-N routines developed by Torsten Hahn <torstenhahn@fastmail.fm>)')
-
-        #print(self._mf.grids.coords.shape)
-        #print(self._mf.grids.weights.shape)
-
+        #print(self.grid_level)
         #sys.exit()
-
+        
     def build(self):
         """build the required data structures (e.g. neigbor lists)"""
         # convert to Bohr as internal unit
         self.onatoms = list()
         for s in range(self.nspin):
             self.onatoms.append(dict())
-
+        
         self.fod = list()
         self.nfod = [0,0]
         for s in range(self.nspin):
             self.fod.append( self._fod[s].copy())
             self.nfod[s] = self._fod[s].shape[0]
             #print np.array_str(self.fod[s],precision=4)
-
+        
         # build atom object (make sure to enter ccors in Angst)
         acoord = self.mol.atom_coords()
         self.atoms = Atoms()
@@ -93,16 +76,16 @@ class ON(object):
             aa = Atom(symbol=self.mol.atom_symbol(na),
                 position=acoord[na]*units.Bohr)
             self.atoms.extend(aa)
-
+        
         cutoffs = natural_cutoffs(self.atoms)
-
+        
         ##print cutoffs
         self.nl = NL.NeighborList(cutoffs,
-            self_interaction=False, bothways=True)
+            self_interaction=False, bothways=True) 
         self.nl.update(self.atoms)
-
+        
         ##print self.nl.get_neighbors(1)
-
+        
         # cut out the H atoms from the distances
         #non_H_ids = list()
         #for atmid in range(self.mol.natm):
@@ -112,8 +95,8 @@ class ON(object):
         #non_H_pos = np.zeros((len(non_H_ids),3), dtype=np.float64)
         #for atmid,i in zip(non_H_ids,range(len(non_H_ids))):
         #    non_H_pos[i,:] = self.atoms.positions[atmid,:]
-
-
+        
+        
         #self.fod_atm = [[[-1,0.0,'C']*4],[[-2,0.0,'C']*4]]
         #print self.fod_atm[0]
         #self.fod[0].shape[0],self.fod[1].shape[0]
@@ -133,8 +116,8 @@ class ON(object):
                 while self.mol.atom_pure_symbol(nearest_atom) == 'H':
                     ite += 1
                     nearest_atom = np.argsort(dists)[ite]
-
-
+                
+                
                 #print self.fod_atm
                 #print self.fod_atm[s]
                 #self.fod_atm[s][i][0] = nearest_atom
@@ -152,7 +135,7 @@ class ON(object):
                     (nearest_atom,dists[nearest_atom],fodtype))
             self.fod_atm.append(lfod_atm)
         #print len(self.fod_atm)
-
+        
         # make a list of all fods that correspond to a specific atom
         self.atm_fod = list()
         for na in range(self.mol.natm):
@@ -164,7 +147,7 @@ class ON(object):
                         lfodlist[s].append(i)
             self.atm_fod.append(lfodlist)
         #print self.atm_fod
-
+        
         # prepare the ao slices
         self.fod_ao_slc = list()
         for s in range(self.nspin):
@@ -174,11 +157,10 @@ class ON(object):
                 lfod_slc.append(slc)
             self.fod_ao_slc.append(lfod_slc)
         #print len(self.fod_ao_slc[0]), len(self.fod_ao_slc)
-
+        
         # prepare the ongrids
-        if self.mol.verbose > 3:
-            print(" Generating O(N) meshes: nshell={}, grid level={}"\
-                .format(self.nshell, self.grid_level))
+        print("Generating O(N) meshes: nshell={}, grid level={}"\
+            .format(self.nshell, self.grid_level))
         self.fod_onmsh = list()
         self.fod_onmol = list()
         for s in range(self.nspin):
@@ -190,13 +172,12 @@ class ON(object):
                 lfod_onmol.append(omol)
             self.fod_onmsh.append(lfod_onmsh)
             self.fod_onmol.append(lfod_onmol)
-
-        if self.mol.verbose > 3:
-            print(" Generating O(N) FOD lists ...")
-        #print self.fod_onmsh
+        
+        print("Generating O(N) FOD lists ...")
+        #print self.fod_onmsh 
         #print self.onatoms
         #sys.exit()
-
+        
         # prepare a list that contains all fods that
         # correspond to a given fod
         self.fod_fod = [[],[]]
@@ -223,32 +204,32 @@ class ON(object):
         #print self.fod_fod[0]
         #print self.fod_fod[1]
         #sys.exit()
-
+        
         # finally, build a fod-grp list
         # this list orders all fod that have the same mesh
         self.fodlist2group()
-
-
+        
+    
     def update(self,s,fpos):
         '''update the class according to the given (new) fod positions [in Angst.]'''
         pass
-
-
+        
+    
     def fodlist2group(self):
         """docstring for fodlist2group"""
-        #print('generate fodgroup list')
+        print('generate fodgroup list')
         # pre-generate the data structure
         self.fodgrps = list()
         for s in range(self.nspin):
             self.fodgrps.append(list())
-
+        
         #print(self.fodgrps)
         #print(len(self.fodgrps))
-
+        
         #for j in range(self.nfod[0]):
         #    print(self.onatoms[0][j])
         #sys.exit()
-
+        
         # self.onatoms hält zu jedem fod id die entsprechenden
         # atome, die das mesh definieren
         for s in range(self.nspin):
@@ -272,24 +253,23 @@ class ON(object):
                 #print(self.fodgrps[s])
                 #sys.exit()
         return
-
+    
     def get_grid(self,s,fodid,lmsh,level=None,verbose=False):
         """Generate a grid object that corresponds to the
             O(N) structure for the given FOD
         """
-        if self.mol.verbose > 3:
-            print(' -> building Vxc-Grid for FOD {} ...'.format(fodid), flush=True)
+        print(' -> building Vxc-Grid for FOD {} ...'.format(fodid), flush=True)
         #mol.atom_pure_symbol
         if level == None:
             level = self.grid_level
         onatoms = self.onatoms[s][fodid]
         #print(onatoms)
-
+        
         #print('onatoms:', onatoms)
         #sys.exit()
         fodtype = self.fod_atm[s][fodid][2]
         ongrid = None
-
+        
         # check if we already have meshes available
         # with the same onatoms
         #self.mf.on.fod_onmsh[self.s][fgrp[0]]
@@ -315,7 +295,7 @@ class ON(object):
             #print sym, pos
             mstr += "{0} {1:0.12f} {2:0.12f} {3:0.12f};".format(
                 sym,pos[0],pos[1],pos[2])
-
+        
         # add ghost atom for valence descriptors
         if (fodtype == 'V') and (self.add_ghosts):
             sym = 'ghost:H'
@@ -323,11 +303,10 @@ class ON(object):
             #print sym, pos
             mstr += "{0} {1:0.12f} {2:0.12f} {3:0.12f};".format(
                 sym,pos[0],pos[1],pos[2])
-
-        if self.mol.verbose > 3:
-            print('     type {}, na {}:  atoms in msh {}'.format(fodtype, self.fod_atm[s][fodid][0], onatoms))
-
-
+            
+        print('     type {}, na {}:  atoms in msh {}'.format(fodtype, self.fod_atm[s][fodid][0], onatoms))
+        
+        
         # build a Mole object from subsystem
         #isinstance(o, str):
         #if type(self.mol.basis) == dict:
@@ -335,44 +314,46 @@ class ON(object):
         #    b['ghost'] = gto.basis.load('sto3g', 'H')
         #else:
         #    b = {'default':self.mol.basis, 'ghost': gto.basis.load('sto3g', 'H')}
-
+        
         b = self.mol.basis
-
-
+        
+        #print(mstr)
+        #print("{0} {1}".format(fodid,b))
+        
+        #sys.exit()
+        
         try:
             onmol =  gto.M(atom=mstr,basis=b)
         except RuntimeError:
             onmol =  gto.M(atom=mstr, basis=b, spin=1)
         onmol.verbose=0
-        onmol.max_memory=self.mol.max_memory/2
-        if onmol.max_memory < 1000:
-            onmol.max_memory = 1000
+        onmol.max_memory=1000
         #print(onmol.atom)
         # build the meshes
         if ongrid is None:
-            ongrid = dft.gen_grid.Grids(onmol)
-            ongrid.level=self.grid_level
-            ongrid.build()
-            #print(">> Grid: ", ongrid.size)
+            _mdft = dft.UKS(onmol)
+            _mdft.max_cycle = 0
+            _mdft.grids.level = level
+            _mdft.kernel()
+            ongrid = copy.copy(_mdft.grids)
         else:
-            if self.mol.verbose > 3:
-                print('     (mesh was already generated for fod {})'.format(pmshid))
+            print('     (mesh was already generated for fod {})'.format(pmshid))
         #ongrid = dft.gen_grid.Grids(onmol)
         #ongrid.prune = dft.gen_grid.nwchem_prune
         #ongrid.level = level
         #ongrid.build()
-
-
-
+        
+        
+        
         #print(level)
         #print(ongrid.coords.shape)
         #print onmol
         #sys.exit()
-
+        
         return (onmol,ongrid)
-
-
-    # now we want to find out the basis functions that are
+        
+        
+    # now we want to find out the basis functions that are 
     # really needed for each FO
     # - we check the nearest atom
     # - we find the neigbors to that atom
@@ -393,16 +374,16 @@ class ON(object):
             nei_atm = self.get_neighbors(near_atm[0], nshell=self.nshell)
             for na in nei_atm:
                 onatoms.append(na)
-
+        
         # remove duplicates
         onatoms = list(set(onatoms))
-
+        
         if self.nshell == -1:
             onatoms = list(range(self.mol.natm))
-
+        
         # update class onatoms dict
         self.onatoms[s][fodid] = onatoms
-
+        
         all_slices=self.mol.aoslice_by_atom()
         #print all_slices
         onnbas = 0
@@ -410,107 +391,41 @@ class ON(object):
             lslice=(all_slices[na,2],all_slices[na,3])
             slices.append(lslice)
             onnbas += lslice[1]-lslice[0]
-
+        
         # print all_slices[-1][-1]
         pc = 100.0 - onnbas / (all_slices[-1,-1] / 100.0)
-
+        
         if verbose:
             print("Sparsity: {0} / {1} ({2:0.2f} %)"
                 .format(onnbas,all_slices[-1,-1], pc))
-
+        
         return slices
-
+        
         #sys.exit()
-
-    def on_coeff(self, s, flo):
-        """Returns O(N)'ed coefficients for the given flo's.
-
-        Args:
-            s (int): spin index
-
-            fod_id (int): FOD index
-
-            flo (np.array): mo_coeffs of all Fermi-Loewdin orbitals
-                shape is flo[fod_id] (w/o spin index)
-
-        Returns:
-            Normalized set of FLO's (which integrate correctly to 1e)
-
-        """
-
-        #print('on_coeff>', s)
-        #print('on_coeff> flo:', flo.shape, flo.ndim)
-
-        assert flo.ndim == 2, 'Coefficients must be ordered [fodid,nks] and have ndim of 2'
-
-        # initialze variables
-        nfod = self.nfod[s]
-        flo_on = np.zeros_like(flo)
-        flo_on[:,:] = flo[:,:]
-
-        self.norm_fact = np.zeros((self.nspin, np.max(self.nfod)),
-                                  dtype=np.float64)
-
-        # loop over all FLO's
-        for m in range(nfod):
-            # get the slicing information for the orbital
-            slcs = self.fod_ao_slc[s][m]
-            slc = list()
-            for sl in slcs:
-                slc += list(range(sl[0],sl[1]))
-
-            #print('on_coeff>', m, slc)
-            ## zero out coefficients
-            for i in range(flo_on.shape[1]):
-                if i in slc: continue
-                flo[m,i] = 0.0
-
-            # renormalization of O(N) FLO to integrate
-            # correctly to 1.0 electrons
-            lgrid = self.fod_onmsh[s][m]
-            ao_on = numint.eval_ao(self.mol, lgrid.coords)
-            phi_on = ao_on.dot(flo_on[m])
-            dens_on = np.sum(phi_on**2*lgrid.weights)
-
-            # lets save the normalization factor for later use
-            self.norm_fact[s,m] = dens_on
-
-            flo_on[m,:] = flo_on[m,:] / np.sqrt(dens_on)
-
-
-            phi_on = ao_on.dot(flo_on[m])
-            dens_on = np.sum(phi_on**2*lgrid.weights)
-
-            if self.mol.verbose >= 3:
-                print('   FLO {:>3d} charge error: {:> .4e} -> corrected: {:> .4e}'\
-                  .format(m, 1.0 - self.norm_fact[s,m], 1.0 - dens_on))
-
-
-        return flo_on
-
-    def get_on_dm_old(self,s,fodid,dm,flo=None):
+    
+    def get_on_dm(self,s,fodid,dm,flo=None):
         """Mask out all basis functions that are not required
         return FLO's and dm were unused ebtries are set to zero
-
+        
         if condense is set to True, return dm and FLO's with only
         the size needed for the O(N) method (e.g. reduced)
-
+        
         """
         if dm.shape[-1] != self.mol.aoslice_by_atom()[-1,-1]:
             print("DM has wrong shape")
             print(self.mol.aoslice_by_atom()[-1,-1])
             sys.exit()
-
+        
         # find out which indices in the density matrix
         # belong to a given fod
         slcs = self.fod_ao_slc[s][fodid]
         slc = list()
         for sl in slcs:
             slc += list(range(sl[0],sl[1]))
-
+        
         dmout = dm.copy()
         #floout = flo.copy()
-
+        
         # zero out the dm
         for i in range(dm.shape[-1]):
             if i in slc: continue
@@ -518,27 +433,30 @@ class ON(object):
                 if j in slc: continue
                 #print "set dm zero", i, j
                 dmout[i,j] = 0.0
-
-        assert any(np.isnan(dmout)) != True, 'NaN detected in dm-matrix'
+        
+        nchk = np.sum(dmout)
+        if np.isnan(nchk):
+            print('Got it')
+            sys.exit()
 
         return dmout
-
+        
     def get_neighbors(self, atmid, nshell=1):
         """
         Return the indices of the neighbor atoms to a given atom id.
-
+        
         Args:
             atmid : int
                 id of the atom for which the neigbors shall be returned
-
+        
         Kwargs:
             nshell : int
-                number of shells around the given atom that should be
+                number of shells around the given atom that should be 
                 considered as neigbors
                 1 -> means include only 'nearest neigbors'
                 2 -> include nearest and next-nearest neigbors
                 3 -> (and larger not yet implemented!)
-
+        
         Returns:
             List of integers which are the indices of the neigbor atoms
             to atmid.
@@ -548,7 +466,7 @@ class ON(object):
         if nshell == -1:
             ret = list(range(self.mol.natm))
             return ret
-
+        
         if nshell == 1:
             ret = list(self.nl.get_neighbors(atmid)[0])
         else:
@@ -557,12 +475,12 @@ class ON(object):
             for aid in base:
                 nn += list(self.nl.get_neighbors(aid)[0])
             base.extend(nn)
-
+            
             # remove duplicates
             ret = list(dict.fromkeys(base))
-
+        
         return ret
-
+    
     def print_stats(self):
         '''Print out statistics'''
         print('    --- O(N) stats ---')
@@ -580,9 +498,6 @@ class ON(object):
                 print('{:4d} {:4d} : {:7d} {:7d}    {}'.format(s,j,nonmsh,nbas, onat))
         print('    ----------------')
         _nbas = float(_nbas)/(np.sum(self.nfod))
-        ##
-        #print(np.sum(self.nfod))
-        #sys.exit()
         _tnbas = self.mol.aoslice_by_atom()[-1,-1]
         _nmshs = float(_nmshs)/(np.sum(self.nfod))
         #print(_tnbas)
@@ -596,13 +511,13 @@ class ON(object):
 
 def C1s_FixPos(on, s):
     '''Returns an ASE constraint that fixes the 1s core descriptor positions
-
+    
     Args:
         on : ON object
             the object that corresponds to the mol/fod structure
-
+        
         s : spin index
-
+    
     Returns:
         ase.constraint object if there are C1s to fix, None otherwise
     '''
@@ -613,11 +528,11 @@ def C1s_FixPos(on, s):
         _ft = on.fod_atm[s][fodid][2]
         if (_ft == 'C1s'):
             c1sidx.append(fodid)
-
+    
     c1score = None
     if len(c1sidx) > 0:
         c1score = FixAtoms(indices=c1sidx)
-
+        
     return c1score
 
 
@@ -645,7 +560,7 @@ if __name__ == '__main__':
     Atom('X', (+0.05389371, -0.57381853, +0.19630494)),
     Atom('X', (+0.09262866, -0.55485889, -0.15751914)),
     Atom('X', (-0.05807583, -0.90413106, -0.00104673))])
-
+    
     # this are the spin-down descriptors
     fod2 = Atoms([
     Atom('He',( -0.04795000, -0.66486000, +0.0000000)),
@@ -661,13 +576,13 @@ if __name__ == '__main__':
     Atom('He',( +0.07365725, -0.59150454, -0.1951675)),
     Atom('He',( -0.28422422, -0.61466396, -0.0087913)),
     Atom('He',( -0.02352948, -1.0425011 ,+0.01253239))])
-
-
+    
+    
     b = 'ccpvdz'
     spin = 0
     charge = 0
-
-    mol = gto.M(atom=CH3SH,
+    
+    mol = gto.M(atom=CH3SH, 
                 basis=b,
                 spin=spin,
                 charge=charge)
@@ -677,30 +592,31 @@ if __name__ == '__main__':
     mol.max_memory = 2000
     mol.build()
     xc = 'LDA,PW'
-
-
+    
+    
     # quick dft calculation
     mdft = dft.UKS(mol)
     mdft.xc = xc
     mdft.kernel()
-
+    
     # build O(N) stuff
     myon = ON(mol,[fod1.positions,fod2.positions], grid_level=grid_level)
     myon.nshell = 2
     myon.build()
-
+    
     # enable ONMSH
     m = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level, init_dm=mdft.make_rdm1())
     m.max_cycle = 40
     m.set_on(myon)
     m.conv_tol = 1e-5
-
+    
     m.preopt = False
     m.preopt_start_cycle=0
     m.preopt_fix1s = True
     m.preopt_fmin = 0.005
-
+    
     m.kernel()
-
+    
     print(m.fod_gradients())
     print(m.get_fforces())
+    
