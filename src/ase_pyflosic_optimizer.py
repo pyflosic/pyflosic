@@ -71,13 +71,13 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,l
     if mode == 'dft':
         [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
         atoms = nuclei 
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='dft',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='dft',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,use_chk=use_chk)
     # FLO-SIC one-shot (os) mode 
     if mode == 'flosic-os':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-os',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-os',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,use_chk=use_chk)
     # FLO-SIC scf mode 
     if mode == 'flosic-scf':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-scf',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-scf',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,use_chk=use_chk)
 	
     # Assign the ase-calculator to the ase-atoms object. 
     atoms.set_calculator(calc)
