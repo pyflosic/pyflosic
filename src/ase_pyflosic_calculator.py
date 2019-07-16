@@ -222,7 +222,7 @@ class PYFLOSIC(FileIOCalculator):
 
     def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces'], system_changes = all_changes):
         self.num_iter += 1 
-        if atoms == None:
+        if atoms is None:
             atoms = self.get_atoms()
         else:
             self.set_atoms(atoms)
@@ -249,7 +249,7 @@ class PYFLOSIC(FileIOCalculator):
                 mf = mf.as_scanner()
                 mf = mf.newton()
             self.mf = mf
-            if self.dm == None:
+            if self.dm is None:
                 e = self.mf.kernel()
             else:
                 e = self.mf.kernel(self.dm)
@@ -321,7 +321,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
             self.mf = mf
-            if self.dm == None :
+            if self.dm is None :
                 e = self.mf.kernel()
             else:
                 e = self.mf.kernel(self.dm)
@@ -353,7 +353,7 @@ class PYFLOSIC(FileIOCalculator):
             from pyscf import gto
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             # Effective core potentials need so special treatment. 
-            if self.ecp == None:
+            if self.ecp is None:
                 if self.ghost == False: 
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)	
                 if self.ghost == True: 
@@ -386,7 +386,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             self.mf = mf
-            if self.dm == None:
+            if self.dm is None:
                 e = self.mf.kernel()
             else:
                 e = self.mf.kernel(self.dm)
