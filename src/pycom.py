@@ -92,7 +92,7 @@ def calc_localized_orbitals(mf,mol,method='ER',jmol=False):
         orbital(mol, str(method)+'_orb_'+str(i)+'spin2.cube', orb2[:,i], nx=80, ny=80, nz=80)
 	
 def get_com(f_cube,vec):
-	# Calculation of COM 
+        # Calculation of COM 
 	# COM	...	center of mass (COM), center of gravity (COG), centroid
 
 	# Determine the origin of the cube file 
@@ -108,10 +108,11 @@ def get_com(f_cube,vec):
     orb = cube.read(f_cube)
     # cuba data in [Bohr**3]
     data = cube.read_cube_data(f_cube)
-	# cell of cube in [Ang] 
+    # cell of cube in [Ang] 
     cell= orb.get_cell()
     shape = np.array(data[0]).shape
-    spacing_vec = cell/shape[0]/Bohr
+    #spacing_vec = cell/shape[0]/Bohr
+    spacing_vec = cell/Bohr
     values = data[0]
     idx = 0
     unit = 1/Bohr #**3
@@ -120,10 +121,10 @@ def get_com(f_cube,vec):
     Z = []
     V = []
     for i in range(0,shape[0]):
-        for j in range(0,shape[0]):
-            for k in range(0,shape[0]):
+        for j in range(0,shape[1]):
+            for k in range(0,shape[2]):
                 idx+=1
-                x,y,z = i*float(spacing_vec[0,0]),j*float(spacing_vec[1,1]),k*float(spacing_vec[2,2])
+                x,y,z = i*float(spacing_vec[0,0])/shape[0],j*float(spacing_vec[1,1])/shape[1],k*float(spacing_vec[2,2]/shape[2])
                 # approximate fermi hole h = 2*abs(phi_i)**2 
                 # Electron Pairing and Chemical Bonds:
                 # see Bonding in Hypervalent Molecules from Analysis of Fermi Holes Eq(11) 
@@ -186,11 +187,13 @@ def get_guess(atoms,spin1_cube,spin2_cube,method='ER'):
         f.write('%s %0.6f %0.6f %0.6f \n' % (sym[s],pos[s][0],pos[s][1],pos[s][2]))
     # FODs of alpha spin channel 
     for orb in f1:
+        print(orb)
         [x,y,z] = get_com(orb,vec)
         f.write('X %0.6f %0.6f %0.6f \n' % (x+shift,y+shift,z+shift))
     
     # FODs of beta spin channel
     for orb in f2:
+        print(orb)
         [x,y,z] = get_com(orb,vec)
         f.write('He %0.6f %0.6f %0.6f \n' % (x+shift,y+shift,z+shift))
     f.close()
