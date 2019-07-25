@@ -50,7 +50,7 @@ def apply_field(mol,mf,E):
 class PYWF(FileIOCalculator):
     
     implemented_properties = ['energy', 'forces','dipole','evalues','homo']
-    PYWF = os.environ.get('ASE_PYWF_COMMAND')
+    PYWF_CMD = os.environ.get('ASE_PYWF_COMMAND')
     command =  PYWF_CMD
 
     # Note: If you need to add keywords, please also add them in valid_args 
