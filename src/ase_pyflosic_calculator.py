@@ -220,7 +220,7 @@ class PYFLOSIC(FileIOCalculator):
         self.homo = self.results['homo'].copy()
         return self.homo
 
-    def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces'], system_changes = all_changes):
+    def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces','homo'], system_changes = all_changes):
         self.num_iter += 1 
         if atoms is None:
             atoms = self.get_atoms()
