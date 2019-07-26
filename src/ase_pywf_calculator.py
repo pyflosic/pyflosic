@@ -229,7 +229,6 @@ class PYWF(FileIOCalculator):
 
             gf = uhf.Gradients(self.mf)
             gf.verbose = self.verbose
-            gf.grid_response = True
             forces = gf.kernel()*(Ha/Bohr)
             forces = -1.*forces
             self.results['forces'] = forces
