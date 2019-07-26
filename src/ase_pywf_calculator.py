@@ -255,7 +255,6 @@ class PYWF(FileIOCalculator):
 
             gf = uccsd.Gradients(self.mcc)
             gf.verbose = self.verbose
-            gf.grid_response = True
             forces = gf.kernel()*(Ha/Bohr)
             forces = -1.*forces
             self.results['forces'] = forces
