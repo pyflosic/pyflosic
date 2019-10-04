@@ -254,7 +254,7 @@ class PYFLOSIC(FileIOCalculator):
             else:
                 e = self.mf.kernel(self.dm)
             self.results['energy'] = e*Ha
-            self.results['dipole'] = self.mf.dip_moment(verbose=0) 
+            self.results['dipole'] = self.mf.dip_moment(verbose=0)*Debye # conversion to e*A to match the ase calculator object
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
@@ -331,7 +331,7 @@ class PYFLOSIC(FileIOCalculator):
             print('Analytical FOD force [Ha/Bohr]')
             print(-1*mf['fforces'])
             print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((mf['fforces']**2).sum(axis=1).max()))
-            self.results['dipole'] = mf['dipole']
+            self.results['dipole'] = mf['dipole']*Debye
             self.results['evalues'] = mf['evalues']*Ha
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
@@ -457,7 +457,7 @@ class PYFLOSIC(FileIOCalculator):
                     print(fforces) 
                     print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((fforces**2).sum(axis=1).max()))
 
-            self.results['dipole'] =  self.mf.dip_moment()
+            self.results['dipole'] =  self.mf.dip_moment()*Debye
             self.results['evalues'] = np.array(self.mf.evalues)*Ha
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:

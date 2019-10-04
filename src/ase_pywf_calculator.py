@@ -209,7 +209,7 @@ class PYWF(FileIOCalculator):
             else:
                 e = self.mf.kernel(self.dm)
             self.results['energy'] = e*Ha
-            self.results['dipole'] = self.mf.dip_moment(verbose=0) 
+            self.results['dipole'] = self.mf.dip_moment(verbose=0)*Debye 
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
