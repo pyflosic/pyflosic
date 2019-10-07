@@ -36,7 +36,9 @@ Note: The variable path_to_pyscf describes the absolute path pointing towards th
 
 With newer versions of PySCF, e.g. pyscf.1.6.4, it might be necessary to add the following library paths in your job script:
 
+```bash
 export LD_PRELOAD=$MKLROOT/lib/intel64/libmkl_avx2.so:$MKLROOT/lib/intel64/libmkl_sequential.so:$MKLROOT/lib/intel64/libmkl_core.so
+```
 
 The value of $MKLROOT depends on your specific system.
 
