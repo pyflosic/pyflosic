@@ -34,6 +34,12 @@ export PYTHONPATH=[path_to_pyscf]/pyscf/:$PYTHONPATH
 ```
 Note: The variable path_to_pyscf describes the absolute path pointing towards the pyscf folder (not including the pyscf folder itself). 
 
+With newer versions of PySCF, e.g. pyscf.1.6.4, it might be necessary to add the following library paths in your job script:
+
+export LD_PRELOAD=$MKLROOT/lib/intel64/libmkl_avx2.so:$MKLROOT/lib/intel64/libmkl_sequential.so:$MKLROOT/lib/intel64/libmkl_core.so
+
+The value of $MKLROOT depends on your specific system.
+
 # Python packages (required)  
 
 ```bash 
