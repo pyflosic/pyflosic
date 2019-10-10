@@ -60,7 +60,7 @@ class PYWF(FileIOCalculator):
         spin = None,            # spin of the system, equal to 2S 
         basis = None,           # basis set
         ecp = None,             # only needed if ecp basis set is used 
-        mode = 'hf',     # calculation method 
+        mode = 'hf',            # calculation method 
         efield=None,            # perturbative electric field
         max_cycle = 300,        # maximum number of SCF cycles 
         conv_tol = 1e-5,        # energy convergence threshold 
@@ -72,7 +72,8 @@ class PYWF(FileIOCalculator):
         debug=False,            # extra ouput for debugging purpose 
         num_iter=0,             # SCF iteration number 
         dm = None,              # density matrix
-        mcc = None              # PySCF post-HF calculation object
+        mcc = None,             # PySCF post-HF calculation object
+        calc_ip = True          # calculate ionization potentials
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -211,22 +212,24 @@ class PYWF(FileIOCalculator):
             self.results['energy'] = e*Ha
             self.results['dipole'] = self.mf.dip_moment(verbose=0)*Debye 
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
-            n_up, n_dn = self.mf.mol.nelec
-            if n_up != 0 and n_dn != 0:
-                e_up = np.sort(self.results['evalues'][0])
-                e_dn = np.sort(self.results['evalues'][1])
-                homo_up = e_up[n_up-1]
-                homo_dn = e_dn[n_dn-1]
-                self.results['homo'] = max(homo_up,homo_dn)
-            elif n_up != 0:
-                e_up = np.sort(self.results['evalues'][0])
-                self.results['homo'] = e_up[n_up-1]
-            elif n_dn != 0:
-                e_dn = np.sort(self.results['evalues'][1])
-                self.results['homo'] = e_dn[n_dn-1]
+            if calc_ip == True:
+                n_up, n_dn = self.mf.mol.nelec
+                if n_up != 0 and n_dn != 0:
+                    e_up = np.sort(self.results['evalues'][0])
+                    e_dn = np.sort(self.results['evalues'][1])
+                    homo_up = e_up[n_up-1]
+                    homo_dn = e_dn[n_dn-1]
+                    self.results['homo'] = max(homo_up,homo_dn)
+                elif n_up != 0:
+                    e_up = np.sort(self.results['evalues'][0])
+                    self.results['homo'] = e_up[n_up-1]
+                elif n_dn != 0:
+                    e_dn = np.sort(self.results['evalues'][1])
+                    self.results['homo'] = e_dn[n_dn-1]
+                else:
+                    self.results['homo'] = None
             else:
                 self.results['homo'] = None
-
             gf = uhf.Gradients(self.mf)
             gf.verbose = self.verbose
             forces = gf.kernel()*(Ha/Bohr)
@@ -239,8 +242,7 @@ class PYWF(FileIOCalculator):
             from pyscf.grad import uccsd
 
             mcc = cc.UCCSD(self.mf)
-            mcc.incore_complete = True
-            mcc.async_io = False
+            mcc.direct = True
             mcc.conv_tol = self.conv_tol
             mcc.max_cycle = self.max_cycle
             mcc.verbose = self.verbose
@@ -248,11 +250,12 @@ class PYWF(FileIOCalculator):
             self.mcc.kernel()
 
             self.results['energy'] += (self.mcc.e_corr + self.mcc.ccsd_t() )*Ha
-
-            e_ip, c_ip = self.mcc.ipccsd()
-
-            self.results['homo'] = -1.*e_ip*Ha
-
+            
+            if calc_ip == True:
+                e_ip, c_ip = self.mcc.ipccsd()
+                self.results['homo'] = -1.*e_ip*Ha
+            else:
+                self.results['homo'] = None
             gf = uccsd.Gradients(self.mcc)
             gf.verbose = self.verbose
             forces = gf.kernel()*(Ha/Bohr)
