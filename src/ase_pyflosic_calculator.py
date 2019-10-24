@@ -52,16 +52,18 @@ def force_max_lij(lambda_ij):
     lijrms = lijrms/2.
     return  lijrms
 
-def apply_field(mol,mf,E):
+def apply_electric_field(mol,mf,efield):
+    # based on example 40-apply_electric_field.py in pyscf/examples/scf
     # 
-    # add efield to hamiltonian 
+    # add electric field to Hamiltonian 
     # 
     # The gauge origin for dipole integral
     mol.set_common_orig([0., 0., 0.])
     # recalculate h1e with extra efield 
-    h =(mol.intor('cint1e_kin_sph') + mol.intor('cint1e_nuc_sph') + np.einsum('x,xij->ij', E, mol.intor('cint1e_r_sph', comp=3)))
+    h =(mol.intor('cint1e_kin_sph') + mol.intor('cint1e_nuc_sph') + np.einsum('x,xij->ij', efield, mol.intor('cint1e_r_sph', comp=3)))
     # update h1e with efield 
     mf.get_hcore = lambda *args: h
+    return mf
 
 class PYFLOSIC(FileIOCalculator):
     """ PYFLOSIC calculator for atoms and molecules.
@@ -248,6 +250,8 @@ class PYFLOSIC(FileIOCalculator):
             if self.use_newton == True and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
+            if self.efield != None:
+                mf = apply_electric_field(mol,mf,efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
@@ -320,6 +324,8 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
+            if self.efield != None:
+                mf = apply_electric_field(mol,mf,efield)
             self.mf = mf
             if self.dm is None :
                 e = self.mf.kernel()
@@ -361,17 +367,6 @@ class PYFLOSIC(FileIOCalculator):
                     mol.basis ={'default':self.basis,'GHOST1':gto.basis.load('sto3g', 'H'),'GHOST2':gto.basis.load('sto3g', 'H')}
             if self.ecp != None:
                 mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp)
-            if self.efield != None:
-                m0 = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
-                # test efield to enforce some pseudo chemical environment 
-                # and break symmetry of density 
-                m0.grids.level = self.grid
-                m0.conv_tol = self.conv_tol
-                # small efield 
-                m0.max_cycle = 1
-                h= -0.0001 #-0.1
-                apply_field(mol,m0,E=(0,0,0+h))
-                m0.kernel()
             mf = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,calc_forces=self.calc_forces,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
             mf.verbose = self.verbose 
             if self.use_chk == True and self.use_newton == False:
@@ -385,6 +380,8 @@ class PYFLOSIC(FileIOCalculator):
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
+            if self.efield != None:
+                mf = apply_electric_field(mol,mf,efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
