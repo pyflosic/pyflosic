@@ -251,7 +251,7 @@ class PYFLOSIC(FileIOCalculator):
                 mf = mf.as_scanner()
                 mf = mf.newton()
             if self.efield != None:
-                mf = apply_electric_field(mol,mf,efield)
+                mf = apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
@@ -325,7 +325,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
             if self.efield != None:
-                mf = apply_electric_field(mol,mf,efield)
+                mf = apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None :
                 e = self.mf.kernel()
@@ -381,7 +381,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             if self.efield != None:
-                mf = apply_electric_field(mol,mf,efield)
+                mf = apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
