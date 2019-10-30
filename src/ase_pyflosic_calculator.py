@@ -283,15 +283,8 @@ class PYFLOSIC(FileIOCalculator):
                 gf.grid_response = True
                 forces = gf.kernel()*(Ha/Bohr)
                 forces = -1*forces
-                forces = forces.tolist()
                 totalforces = []
                 totalforces.extend(forces)
-                fod1forces = np.zeros_like(fod1.get_positions())
-                fod2forces = np.zeros_like(fod2.get_positions())
-                fod1forces = fod1forces.tolist()
-                fod2forces = fod2forces.tolist()
-                totalforces.extend(fod1forces)
-                totalforces.extend(fod2forces)
                 totalforces = np.array(totalforces)
                 self.results['forces'] = totalforces
             else:
@@ -477,8 +470,6 @@ class PYFLOSIC(FileIOCalculator):
             totalforces = []
             forces = np.zeros_like(nuclei.get_positions()) 
             fodforces = self.results['fodforces'].copy()
-            forces = forces.tolist()
-            fodforces = fodforces.tolist()
             totalforces.extend(forces)
             totalforces.extend(fodforces)
             totalforces = np.array(totalforces)
