@@ -1988,7 +1988,6 @@ def initial_guess(m, grid_level):
     return (fodup, foddn)
 
 
-from ase.test import NotAvailable
 from ase.calculators.calculator import Calculator, all_changes
 import os, time
 
