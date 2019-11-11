@@ -24,7 +24,7 @@ from pyscf.dft import numint
 from pyscf import dft
 from pyscf import lo
 from ase import neighborlist as NL
-from ase.utils import natural_cutoffs
+from ase.neighborlist import natural_cutoffs
 from pyscf.lib import logger
 from pyscf import lib
 import multiprocessing as mp
