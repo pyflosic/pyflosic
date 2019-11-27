@@ -23,7 +23,7 @@ except:
 import os
 
 def get_dfo_basis(ase_sym,basis='nrlmol_dfo.gbs'):
-    # ase_sym	...	string of atoms/chemical symbols (e.g. 'LiH', 'H2') 
+    # ase_sym	...	string of symbols for the elements found in the substance (e.g., 'LiH' for LiH, 'CH' for alkanes) 
     # output	...	dict/basis format of pyscf 
     # 
     # convert string to list object 
