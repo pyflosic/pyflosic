@@ -104,7 +104,8 @@ class PYFLOSIC(FileIOCalculator):
         num_iter=0,             # SCF iteration number 
         vsic_every=1,           # calculate vsic after this number on num_iter cycles 
         ham_sic ='HOO',         # unified SIC Hamiltonian - HOO or HOOOV 
-        dm = None               # density matrix
+        dm = None,              # density matrix
+        cart = False            # use Cartesian GTO basis and integrals (6d,10f,15g)
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -233,7 +234,7 @@ class PYFLOSIC(FileIOCalculator):
             from pyscf import gto, scf
             from pyscf.grad import uks
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
-            mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
+            mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)
             mf = scf.UKS(mol)
             mf.xc = self.xc 
             # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
@@ -295,13 +296,13 @@ class PYFLOSIC(FileIOCalculator):
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             if self.ecp == None:
                 if self.ghost == False:
-                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
+                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)
                 
                 if self.ghost == True:
-                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
+                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)
                     mol.basis ={'default':self.basis,'GHOST1':gto.basis.load('sto3g', 'H'),'GHOST2':gto.basis.load('sto3g', 'H')}
             if self.ecp != None:
-                mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp)
+                mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp,cart=self.cart)
             mf = scf.UKS(mol)
             mf.xc = self.xc 
             mf.verbose = self.verbose
@@ -327,7 +328,7 @@ class PYFLOSIC(FileIOCalculator):
             mf = flosic(mol,self.mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,l_ij = self.l_ij, ods = self.ods, fixed_vsic = self.fixed_vsic, calc_forces=True,ham_sic = self.ham_sic)
             self.results['energy']= mf['etot_sic']*Ha
             self.results['fodforces'] = -1*mf['fforces']*(Ha/Bohr) 
-            print('Analytical FOD force [Ha/Bohr]')
+            print('Analytic FOD force [Ha/Bohr]')
             print(-1*mf['fforces'])
             print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((mf['fforces']**2).sum(axis=1).max()))
             self.results['dipole'] = mf['dipole']*Debye
@@ -354,12 +355,12 @@ class PYFLOSIC(FileIOCalculator):
             # Effective core potentials need so special treatment. 
             if self.ecp is None:
                 if self.ghost == False: 
-                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)	
+                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)	
                 if self.ghost == True: 
-                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge)
+                    mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)
                     mol.basis ={'default':self.basis,'GHOST1':gto.basis.load('sto3g', 'H'),'GHOST2':gto.basis.load('sto3g', 'H')}
             if self.ecp != None:
-                mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp)
+                mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp,cart=self.cart)
             mf = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,calc_forces=self.calc_forces,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
             mf.verbose = self.verbose 
             if self.use_chk == True and self.use_newton == False:
