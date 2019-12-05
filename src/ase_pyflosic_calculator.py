@@ -60,7 +60,7 @@ def apply_electric_field(mol,mf,efield):
     # The gauge origin for dipole integral
     mol.set_common_orig([0., 0., 0.])
     # recalculate h1e with extra efield 
-    if mol.cart = False:
+    if mol.cart == False:
 
         h =(mol.intor('cint1e_kin_sph') + mol.intor('cint1e_nuc_sph') + np.einsum('x,xij->ij', efield, mol.intor('cint1e_r_sph', comp=3)))
     
