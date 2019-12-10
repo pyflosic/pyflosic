@@ -60,14 +60,23 @@ def apply_electric_field(mol,mf,efield):
     # The gauge origin for dipole integral
     mol.set_common_orig([0., 0., 0.])
     # recalculate h1e with extra efield 
+    h_old = mf.get_hcore()
     if mol.cart == False:
-
+        
         h =(mol.intor('cint1e_kin_sph') + mol.intor('cint1e_nuc_sph') + np.einsum('x,xij->ij', efield, mol.intor('cint1e_r_sph', comp=3)))
+
+        h_nf = (mol.intor('cint1e_kin_sph') + mol.intor('cint1e_nuc_sph')) 
     
     else:
 
         h =(mol.intor('cint1e_kin_cart') + mol.intor('cint1e_nuc_cart') + np.einsum('x,xij->ij', efield, mol.intor('cint1e_r_cart', comp=3)))
+        
+        h_nf = (mol.intor('cint1e_kin_cart') + mol.intor('cint1e_nuc_cart')) 
+    
     # update h1e with efield 
+    
+    if h_old == h_nf:
+        print('h_old == h_new - h_efield\n')
     mf.get_hcore = lambda *args: h
     return mf
 
@@ -241,6 +250,7 @@ class PYFLOSIC(FileIOCalculator):
             from pyscf.grad import uks
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)
+            
             mf = scf.UKS(mol)
             mf.xc = self.xc 
             # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
