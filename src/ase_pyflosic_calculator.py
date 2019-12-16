@@ -75,8 +75,7 @@ def apply_electric_field(mol,mf,efield):
     
     # update h1e with efield 
     
-    print('h_old: ',h_old,'\n')
-    print('h_nf: ',h_nf,'\n')
+    print('h_old-h_nf: ',h_old-h_nf,'\n')
     mf.get_hcore = lambda *args: h
     return mf
 
