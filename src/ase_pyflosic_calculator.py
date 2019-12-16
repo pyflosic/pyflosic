@@ -15,7 +15,7 @@
 #
 # pyflosic-ase-calculator 
 #
-# author:	S. Schwalbe 
+# author:	S. Schwalbe, J. Kraus
 # task:  	ase calculator for pyflosic 
 
 import os, sys
@@ -75,8 +75,8 @@ def apply_electric_field(mol,mf,efield):
     
     # update h1e with efield 
     
-    if not (h_old-h_nf).any():
-        print('h_old == h_new - h_efield\n')
+    print('h_old: ',h_old,'\n')
+    print('h_nf: ',h_nf,'\n')
     mf.get_hcore = lambda *args: h
     return mf
 
