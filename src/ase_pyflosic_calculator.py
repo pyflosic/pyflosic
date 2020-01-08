@@ -159,7 +159,7 @@ class PYFLOSIC(FileIOCalculator):
      
         charges = mol.atom_charges()
         coords  = mol.atom_coords()
-        charge_center = numpy.einsum('i,ix->x', charges, coords) / charges.sum()
+        charge_center = np.einsum('i,ix->x', charges, coords) / charges.sum()
     
         with mol.with_common_orig(charge_center):
         
@@ -172,7 +172,7 @@ class PYFLOSIC(FileIOCalculator):
                 ao_dip = mol.intor_symmetric('cint1e_r_cart',comp=3)
             
         h1 = mf.get_hcore()
-        mf.get_hcore = lambda *args, **kwargs: h1 + numpy.einsum('x,xij->ij',efield, ao_dip)
+        mf.get_hcore = lambda *args, **kwargs: h1 + np.einsum('x,xij->ij',efield, ao_dip)
         return mf
     
     def get_energy(self,atoms=None):
