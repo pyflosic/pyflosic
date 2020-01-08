@@ -27,6 +27,7 @@ from ase.units import Ha, Bohr, Debye
 from ase.data import atomic_numbers
 from pyscf import scf, gto
 from pyscf.grad import uks
+from pyscf.prop.polarizability.uhf import Polarizability, polarizability
 import copy
 from flosic_os import xyz_to_nuclei_fod, ase2pyscf, flosic 
 from flosic_scf import FLOSIC
