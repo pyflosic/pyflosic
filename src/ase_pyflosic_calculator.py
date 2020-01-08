@@ -53,30 +53,26 @@ def force_max_lij(lambda_ij):
     return  lijrms
 
 def apply_electric_field(mol,mf,efield):
-    # based on example 40-apply_electric_field.py in pyscf/examples/scf
-    # 
-    # add electric field to Hamiltonian 
-    # 
-    # The gauge origin for dipole integral
-    mol.set_common_orig([0., 0., 0.])
-    # recalculate h1e with extra efield 
-    h_old = mf.get_hcore()
-    if mol.cart == False:
+    # based on pyscf/pyscf/prop/polarizability/uks.py
+     
+     
+    charges = mol.atom_charges()
+    coords  = mol.atom_coords()
+    charge_center = numpy.einsum('i,ix->x', charges, coords) / charges.sum()
+    
+    with mol.with_common_orig(charge_center):
         
-        h =(mol.intor('cint1e_kin_sph') + mol.intor('cint1e_nuc_sph') + np.einsum('x,xij->ij', efield, mol.intor('cint1e_r_sph', comp=3)))
-
-        h_nf = (mol.intor('cint1e_kin_sph') + mol.intor('cint1e_nuc_sph')) 
-    
-    else:
-
-        h =(mol.intor('cint1e_kin_cart') + mol.intor('cint1e_nuc_cart') + np.einsum('x,xij->ij', efield, mol.intor('cint1e_r_cart', comp=3)))
+        if mol.cart == False:
         
-        h_nf = (mol.intor('cint1e_kin_cart') + mol.intor('cint1e_nuc_cart')) 
+            ao_dip = mol.intor_symmetric('cint1e_r_sph', comp=3)
+        
+        else:
+            
+            ao_dip = mol.intor_symmetric('cint1e_r_cart',comp=3)
+            
+    h1 = mf.get_hcore()
+    mf.get_hcore = lambda *args, **kwargs: h1 + numpy.einsum('x,xij->ij',efield, ao_dip)
     
-    # update h1e with efield 
-    
-    print('h_old-h_nf: ',np.round(h_old-h_nf,12),'\n')
-    mf.get_hcore = lambda *args: h
     return mf
 
 class PYFLOSIC(FileIOCalculator):
@@ -225,6 +221,12 @@ class PYFLOSIC(FileIOCalculator):
         self.dipole_moment = self.results['dipole'].copy()
         return self.dipole_moment
 
+    def get_polarizability(self,atoms=None):  # only implemented for DFT 
+        if self.calculation_required(atoms,['polarizability']):
+            self.calculate(atoms)
+        self.polarizability = self.results['polarizability'].copy()
+        return self.polarizability
+
     def get_evalues(self,atoms=None):
         if self.calculation_required(atoms,['evalues']):
             self.calculate(atoms)
@@ -274,7 +276,9 @@ class PYFLOSIC(FileIOCalculator):
             else:
                 e = self.mf.kernel(self.dm)
             self.results['energy'] = e*Ha
-            self.results['dipole'] = self.mf.dip_moment(verbose=0)*Debye # conversion to e*A to match the ase calculator object
+            self.results['dipole'] = self.mf.dip_moment(verbose=self.verbose)*Debye # conversion to e*A to match the ase calculator object
+            from pyscf.prop.polarizability.uks import Polarizability
+            self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) # conversion to A**3
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
