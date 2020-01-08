@@ -20,20 +20,16 @@
 
 import os, sys
 import numpy as np
-from ase.calculators.calculator import FileIOCalculator, Parameters, kpts2mp, \
-    ReadError
+from ase.calculators.calculator import FileIOCalculator, Parameters, kpts2mp, ReadError, Calculator, all_changes, compare_atoms
 from ase.atom import Atom
 from ase import Atoms 
 from ase.units import Ha, Bohr, Debye 
-try:
-    from ase.atoms import atomic_numbers 
-except:
-    # moved in 3.17 to
-    from ase.data import atomic_numbers
+from ase.data import atomic_numbers
+from pyscf import scf, gto
+from pyscf.grad import uks
 import copy
-from flosic_os import xyz_to_nuclei_fod,ase2pyscf,flosic 
+from flosic_os import xyz_to_nuclei_fod, ase2pyscf, flosic 
 from flosic_scf import FLOSIC
-from ase.calculators.calculator import Calculator, all_changes, compare_atoms
 
 def force_max_lij(lambda_ij):
     # 
@@ -52,36 +48,15 @@ def force_max_lij(lambda_ij):
     lijrms = lijrms/2.
     return  lijrms
 
-def apply_electric_field(mol,mf,efield):
-    # based on pyscf/pyscf/prop/polarizability/uks.py
-     
-     
-    charges = mol.atom_charges()
-    coords  = mol.atom_coords()
-    charge_center = numpy.einsum('i,ix->x', charges, coords) / charges.sum()
-    
-    with mol.with_common_orig(charge_center):
-        
-        if mol.cart == False:
-        
-            ao_dip = mol.intor_symmetric('cint1e_r_sph', comp=3)
-        
-        else:
-            
-            ao_dip = mol.intor_symmetric('cint1e_r_cart',comp=3)
-            
-    h1 = mf.get_hcore()
-    mf.get_hcore = lambda *args, **kwargs: h1 + numpy.einsum('x,xij->ij',efield, ao_dip)
-    
-    return mf
+
 
 class PYFLOSIC(FileIOCalculator):
     """ PYFLOSIC calculator for atoms and molecules.
-        by Sebastian Schwalbe
+        by Sebastian Schwalbe and Jakob Kraus
         Notes: ase.calculators -> units [eV,Angstroem,eV/Angstroem]
     	   pyflosic	   -> units [Ha,Bohr,Ha/Bohr] 		                
     """
-    implemented_properties = ['energy', 'forces','fodforces','dipole','evalues','homo']
+    implemented_properties = ['energy', 'forces','fodforces','dipole','evalues','homo','polarizability']
     PYFLOSIC_CMD = os.environ.get('ASE_PYFLOSIC_COMMAND')
     command =  PYFLOSIC_CMD
 
@@ -176,6 +151,29 @@ class PYFLOSIC(FileIOCalculator):
         FileIOCalculator.write_input(self, atoms, properties, system_changes)
         self.initialize(atoms)
         
+    
+    def apply_electric_field(self,mol,mf,efield):
+        # based on pyscf/pyscf/prop/polarizability/uks.py
+     
+     
+        charges = mol.atom_charges()
+        coords  = mol.atom_coords()
+        charge_center = numpy.einsum('i,ix->x', charges, coords) / charges.sum()
+    
+        with mol.with_common_orig(charge_center):
+        
+            if mol.cart == False:
+        
+                ao_dip = mol.intor_symmetric('cint1e_r_sph', comp=3)
+        
+            else:
+            
+                ao_dip = mol.intor_symmetric('cint1e_r_cart',comp=3)
+            
+        h1 = mf.get_hcore()
+        mf.get_hcore = lambda *args, **kwargs: h1 + numpy.einsum('x,xij->ij',efield, ao_dip)
+        return mf
+    
     def get_energy(self,atoms=None):
         return self.get_potential_energy(atoms) 
 
@@ -239,22 +237,18 @@ class PYFLOSIC(FileIOCalculator):
         self.homo = self.results['homo'].copy()
         return self.homo
 
-    def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces','homo'], system_changes = all_changes):
+    def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces','homo','polarizability'], system_changes = all_changes):
         self.num_iter += 1 
         if atoms is None:
             atoms = self.get_atoms()
         else:
             self.set_atoms(atoms)
         if self.mode == 'dft':
-            # DFT only mode 
-            from pyscf import gto, scf
-            from pyscf.grad import uks
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)
             
             mf = scf.UKS(mol)
             mf.xc = self.xc 
-            # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
             mf.verbose = self.verbose
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
@@ -269,7 +263,7 @@ class PYFLOSIC(FileIOCalculator):
                 mf = mf.as_scanner()
                 mf = mf.newton()
             if self.efield != None:
-                mf = apply_electric_field(mol,mf,self.efield)
+                mf = self.apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
@@ -277,8 +271,7 @@ class PYFLOSIC(FileIOCalculator):
                 e = self.mf.kernel(self.dm)
             self.results['energy'] = e*Ha
             self.results['dipole'] = self.mf.dip_moment(verbose=self.verbose)*Debye # conversion to e*A to match the ase calculator object
-            from pyscf.prop.polarizability.uks import Polarizability
-            self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) # conversion to A**3
+            self.results['polarizability'] = self.mf.Polarizability().polarizability()*(Bohr**3) # conversion to A**3
             self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
@@ -311,7 +304,6 @@ class PYFLOSIC(FileIOCalculator):
                 self.results['forces'] = None
             
         if self.mode == 'flosic-os':
-            from pyscf import gto,scf
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             if self.ecp == None:
                 if self.ghost == False:
@@ -338,7 +330,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
             if self.efield != None:
-                mf = apply_electric_field(mol,mf,self.efield)
+                mf = self.apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None :
                 e = self.mf.kernel()
@@ -369,9 +361,7 @@ class PYFLOSIC(FileIOCalculator):
                 self.results['homo'] = None
 
         if self.mode == 'flosic-scf' or self.mode == 'both':
-            from pyscf import gto
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
-            # Effective core potentials need so special treatment. 
             if self.ecp is None:
                 if self.ghost == False: 
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart)	
@@ -394,7 +384,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             if self.efield != None:
-                mf = apply_electric_field(mol,mf,self.efield)
+                mf = self.apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
@@ -631,7 +621,6 @@ class BasicFLOSICC(Calculator):
 
 if __name__ == "__main__":
     from ase.io import read
-    import os
 
     # Path to the xyz file 
     #f_xyz = os.path.dirname(os.path.realpath(__file__))+'/../examples/ase_pyflosic_optimizer/LiH.xyz' 
