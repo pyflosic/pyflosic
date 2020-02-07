@@ -15,8 +15,25 @@
 #
 # pyflosic-ase-calculator 
 #
-# author:	S. Schwalbe, J. Kraus
-# task:  	ase calculator for pyflosic 
+# author:	            Sebastian Schwalbe, Jakob Kraus
+# task:  	            ase calculator for pyflosic 
+# CHANGELOG 07.02.2020:     get_atoms/set_atoms
+#                           get_forces-> calculate 
+#                           get_energy/get_potential_energy
+#                           check_state
+#                           no empty fodforces in DFT forces anymore
+#                           new properties: homo energy, polarizability
+#                           new units: dipole (e*A), evalues (eV)
+#                           efield: keyword ->  tuple (freely chosen homog. efield)
+#                           efield: function -> PYFLOSIC, corrected gauge origin
+#                           new keywords: dm, cart, output
+#                           removed keywords: 'atoms' (superfluous)
+#                           removed mode: 'both'
+#                           replaced calculation example at the bottom
+# FUTURELOG 07.02.2020:     remove class BasicFLOSICC by Torsten Hahn?
+#                           include finite_differences polarizability?
+#                           include hyperpolarizability?
+#                           reintroduce mode 'both' in updated form?
 
 import os, sys
 import numpy as np
@@ -33,9 +50,7 @@ from flosic_os import xyz_to_nuclei_fod, ase2pyscf, flosic
 from flosic_scf import FLOSIC
 
 def force_max_lij(lambda_ij):
-    # 
     # calculate the RMS of the l_ij matrix 
-    # 
     nspin = 2
     lijrms = 0
     for s in range(nspin):
@@ -54,8 +69,8 @@ def force_max_lij(lambda_ij):
 class PYFLOSIC(FileIOCalculator):
     """ PYFLOSIC calculator for atoms and molecules.
         by Sebastian Schwalbe and Jakob Kraus
-        Notes: ase.calculators -> units [eV,Angstroem,eV/Angstroem]
-    	   pyflosic	   -> units [Ha,Bohr,Ha/Bohr] 		                
+        Notes: ase      -> units [eV,Angstroem,eV/Angstroem,e*A,A**3]
+    	       pyscf	-> units [Ha,Bohr,Ha/Bohr,Debye,Bohr**3] 		                
     """
     implemented_properties = ['energy', 'forces','fodforces','dipole','evalues','homo','polarizability']
     PYFLOSIC_CMD = os.environ.get('ASE_PYFLOSIC_COMMAND')
@@ -92,7 +107,7 @@ class PYFLOSIC(FileIOCalculator):
         ham_sic ='HOO',         # unified SIC Hamiltonian - HOO or HOOOV 
         dm = None,              # density matrix
         cart = False,           # use Cartesian GTO basis and integrals (6d,10f,15g)
-        output =None           # specify an output file, if None: standard output is used
+        output =None            # specify an output file, if None: standard output is used
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -155,12 +170,11 @@ class PYFLOSIC(FileIOCalculator):
         
     
     def apply_electric_field(self,mol,mf,efield):
-        # based on pyscf/pyscf/prop/polarizability/uks.py
-     
-     
+        # based on pyscf/pyscf/prop/polarizability/uks.py and pyscf/pyscf/scf/40_apply_electric_field.py     
         charges = mol.atom_charges()
         coords  = mol.atom_coords()
         charge_center = np.einsum('i,ix->x', charges, coords) / charges.sum()
+        # define gauge origin for dipole integral
     
         with mol.with_common_orig(charge_center):
         
@@ -177,10 +191,11 @@ class PYFLOSIC(FileIOCalculator):
         return mf
     
     def get_energy(self,atoms=None):
+        # wrapper for get_potential_energy()
         return self.get_potential_energy(atoms) 
 
     def calculation_required(self, atoms, properties):
-        # checks of some properties need to be calculated or not 
+        # check if a list of properties has to be calculated or not 
         assert not isinstance(properties, str)
         system_changes = self.check_state(atoms)
         if system_changes:
@@ -204,36 +219,43 @@ class PYFLOSIC(FileIOCalculator):
         return res 
 
     def get_forces(self, atoms=None):
+        # calculate forces if required
         if self.calculation_required(atoms,['forces']):
             self.calculate(atoms)
         self.forces = self.results['forces'].copy()
         return self.forces
 
     def get_fodforces(self, atoms=None):
+        # calculate FOD forces if required
         if self.calculation_required(atoms,['fodforces']):
             self.calculate(atoms)
         self.fodforces = self.results['fodforces'].copy() 
         return self.fodforces 
 	
     def get_dipole_moment(self,atoms=None):
+        # calculate dipole moment if required
         if self.calculation_required(atoms,['dipole']):
             self.calculate(atoms)
         self.dipole_moment = self.results['dipole'].copy()
         return self.dipole_moment
 
-    def get_polarizability(self,atoms=None):  # only implemented for DFT 
+    def get_polarizability(self,atoms=None):  
+        # calculate polarizability  if required
+        # only implemented for DFT
         if self.calculation_required(atoms,['polarizability']):
             self.calculate(atoms)
         self.polarizability = self.results['polarizability'].copy()
         return self.polarizability
 
     def get_evalues(self,atoms=None):
+        # calculate eigenvalues if required
         if self.calculation_required(atoms,['evalues']):
             self.calculate(atoms)
         self.evalues = self.results['evalues'].copy()
         return self.evalues
 
     def get_homo(self,atoms=None):
+        # calculate HOMO energy if required
         if self.calculation_required(atoms,['homo']):
             self.calculate(atoms)
         self.homo = self.results['homo'].copy()
@@ -271,9 +293,13 @@ class PYFLOSIC(FileIOCalculator):
             else:
                 e = self.mf.kernel(self.dm)
             self.results['energy'] = e*Ha
-            self.results['dipole'] = self.mf.dip_moment(verbose=self.verbose)*Debye # conversion to e*A to match the ase calculator object
-            self.results['polarizability'] = self.mf.Polarizability().polarizability()*(Bohr**3) # conversion to A**3
-            self.results['evalues'] = np.array(self.mf.mo_energy)*Ha
+            # conversion to eV to match ase
+            self.results['dipole'] = self.mf.dip_moment(verbose=self.verbose)*Debye 
+            # conversion to e*A to match ase
+            self.results['polarizability'] = self.mf.Polarizability().polarizability()*(Bohr**3) 
+            # conversion to A**3 to match ase
+            self.results['evalues'] = self.mf.mo_energy*Ha
+            # conversion to eV to match ase
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
                 e_up = np.sort(self.results['evalues'][0])
@@ -296,6 +322,7 @@ class PYFLOSIC(FileIOCalculator):
                 gf.verbose = self.verbose
                 gf.grid_response = True
                 forces = gf.kernel()*(Ha/Bohr)
+                # conversion to eV/A to match ase
                 forces = -1*forces
                 totalforces = []
                 totalforces.extend(forces)
@@ -338,12 +365,16 @@ class PYFLOSIC(FileIOCalculator):
                 e = self.mf.kernel(self.dm)
             mf = flosic(mol,self.mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,l_ij = self.l_ij, ods = self.ods, fixed_vsic = self.fixed_vsic, calc_forces=True,ham_sic = self.ham_sic)
             self.results['energy']= mf['etot_sic']*Ha
+            # conversion to eV to match ase
             self.results['fodforces'] = -1*mf['fforces']*(Ha/Bohr) 
+            # conversion to eV/A to match ase
             print('Analytic FOD force [Ha/Bohr]')
             print(-1*mf['fforces'])
             print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((mf['fforces']**2).sum(axis=1).max()))
             self.results['dipole'] = mf['dipole']*Debye
+            # conversion to e*A to match ase
             self.results['evalues'] = mf['evalues']*Ha
+            # conversion to eV to match ase
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
                 e_up = np.sort(self.results['evalues'][0])
@@ -360,7 +391,7 @@ class PYFLOSIC(FileIOCalculator):
             else:
                 self.results['homo'] = None
 
-        if self.mode == 'flosic-scf' or self.mode == 'both':
+        if self.mode == 'flosic-scf':
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             if self.ecp is None:
                 if self.ghost == False: 
@@ -391,16 +422,16 @@ class PYFLOSIC(FileIOCalculator):
             else:
                 e = self.mf.kernel(self.dm)
             self.results['esic'] = self.mf.esic*Ha
+            # conversion to eV to match ase
             self.results['energy'] = e*Ha
+            # conversion to eV to match ase
             self.results['fixed_vsic'] = self.mf.fixed_vsic  
             
             if self.fopt == 'force' or self.fopt == 'esic-force':
-                # 
-                # The standard optimization uses 
-                # the analytical FOD forces 
-                #
+                # default: 'force'
                 fforces = self.mf.get_fforces()
                 self.results['fodforces'] = fforces*(Ha/Bohr)
+                # conversion to eV/A to match ase
                 print('Analytical FOD force [Ha/Bohr]')
                 print(fforces)
                 print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((fforces**2).sum(axis=1).max()))
@@ -458,7 +489,9 @@ class PYFLOSIC(FileIOCalculator):
                     print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((fforces**2).sum(axis=1).max()))
 
             self.results['dipole'] =  self.mf.dip_moment()*Debye
-            self.results['evalues'] = np.array(self.mf.evalues)*Ha
+            # conversion to e*A to match ase
+            self.results['evalues'] = self.mf.evalues*Ha
+            # conversion to eV to match ase
             n_up, n_dn = self.mf.mol.nelec
             if n_up != 0 and n_dn != 0:
                 e_up = np.sort(self.results['evalues'][0])
@@ -476,7 +509,7 @@ class PYFLOSIC(FileIOCalculator):
                 self.results['homo'] = None
 
 
-        if self.mode == 'flosic-scf' or self.mode == 'flosic-os' or self.mode =='both':
+        if self.mode == 'flosic-scf' or self.mode == 'flosic-os':
             totalforces = []
             forces = np.zeros_like(nuclei.get_positions()) 
             fodforces = self.results['fodforces'].copy()
@@ -620,108 +653,26 @@ class BasicFLOSICC(Calculator):
 
 
 if __name__ == "__main__":
-    from ase.io import read
 
-    # Path to the xyz file 
-    #f_xyz = os.path.dirname(os.path.realpath(__file__))+'/../examples/ase_pyflosic_optimizer/LiH.xyz' 
-    #atoms = read(f_xyz)
-    #calc = PYFLOSIC(atoms=atoms,charge=0,spin=0,xc='LDA,PW',basis='cc-pvqz')
-    #print('Pyflosic total energy: ',calc.get_energy())
-    #print('Pyflosic total forces: ',calc.get_forces())
+from ase.vibrations import Raman
 
-    print('Testing basic optimizer')
-    CH3SH = '''
-    C -0.04795000 +1.14952000 +0.00000000
-    S -0.04795000 -0.66486000 +0.00000000
-    H +1.28308000 -0.82325000 +0.00000000
-    H -1.09260000 +1.46143000 +0.00000000
-    H +0.43225000 +1.55121000 +0.89226000
-    H +0.43225000 +1.55121000 -0.89226000
-    '''
-    # this are the spin-up descriptors
-    fod = Atoms('X13He13', positions=[
-    (-0.04795000, -0.66486000, +0.00000000),
-    (-0.04795000, +1.14952000, +0.00000000),
-    (-1.01954312, +1.27662578, +0.00065565),
-    (+1.01316012, -0.72796570, -0.00302478),
-    (+0.41874165, +1.34380502, +0.80870475),
-    (+0.42024357, +1.34411742, -0.81146545),
-    (-0.46764078, -0.98842277, -0.72314717),
-    (-0.46848962, -0.97040067, +0.72108036),
-    (+0.01320210, +0.30892333, +0.00444147),
-    (-0.28022018, -0.62888360, -0.03731204),
-    (+0.05389371, -0.57381853, +0.19630494),
-    (+0.09262866, -0.55485889, -0.15751914),
-    (-0.05807583, -0.90413106, -0.00104673),
-    ( -0.04795000, -0.66486000, +0.0000000),
-    ( -0.04795000, +1.14952000, +0.0000000),
-    ( +1.12523084, -0.68699049, +0.0301970),
-    ( +0.40996981, +1.33508869, +0.8089839),
-    ( +0.40987059, +1.34148952, -0.8106910),
-    ( -0.49563876, -0.99517303, +0.6829207),
-    ( -0.49640020, -0.89986161, -0.6743094),
-    ( +0.00073876, +0.28757089, -0.0298617),
-    ( -1.03186573, +1.29783767, -0.0035536),
-    ( +0.04235081, -0.54885843, +0.1924678),
-    ( +0.07365725, -0.59150454, -0.1951675),
-    ( -0.28422422, -0.61466396, -0.0087913),
-    ( -0.02352948, -1.0425011 ,+0.01253239)])
-    
-    fodup = Atoms([a for a in fod if a.symbol == 'X'])
-    foddn = Atoms([a for a in fod if a.symbol == 'He'])
-    print(fodup)
-    print(foddn)
-    
-    from pyscf import gto, dft
-    from flosic_scf import FLOSIC
-    
-    b = 'sto6g'
-    spin = 0
-    charge = 0
-    
-    mol = gto.M(atom=CH3SH, 
-                basis=b,
-                spin=spin,
-                charge=charge)
 
-    grid_level  = 5
-    mol.verbose = 4
-    mol.max_memory = 2000
-    mol.build()
-    xc = 'LDA,PW'
-    
-    
-    # quick dft calculation
-    mdft = dft.UKS(mol)
-    mdft.xc = xc
-    mdft.kernel()
-    
-    # build FLOSIC object
-    mflosic = FLOSIC(mol, xc=xc,
-        fod1=fodup,
-        fod2=foddn,
-        grid_level=grid_level, 
-        init_dm=mdft.make_rdm1()
-    )
-    mflosic.max_cycle = 40
-    mflosic.conv_tol = 1e-5  # just for testing
-    
-    calc = BasicFLOSICC(atoms=fod, mf=mflosic)
-    #print(fod.get_potential_energy())
-    #print(fod.get_forces())
-    
-    print(" >>>>>>>>>>>> OPTIMIZER TEST <<<<<<<<<<<<<<<<<<<<")
-    
-    # test the calculator by optimizing a bit
-    from ase.optimize import  FIRE
-    dyn = FIRE(atoms=fod,
-        logfile='OPT_FRMORB_FIRE_TEST.log',
-        #downhill_check=True,
-        maxmove=0.05
-    )
-    dyn.run(fmax=0.005,steps=99)
-    
-    
-    
-    
-    
+# define system
+atoms = Atomsa('N3', [(0, 0, 0), (1, 0, 0), (0, 0, 1)])
+charge = 0
+spin = 0
+xc = 'LDA,PW'
+basis = 'aug-cc-pVQZ' 
+grid = 7
+max_cycle = 300
+conv_tol = 1e-8
+cart = False
+verbose = 4
+# define calculator
+calc = PYFLOSIC(mode='dft',atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,grid=grid,max_cycle=max_cycle,conv_tol=conv_tol,verbose=verbose,cart=cart)
+atoms.set_calculator(calc)
+
+ram = Raman(atoms,delta=0.005)
+ram.run()
+ram.summary()
+ram.write_spectrum(out='raman.dat',quantity='raman',intensity_unit='A^4/amu')
