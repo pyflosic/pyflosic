@@ -654,25 +654,25 @@ class BasicFLOSICC(Calculator):
 
 if __name__ == "__main__":
 
-from ase.vibrations import Raman
+    from ase.vibrations import Raman
 
 
-# define system
-atoms = Atoms('N3', [(0, 0, 0), (1, 0, 0), (0, 0, 1)])
-charge = 0
-spin = 0
-xc = 'LDA,PW'
-basis = 'aug-cc-pVQZ' 
-grid = 7
-max_cycle = 300
-conv_tol = 1e-8
-cart = False
-verbose = 4
-# define calculator
-calc = PYFLOSIC(mode='dft',atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,grid=grid,max_cycle=max_cycle,conv_tol=conv_tol,verbose=verbose,cart=cart)
-atoms.set_calculator(calc)
+    # define system
+    atoms = Atoms('N3', [(0, 0, 0), (1, 0, 0), (0, 0, 1)])
+    charge = 0
+    spin = 0
+    xc = 'LDA,PW'
+    basis = 'aug-cc-pVQZ' 
+    grid = 7
+    max_cycle = 300
+    conv_tol = 1e-8
+    cart = False
+    verbose = 4
+    # define calculator
+    calc = PYFLOSIC(mode='dft',atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,grid=grid,max_cycle=max_cycle,conv_tol=conv_tol,verbose=verbose,cart=cart)
+    atoms.set_calculator(calc)
 
-ram = Raman(atoms,delta=0.005)
-ram.run()
-ram.summary()
-ram.write_spectrum(out='raman.dat',quantity='raman',intensity_unit='A^4/amu')
+    ram = Raman(atoms,delta=0.005)
+    ram.run()
+    ram.summary()
+    ram.write_spectrum(out='raman.dat',quantity='raman',intensity_unit='A^4/amu')
