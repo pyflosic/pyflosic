@@ -34,6 +34,7 @@
 #                           include finite_differences polarizability?
 #                           include hyperpolarizability?
 #                           reintroduce mode 'both' in updated form?
+#                           include pbc for DFT?
 
 import os, sys
 import numpy as np
