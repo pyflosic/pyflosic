@@ -30,19 +30,19 @@
 #                           removed keywords: 'atoms' (superfluous)
 #                           removed mode: 'both'
 #                           replaced calculation example at the bottom
-# FUTURELOG 07.02.2020:     remove class BasicFLOSICC by Torsten Hahn?
-#                           include finite_differences polarizability?
+# CHANGELOG 18.02.2020:     moved class BasicFLOSICC by Torsten Hahn to ase_pytorsten_calculator.py
+# FUTURELOG 18.02.2020:     include finite_differences polarizability?
 #                           include hyperpolarizability?
 #                           reintroduce mode 'both' in updated form?
 #                           include pbc for DFT?
+#                           include COSMO/PCM for DFT
+#
 
-import os, sys
+import os
 import numpy as np
-from ase.calculators.calculator import FileIOCalculator, Parameters, kpts2mp, ReadError, Calculator, all_changes, compare_atoms
-from ase.atom import Atom
+from ase.calculators.calculator import FileIOCalculator, all_changes, compare_atoms
 from ase import Atoms 
 from ase.units import Ha, Bohr, Debye 
-from ase.data import atomic_numbers
 from pyscf import scf, gto
 from pyscf.grad import uks
 from pyscf.prop.polarizability.uhf import Polarizability, polarizability
@@ -518,140 +518,7 @@ class PYFLOSIC(FileIOCalculator):
             totalforces.extend(fodforces)
             totalforces = np.array(totalforces)
             self.results['forces'] = totalforces
-        	
-
-class BasicFLOSICC(Calculator):
-    '''Interface to use ase.optimize methods in an easy way within the
-    pyflosic framework.
     
-    This is an easy-to-use class to make the usage of pyflosic identical to other
-    ase optimizer classes.
-    
-    For details refer to https://wiki.fysik.dtu.dk/ase/ase/optimize.html
-    
-    
-    Kwargs
-        mf : a FLOSIC class object
-            to be used to optimize the FOD's on (mandatory)
-        
-        atoms: an ase.Atoms object
-            contains both, the spin up and down FODs
-               
-            fod1 and fod2 input to the FLOSIC class *must* be references
-            pointing to this atoms object:
-            fods = ase.Atoms('X2He2', positions=[[0,0,0],[-1,0,0],[0,0,0],[-1,0,0]])
-            fodup = fod[:2]
-            foddn = fod[2:]
-            mf = FLOSIC(...,fod1=fodup, fod2=foddn, ...)
-    
-    author:
-        Torsten Hahn (torstenhahn@fastmail.fm)
-    '''
-    
-    implemented_properties = ['energy', 'forces']
-    
-    
-    def __init__(self, restart=None, ignore_bad_restart_file=False, \
-                label=os.curdir, atoms=None, **kwargs):
-        
-        Calculator.__init__(self, restart, ignore_bad_restart_file, \
-                        label, atoms, **kwargs)
-        valid_args = ('mf')
-        
-        
-        # set any additional keyword arguments
-        for arg, val in self.parameters.items():
-            if arg in valid_args:
-                setattr(self, arg, val)
-            else:
-                raise RuntimeError('unknown keyword arg "%s" : not in %s'
-                                   % (arg, valid_args))
-        #print("ESICC: {0}".format(atoms))
-        self.atoms = atoms
-        
-        # find out machine precision
-        # (this is pretty usefull for reliable numerics)
-        #self.meps = np.finfo(np.float64).eps
-        self.meps = 1e-12
-        self.is_init = False
-        
-    def print_atoms(self):
-        print('print_atoms', self.atoms)
-        print(self.atoms.positions)
-        return
-
-    def get_forces(self, atoms=None):
-        if atoms is not None:
-            lpos = atoms.positions
-        else:
-            lpos = self.atoms.positions
-        
-        nspin = self.mf.nspin
-        fposu = self.mf.fod1.positions
-        nup = self.mf.fod1.positions.shape[0]
-        fposd = self.mf.fod2.positions
-        ndn = self.mf.fod2.positions.shape[0]
-        fpos = np.zeros((nup+ndn,3), dtype=np.float64)
-        fpos[:nup,:] = self.mf.fod1.positions[:,:]
-        if self.mf.nspin == 2: fpos[nup:,:] = self.mf.fod2.positions[:,:]
-        
-        #print(fpos)
-        pdiff = np.linalg.norm(lpos - fpos)
-        #print('get_potential_energy, pdiff {}', pdiff, self.meps)
-        if (pdiff > self.meps):
-            self.mf.update_fpos(lpos)
-            # update sic potential etupdate_fpos()
-            self.mf.kernel(dm0=self.mf.make_rdm1())
-        if not self.is_init:
-            self.mf.kernel()
-            self.is_init = True
-
-        _ff = Ha/Bohr*self.mf.get_fforces()
-        ##self.results['forces'][:,:] = self.FLO.
-        return _ff
-
-
-
-    def get_potential_energy(self, atoms=None, force_consistent=False):
-        if atoms is not None:
-            lpos = atoms.positions
-        else:
-            lpos = self.atoms.positions
-        
-        nspin = self.mf.nspin
-        fposu = self.mf.fod1.positions
-        nup = self.mf.fod1.positions.shape[0]
-        fposd = self.mf.fod2.positions
-        ndn = self.mf.fod2.positions.shape[0]
-        fpos = np.zeros((nup+ndn,3), dtype=np.float64)
-        fpos[:nup,:] = self.mf.fod1.positions[:,:]
-        if self.mf.nspin == 2: fpos[nup:,:] = self.mf.fod2.positions[:,:]
-        
-        #print('>> lpos, fpos:', fpos.sum(), lpos.sum())
-        pdiff = np.linalg.norm(lpos - fpos)
-        #print('get_potential_energy, pdiff {}', pdiff, self.meps)
-        if (pdiff > self.meps):
-            self.mf.update_fpos(lpos)
-            # update sic potential etupdate_fpos()
-            self.mf.kernel(dm0=self.mf.make_rdm1())
-        if not self.is_init:
-            self.mf.kernel()
-            self.is_init = True
-        return self.mf.get_esic()*Ha
-
-
-    def calculate(self, atoms=None, properties=['energy'], system_changes=all_changes):
-        for p in properties:
-            if p == 'energy':
-                self.results['energy'] = self.get_potential_energy()
-            elif p == 'forces':
-                _ff = self.mf.get_fforces()
-                self.results['forces'] = -units.Ha/units.Bohr*_ff.copy()
-            else:
-                raise PropertyNotImplementedError(\
-                    'calculation of {} is not implemented'.format(p))
-
-
 
 if __name__ == "__main__":
 
