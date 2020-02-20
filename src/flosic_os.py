@@ -471,7 +471,7 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
         fod = fod1
         if s == 1:
             fod = fod2
-        nfod[s] = fod.get_number_of_atoms()
+        nfod[s] = len(fod)
 
     # check if the calling object still has the required data structures
     sa_mode = False
