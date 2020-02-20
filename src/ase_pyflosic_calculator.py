@@ -1,5 +1,5 @@
 #2019 PyFLOSIC developers
-           
+#          
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@
 #                           new units: dipole (e*A), evalues (eV)
 #                           efield: keyword ->  tuple (freely chosen homog. efield)
 #                           efield: function -> PYFLOSIC, corrected gauge origin
-#                           new keywords: dm, cart, output
+#                           new keywords: dm, cart, output, solvation (only COSMO at the moment)
 #                           removed keywords: 'atoms' (superfluous)
 #                           removed mode: 'both'
 #                           replaced calculation example at the bottom
@@ -35,7 +35,7 @@
 #                           include hyperpolarizability?
 #                           reintroduce mode 'both' in updated form?
 #                           include pbc for DFT?
-#                           include COSMO/PCM for DFT
+#                           include PCM for DFT
 #
 
 import os
@@ -44,11 +44,12 @@ from ase.calculators.calculator import FileIOCalculator, all_changes, compare_at
 from ase import Atoms 
 from ase.units import Ha, Bohr, Debye 
 from pyscf import scf, gto
-from pyscf.grad import uks
 from pyscf.prop.polarizability.uhf import Polarizability, polarizability
 import copy
 from flosic_os import xyz_to_nuclei_fod, ase2pyscf, flosic 
 from flosic_scf import FLOSIC
+from pyscf.solvent.ddcosmo import DDCOSMO, ddcosmo_for_scf
+from pyscf.data import radii
 
 def force_max_lij(lambda_ij):
     # calculate the RMS of the l_ij matrix 
@@ -79,36 +80,42 @@ class PYFLOSIC(FileIOCalculator):
 
     # Note: If you need to add keywords, please also add them in valid_args 
     default_parameters = dict(
-        fod1 = None,            # ase atoms object FODs spin channel 1 
-        fod2 = None,            # ase atoms objects FODs spin channnel 2 
-        mol= None,              # PySCF mole object 
-        charge = None,          # charge of the system 
-        spin = None,            # spin of the system, equal to 2S 
-        basis = None,           # basis set
-        ecp = None,             # only needed if ecp basis set is used 
-        xc = 'LDA,PW',          # exchange-correlation potential - must be available in libxc 
-        mode = 'flosic-os',     # calculation method 
-        efield=None,            # perturbative electric field
-        max_cycle = 300,        # maximum number of SCF cycles 
-        conv_tol = 1e-5,        # energy convergence threshold 
-        grid = 3,               # numerical mesh (lowest: 0, highest: 9)
-        ghost= False,           # ghost atoms at FOD positions 
-        mf = None,              # PySCF calculation object
-        use_newton=False,       # use the Newton SCF cycle 
-        use_chk=False,          # restart from checkpoint file 
-        verbose=0,              # output verbosity 
-        calc_forces=False,      # calculate FOD forces 
-        debug=False,            # extra ouput for debugging purpose 
-        l_ij=None,              # developer option: alternative optimization target  
-        ods=None,               # developer option: orbital damping sic 
-        fopt='force',           # developer option: in use with l_ij, alternative optimization target 
-        fixed_vsic=None,        # fixed SIC one body values Veff, Exc, Ecoul
-        num_iter=0,             # SCF iteration number 
-        vsic_every=1,           # calculate vsic after this number on num_iter cycles 
-        ham_sic ='HOO',         # unified SIC Hamiltonian - HOO or HOOOV 
-        dm = None,              # density matrix
-        cart = False,           # use Cartesian GTO basis and integrals (6d,10f,15g)
-        output =None            # specify an output file, if None: standard output is used
+        fod1 = None,                # ase atoms object FODs spin channel 1 
+        fod2 = None,                # ase atoms objects FODs spin channnel 2 
+        mol= None,                  # PySCF mole object 
+        charge = None,              # charge of the system 
+        spin = None,                # spin of the system, equal to 2S 
+        basis = None,               # basis set
+        ecp = None,                 # only needed if ecp basis set is used 
+        xc = 'LDA,PW',              # exchange-correlation potential - must be available in libxc 
+        mode = 'flosic-os',         # calculation method (dft,flosic-os or flosic-scf) 
+        efield=None,                # perturbative electric field
+        max_cycle = 300,            # maximum number of SCF cycles 
+        conv_tol = 1e-5,            # energy convergence threshold 
+        grid = 3,                   # numerical mesh (lowest: 0, highest: 9)
+        ghost= False,               # ghost atoms at FOD positions 
+        mf = None,                  # PySCF calculation object
+        use_newton=False,           # use the Newton SCF cycle 
+        use_chk=False,              # restart from checkpoint file 
+        verbose=0,                  # output verbosity 
+        calc_forces=False,          # calculate FOD forces 
+        debug=False,                # extra ouput for debugging purpose 
+        l_ij=None,                  # developer option: alternative optimization target  
+        ods=None,                   # developer option: orbital damping sic 
+        fopt='force',               # developer option: in use with l_ij, alternative optimization target 
+        fixed_vsic=None,            # fixed SIC one body values Veff, Exc, Ecoul
+        num_iter=0,                 # SCF iteration number 
+        vsic_every=1,               # calculate vsic after this number on num_iter cycles 
+        ham_sic ='HOO',             # choose a unified SIC Hamiltonian - HOO or HOOOV 
+        dm = None,                  # density matrix
+        cart = False,               # use Cartesian GTO basis and integrals (6d,10f,15g)
+        output = None,              # specify an output file, if None: standard output is used
+        solvation = None,           # specify if solvation model should be applied (COSMO)
+        lmax = 10,                  # maximum l for basis expansion in spherical harmonics for solvation
+        eta = 0.1,                  # smearing parameter in solvation model
+        lebedev_order = 89,         # order of integration for solvation model
+        radii_table = radii.VDW,    # vdW radii for solvation model
+        eps = 78.3553               # dielectric constant of solvent
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -116,7 +123,7 @@ class PYFLOSIC(FileIOCalculator):
         """ Constructor """
         FileIOCalculator.__init__(self, restart, ignore_bad_restart_file,
                                   label, atoms, **kwargs)
-        valid_args = ('fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic','dm','cart','output')
+        valid_args = ('fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic','dm','cart','output','solvation','lmax','eta','lebedev_order','radii_table','eps')
         # set any additional keyword arguments
         for arg, val in self.parameters.items():
             if arg in valid_args:
@@ -153,10 +160,6 @@ class PYFLOSIC(FileIOCalculator):
             system_changes = []
         else:
             system_changes = compare_atoms(self.atoms, atoms)
-        
-        # Ignore boundary conditions until now 
-        if 'pbc' in system_changes:
-            system_changes.remove('pbc')
         
         return system_changes
 
@@ -271,22 +274,34 @@ class PYFLOSIC(FileIOCalculator):
         if self.mode == 'dft':
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart,output=self.output)
-            mf = scf.UKS(mol)
+            if self.solvation is None:
+                mf = scf.UKS(mol)
+            elif self.solvation == 'cosmo':
+                cm = DDCOSMO(mol)
+                cm.verbose = self.verbose
+                cm.lmax = self.lmax
+                cm.eta = self.eta
+                cm.lebedev_order = self.lebedev_order
+                cm.radii_table = self.radii_table
+                cm.max_cycle = self.max_cycle
+                cm.conv_tol = self.conv_tol
+                cm.eps = self.eps
+                mf = ddcosmo_for_scf(scf.UKS(mol),cm)
             mf.xc = self.xc 
             mf.verbose = self.verbose
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
-            if self.use_chk == True and self.use_newton == False:
-                mf.chkfile = 'pyflosic.chk'
-            if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
+            if self.use_chk and not self.use_newton:
+                    mf.chkfile = 'pyflosic.chk'
+            if self.use_chk and not self.use_newton and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
-            if self.use_newton == True and self.xc != 'SCAN,SCAN':
+            if self.use_newton and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
-            if self.efield != None:
+            if self.efield is not None:
                 mf = self.apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None:
@@ -318,13 +333,13 @@ class PYFLOSIC(FileIOCalculator):
                 self.results['homo'] = None
 
             self.results['fodforces'] = None
+            
             if self.xc != 'SCAN,SCAN': # no gradients for meta-GGAs!
-                gf = uks.Gradients(self.mf)
+                gf = self.mf.nuc_grad_method()
                 gf.verbose = self.verbose
                 gf.grid_response = True
-                forces = gf.kernel()*(Ha/Bohr)
+                forces = -1.*gf.kernel()*(Ha/Bohr)
                 # conversion to eV/A to match ase
-                forces = -1*forces
                 totalforces = []
                 totalforces.extend(forces)
                 totalforces = np.array(totalforces)
@@ -334,8 +349,8 @@ class PYFLOSIC(FileIOCalculator):
             
         if self.mode == 'flosic-os':
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
-            if self.ecp == None:
-                if self.ghost == False:
+            if self.ecp is None:
+                if not self.ghost:
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart,output=self.output)
                 else:
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart,output=self.output)
@@ -345,19 +360,19 @@ class PYFLOSIC(FileIOCalculator):
             mf = scf.UKS(mol)
             mf.xc = self.xc 
             mf.verbose = self.verbose
-            if self.use_chk == True and self.use_newton == False:
+            if self.use_chk and not self.use_newton:
                 mf.chkfile = 'pyflosic.chk'
-            if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
+            if self.use_chk and not self.use_newton and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
-            if self.use_newton == True and self.xc != 'SCAN,SCAN':
+            if self.use_newton and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
-            if self.efield != None:
+            if self.efield is not None:
                 mf = self.apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None :
@@ -395,7 +410,7 @@ class PYFLOSIC(FileIOCalculator):
         if self.mode == 'flosic-scf':
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
             if self.ecp is None:
-                if self.ghost == False: 
+                if not self.ghost: 
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart,output=self.output)	
                 else: 
                     mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart,output=self.output)
@@ -404,18 +419,18 @@ class PYFLOSIC(FileIOCalculator):
                 mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp,cart=self.cart,output=self.output)
             mf = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,calc_forces=self.calc_forces,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
             mf.verbose = self.verbose 
-            if self.use_chk == True and self.use_newton == False:
+            if self.use_chk and not self.use_newton:
                 mf.chkfile = 'pyflosic.chk'
-            if self.use_chk == True and self.use_newton == False and os.path.isfile('pyflosic.chk'):
+            if self.use_chk and not self.use_newton and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
-            if self.use_newton == True and self.xc != 'SCAN,SCAN':
+            if self.use_newton and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
-            if self.efield != None:
+            if self.efield is not None:
                 mf = self.apply_electric_field(mol,mf,self.efield)
             self.mf = mf
             if self.dm is None:

@@ -25,66 +25,61 @@
 from ase.optimize import LBFGS, BFGS, BFGSLineSearch, LBFGSLineSearch, FIRE, GPMin
 from ase.optimize.sciopt import SciPyFminCG
 from ase_pyflosic_calculator import PYFLOSIC
-from flosic_os import xyz_to_nuclei_fod,ase2pyscf
-from ase.io import read 
-#from nrlmol_basis import get_dfo_basis
 from ase.constraints import FixAtoms 
+from pyscf.data import radii
 
-def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,fopt='force',fix_fods=False,ham_sic='HOO',vsic_every=1,dm=None,cart=False,output=None):
+def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,fopt='force',fix_fods=False,ham_sic='HOO',vsic_every=1,dm=None,cart=False,output=None,solvation=None,lmax=10,eta=0.1,lebedev_order=89,radii_table=radii.VDW,eps=78.3553):
     # -----------------------------------------------------------------------------------
     # Input 
     # -----------------------------------------------------------------------------------
-    # mode 			...	dft only optimize nuclei positions 
-    #				flosic only optimize FOD positions (one-shot)
-    #				flosic-scf only optimize FOD positions (self-consistent)
-    # atoms 		...	ase atoms object 
-    # charge 		... 	charge 
-    # spin			...	spin state = alpha - beta 
-    # xc			... 	exchange correlation functional 
-    # basis	 		... 	GTO basis set 
-    # ecp			...	if a ECP basis set is used you must give this extra argument 
-    # opt 			...	optimizer (FIRE, LBFGS, ...) 
+    # mode 			dft only optimizes nuclei positions 
+    #				flosic only optimizes FOD positions (one-shot)
+    #				flosic-scf only optimizes FOD positions (self-consistent)
+    # atoms 			ase atoms object 
+    # charge 		 	charge 
+    # spin			spin state = 2S = # alpha - # beta
+    # xc			exchange-correlation functional 
+    # basis	 		GTO basis set 
+    # ecp			if an ECP basis set is used, you must give this extra argument 
+    # opt 			optimizer (FIRE, LBFGS, ...) 
     # ----------------------------------------------------------------------------------
     # Additional/optional input 
     # ----------------------------------------------------------------------------------
-    # maxstep		...	stepwidth of the optimizer  
-    # label			...	label for the outputs (logfile and trajectory file) 
-    # fmax 			...	maximum force 
-    # steps 		...     maximum steps for the optimizer 
-    # max_cycle     	...     maxium scf cycles 
-    # conv_tol		...	energy threshold 
-    # grid			... 	numerical mesh 
-    # ghost 		...	use ghost atom at positions of FODs 
-    # use_newton		...	use newton scf cycle 
-    # use_chk		...	restart from chk fiels 
-    # verbose 		...	output verbosity 
-    # debug			...	extra output for debugging reasons 
-    # efield 		...	applying a external efield 
-    # l_ij			...	developer option: another optimitzation criterion, do not use for production 
-    # ods			...	developer option orbital damping sic, rescale SIC, do not use for production 
-    # fopt			...	optimization trarget, default FOD forces 
-    # fix_fods		...	freeze FODS during the optimization, might use for 1s/2s FODs 
-    # ham_sic		...	the different unified Hamiltonians HOO and HOOOV 
-    # dm                ...     density matrix
-    # cart              ...     use Cartesian GTO basis and integrals (6d,10f,15g etc.)
-    # output            ...     specify an output file, if None: standard output is used
+    # maxstep			stepwidth of the optimizer  
+    # label			label for the outputs (logfile and trajectory file) 
+    # fmax 			maximum absolute force on each atom
+    # steps 		        maximum number of steps for the optimizer 
+    # max_cycle     	        maximum number of SCF cycles 
+    # conv_tol			energy threshold 
+    # grid			numerical mesh 
+    # ghost 			use ghost atom at positions of FODs 
+    # use_newton		use newton SCF cycle 
+    # use_chk			restart from chk file 
+    # verbose 			output verbosity 
+    # debug			extra output for debugging reasons 
+    # efield 			applying an external efield 
+    # l_ij			developer option: another optimitzation criterion, do not use for production 
+    # ods			developer option orbital damping sic, rescale SIC, do not use for production 
+    # fopt			optimization target, default: FOD forces 
+    # fix_fods			freeze FODS during the optimization, might use for 1s/2s FODs 
+    # ham_sic			the different unified Hamiltonians HOO and HOOOV 
+    # dm                        density matrix
+    # cart                      use Cartesian GTO basis and integrals (6d,10f,15g etc.)
+    # output                    specify an output file, if None: standard output is used
+    # solvation                 specify if solvation model should be applied (COSMO)
+    # lmax                      maximum l for basis expansion in spherical harmonics for solvation
+    # eta                       smearing parameter in solvation model
+    # lebedev_order             order of integration for solvation model
+    # radii_table               vdW radii for solvation model
+    # eps                       dielectric constant of solvent
+    
     if fix_fods != False:
         c = FixAtoms(fix_fods)
         atoms.set_constraint(c)
 	
-    # select the mode of calculation
-    # DFT-only mode
-    if mode == 'dft':
-        [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
-        atoms = nuclei 
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='dft',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,use_chk=use_chk,dm=dm,cart=cart,output=output)
-    # FLO-SIC one-shot (OS) mode 
-    if mode == 'flosic-os':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-os',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,use_chk=use_chk,dm=dm,cart=cart,output=output)
-    # FLO-SIC self-consistent field (SCF) mode 
-    if mode == 'flosic-scf':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-scf',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,use_chk=use_chk,dm=dm,cart=cart,output=output)
-	
+    # set up the ase calculator
+    calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode=mode,ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,use_chk=use_chk,dm=dm,cart=cart,output=output,solvation=solvation,lmax=lmax,eta=eta,lebedev_order=lebedev_order,radii_table=radii_table,eps=eps)
+    
     # assign the ase calculator to the ase atoms object
     atoms.set_calculator(calc)
 	
@@ -142,6 +137,7 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,l
     return atoms 
 
 if __name__ == '__main__':
+    
     from ase.io import read 
     import os
 
