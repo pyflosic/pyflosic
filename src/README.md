@@ -9,6 +9,6 @@
 | pycom.py | python-based center of mass approach for automatic guessing of FODs | 
 | onstuff.py | O(N) grid related methods | 
 | preopt.py | FOD optimization within FLO-SIC scf cycle | 
-| compared to flosic_os.py@master, flosic_os.py@Development/JaK has a flosic_os/flosic_scf consistency problem in def get_fermi_forces() |
+Note: compared to flosic_os.py@master, flosic_os.py@Development/JaK has a flosic_os/flosic_scf consistency problem in def get_fermi_forces() 
 
 
