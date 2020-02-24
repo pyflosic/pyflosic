@@ -17,13 +17,13 @@
 # Author: 	S. Schwalbe (SS) 
 # Target: 	Creates inital FOD guesses, which you will might be figure out soon, are very promising. 
 #         	Please contact the author before publishing results using automatic_gussing. 
-# Changes: 	27.11.2018	-	Kai Trepte (KT) Jakob Kraus (KK) 
+# Changes: 	27.11.2018	-	Kai Trepte (KT) Jakob Kraus (JaK) 
 #					as well as SS find that for some systems the FODs are shifted against the nuclei 
 #					Routines are changes accordingly. The origin+vec shift is replaced by a shift from the origin of 
 #					the cube file
 #				- 	added option grid for automatic_guessing 
 #		07.02.2018 	-	SS rename to pycom.py 
-
+#               24.02.2020      -       JaK modified imports
 from pyscf import gto, scf, lo, tools, dft  
 from pyscf.lo import boys, edmiston, pipek
 from pyscf.tools.cubegen import * 
@@ -280,7 +280,6 @@ def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newt
 
 
 if __name__ == '__main__':
-    from ase.io import read
     import os
 
     # Path to the xyz file 

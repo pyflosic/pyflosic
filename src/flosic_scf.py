@@ -21,18 +21,19 @@
 #   Sebastian Schwalbe (SS) 
 #   Torsten Hahn (TH) 
 #   Jens Kortus (JK) 
-
+#   Jakob Kraus (JaK)
  
 # -----Imports-----
-# Please note that this class imports the main SIC routine from flosic.py.
+# Please note that this class imports the main SIC routine from flosic_os.py.
 #
-
+# CHANGELOG 24.02.2020          removed import redundancies (from pyscf.dft import rks, uks, UKS)
+#                               changed class FLOSIC: calc_uks.max_cycle = 0 -> calc_uks.max_cycle = 1 for pyscf 1.7.0 compatibility
+#                               modified imports
 import time, sys
 import numpy as np
 from pyscf import lib
 from pyscf.lib import logger
 from pyscf.scf import uhf
-from pyscf.dft import rks, uks, UKS 
 from pyscf.dft import rks, uks, UKS 
 from pyscf import dft
 from pyscf import scf
@@ -276,7 +277,7 @@ class FLOSIC(uhf.UHF):
         mol.verbose = 0
         calc_uks = UKS(mol)
         calc_uks.xc = self.xc
-        calc_uks.max_cycle = 0
+        calc_uks.max_cycle = 1 # pyscf 1.6.6 and older: 0 also works
         calc_uks.grids.level = grid_level
         
         # if an initial density matrix is given
@@ -652,8 +653,6 @@ if __name__ == '__main__':
     # Test example for the FLOSIC class.
     # This simple example shows of all of the features of the SIC class.
     from ase.io import read
-    import sys
-    import numpy as np
     from pyscf import gto		
     import os 
     from ase import Atom, Atoms
@@ -786,3 +785,6 @@ if __name__ == '__main__':
     time.sleep(2.0)
     
     po.mpi_stop()
+        
+    
+    

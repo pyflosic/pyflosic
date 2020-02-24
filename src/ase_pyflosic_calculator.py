@@ -535,10 +535,9 @@ class PYFLOSIC(FileIOCalculator):
             self.results['forces'] = totalforces
     
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     from ase.vibrations import Raman
-
 
     # define system
     atoms = Atoms('N3', [(0, 0, 0), (1, 0, 0), (0, 0, 1)])

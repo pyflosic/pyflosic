@@ -20,6 +20,7 @@
 #                               removed old keywords: force_consistent (because ase_pyflosic_calculator cannot calculate the free energy anyway)
 #                               optimizer name: LineSearch->BFGSLineSearch
 #                               new optimizer: LBFGSLineSearch
+#                               modified imports
 
  
 from ase.optimize import LBFGS, BFGS, BFGSLineSearch, LBFGSLineSearch, FIRE, GPMin

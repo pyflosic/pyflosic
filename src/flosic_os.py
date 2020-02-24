@@ -22,19 +22,17 @@
 #   co-authors:    
 #   Kai Trepte (KT) (main tester) 
 #   Jakob Kraus (JaK) (tester)
-#    Jens Kortus (JK) (supervisor)  
-
+#   Jens Kortus (JK) (supervisor)  
+#   CHANGELOG 24.02.2020:   bugfix in get_fermi_forces(): calc_forces = True now works for spin != 0 (consistency with flosic_scf.py)
+#                           deprecated fix in flosic: fod.get_number_of_atoms() -> len(fod)
+#                           modified imports
 import os, sys
 import numpy as np 
 import glob 
 import shutil
 from pyscf import gto, dft,lo
 from ase.data import g2_1
-try:
-    from ase.atoms import string2symbols
-except:
-    # moved in 3.17 to
-    from ase.symbols import string2symbols
+from ase.symbols import string2symbols
 from ase.io import read
 from ase import Atoms,Atom
 from pyscf.dft import numint
@@ -1311,9 +1309,8 @@ def dynamic_rdm(mo_coeff, mo_occ):
 
 # This is the main script that allows for a fast test to be done.
 # The only required input is a system name that one wants to calculate.
-if __name__ == "__main__":
+if __name__ == '__main__':
     from ase.io import read
-    import os 
     f_xyz = os.path.dirname(os.path.realpath(__file__))+'/../examples/basic_calculations/H2.xyz'
     ase_atoms = read(f_xyz)
     flosic_values = calculate_flosic(ase_atoms,'H2',debug=True,basis='cc-pvqz',xc='LDA,PW')
