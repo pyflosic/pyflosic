@@ -1,5 +1,5 @@
 
-This directory includes serveral examples.
+This directory includes several examples.
 
 | file 	| description |  
 | ------------- |:-------------:|
