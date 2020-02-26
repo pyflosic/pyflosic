@@ -22,18 +22,18 @@ mol = gto.M(atom=ase2pyscf(nuclei), basis={'default':b},spin=spin)
 
 # Set the calculation parameters.
 
-gridlevel = 4
-convtol = 1e-6
-maxcycle = 50
+grid = 4
+conv_tol = 1e-6
+max_cycle = 50
 xc = 'LDA,PW'
 
 # Do the DFT calculation.
 
 print('Starting DFT calculation.')
 mf = dft.UKS(mol)
-mf.max_cycle = maxcycle
-mf.conv_tol = convtol
-mf.grids.level = gridlevel
+mf.max_cycle = max_cycle
+mf.conv_tol = conv_tol
+mf.grids.level = grid
 mf.xc = xc	
 mf.kernel()
 

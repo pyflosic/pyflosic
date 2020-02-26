@@ -13,7 +13,7 @@ b = '6-311++Gss' # Basis set.
 verbose = 4 # Amount of output. 4: full output.
 max_cycle = 300 # Number of SCF iterations.
 conv_tol = 1e-7 # Accuracy of the SCF cycle.
-grids_level = 3 # Level of the numerical grid. 3 is the standard value.
+grid = 3 # Level of the numerical grid. 3 is the standard value.
 xc = 'LDA,PW' # Exchange-correlation functional in the form: (exchange,correlation)
 # NOTE: As there exists only one way to express the exchange for LDA, there is only one identifier.
 # For LDA correlation there exist several.
@@ -26,7 +26,7 @@ sysname = 'H2'
 # calculate_flosic operates fully automatic; it performs a DFT SCF cycle and then does FLO-SIC on top of that.
 # The return value is a Python dictionary.
 
-flosic_values_1 = calculate_flosic(spin=0,fname=sysname,basis=b,verbose=verbose,max_cycle=max_cycle,conv_tol=conv_tol,grid=grids_level,xc=xc)
+flosic_values_1 = calculate_flosic(spin=0,fname=sysname,basis=b,verbose=verbose,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,xc=xc)
 
 # ALTERNATIVELY: ASE Atoms object as input.
 # We need an ASE Atoms object as input.
@@ -34,7 +34,7 @@ flosic_values_1 = calculate_flosic(spin=0,fname=sysname,basis=b,verbose=verbose,
 
 #molecule = read('H2.xyz')
 #spin = 0
-#flosic_values_1 = calculate_flosic(spin=0,ase_atoms=molecule,basis=b,verbose=verbose,max_cycle=max_cycle,conv_tol=conv_tol,grid=grids_level,xc=xc)
+#flosic_values_1 = calculate_flosic(spin=0,ase_atoms=molecule,basis=b,verbose=verbose,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,xc=xc)
 
 # Another possibility to use FLO-SIC is as an post-processing step.
 # This is POST-PROCESSING one-shot.
@@ -62,7 +62,7 @@ dft_object = dft.UKS(mol)
 dft_object.verbose = verbose
 dft_object.max_cycle = max_cycle
 dft_object.conv_tol = conv_tol
-dft_object.grids.level = grids_level
+dft_object.grids.level = grid
 dft_object.xc = xc
 
 # Perform the DFT calculation.

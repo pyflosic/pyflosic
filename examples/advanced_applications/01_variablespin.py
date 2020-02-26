@@ -31,7 +31,7 @@ mol_2 = gto.M(atom=ase2pyscf(nuclei), basis={'default':b},spin=spin_2,charge=cha
 
 # We further need to specify the numerical grid level used in the self-consistent FLO-SIC calculation.
 
-grid_level = 4
+grid = 4
 
 # We need to choose an exchange-correlation functional.
 
@@ -41,7 +41,7 @@ xc = 'LDA,PW' # Exchange-correlation functional in the form: (exchange,correlati
 
 # Now we can initiliaze the SIC objects.
 
-sic_0 = FLOSIC(mol_0,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level)
+sic_0 = FLOSIC(mol_0,xc=xc,fod1=fod1,fod2=fod2,grid=grid)
 
 # For spin = 2 we have to adjust the FOD geometry by moving the FOD for the second spin channel into the first one.
 

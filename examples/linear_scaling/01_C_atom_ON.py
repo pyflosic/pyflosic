@@ -19,7 +19,7 @@ mol = gto.M(atom=ase2pyscf(nuclei),
             spin=spin,
             charge=charge)
 
-grid_level  = 9
+grid  = 9
 mol.verbose = 4
 mol.max_memory = 2000
 mol.build()
@@ -31,12 +31,12 @@ mdft.xc = xc
 mdft.kernel()
 
 # build O(N) stuff
-myon = ON(mol,[fod1.positions,fod2.positions], grid_level=grid_level)
+myon = ON(mol,[fod1.positions,fod2.positions], grid=grid)
 myon.nshell = 1
 myon.build()
 
 # enable ONMSH
-m = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level, init_dm=mdft.make_rdm1(),ham_sic='HOOOV')
+m = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid=grid, init_dm=mdft.make_rdm1(),ham_sic='HOOOV')
 m.max_cycle = 40
 m.set_on(myon)
 m.conv_tol = 1e-5
