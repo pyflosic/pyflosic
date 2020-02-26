@@ -11,7 +11,8 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-#
+#   
+# CHANGELOG 26.02.2020      grid_level -> grid (JaK)
 import time
 import copy
 import numpy as np
@@ -42,17 +43,17 @@ import sys
 
 class ON(object):
     """Provides functionality to implement O(N) scaling FLOSIC"""
-    def __init__(self, mol, fod, grid_level=9):
+    def __init__(self, mol, fod, grid=9):
         super(ON, self).__init__()
         self.mol = mol
         self.nspin = len(fod)
         self._fod = fod   # list of positions, Angst
-        self.grid_level = grid_level
+        self.grids.level = grid
         self.eps_cutoff = 1.0e-10
         self.is_init = True
         self.add_ghosts = False
         self.nshell = 2
-        #print(self.grid_level)
+        #print(self.grids.level)
         #sys.exit()
         
     def build(self):
@@ -160,7 +161,7 @@ class ON(object):
         
         # prepare the ongrids
         print("Generating O(N) meshes: nshell={}, grid level={}"\
-            .format(self.nshell, self.grid_level))
+            .format(self.nshell, self.grids.level))
         self.fod_onmsh = list()
         self.fod_onmol = list()
         for s in range(self.nspin):
@@ -261,7 +262,7 @@ class ON(object):
         print(' -> building Vxc-Grid for FOD {} ...'.format(fodid), flush=True)
         #mol.atom_pure_symbol
         if level == None:
-            level = self.grid_level
+            level = self.grids.level
         onatoms = self.onatoms[s][fodid]
         #print(onatoms)
         
@@ -587,7 +588,7 @@ if __name__ == '__main__':
                 spin=spin,
                 charge=charge)
 
-    grid_level  = 7
+    grid  = 7
     mol.verbose = 4
     mol.max_memory = 2000
     mol.build()
@@ -600,12 +601,12 @@ if __name__ == '__main__':
     mdft.kernel()
     
     # build O(N) stuff
-    myon = ON(mol,[fod1.positions,fod2.positions], grid_level=grid_level)
+    myon = ON(mol,[fod1.positions,fod2.positions], grid=grid)
     myon.nshell = 2
     myon.build()
     
     # enable ONMSH
-    m = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level, init_dm=mdft.make_rdm1())
+    m = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid=grid, init_dm=mdft.make_rdm1())
     m.max_cycle = 40
     m.set_on(myon)
     m.conv_tol = 1e-5

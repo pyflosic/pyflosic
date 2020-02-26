@@ -29,6 +29,9 @@
 # CHANGELOG 24.02.2020          removed import redundancies (from pyscf.dft import rks, uks, UKS)
 #                               changed class FLOSIC: calc_uks.max_cycle = 0 -> calc_uks.max_cycle = 1 for pyscf 1.7.0 compatibility
 #                               modified imports
+#                               removed self.grid_level
+#                               grid_level -> grid (consistency with calculator)
+#                               removed grid_level in keys
 import time, sys
 import numpy as np
 from pyscf import lib
@@ -251,7 +254,7 @@ class FLOSIC(uhf.UHF):
     '''FLOSIC 
     See pyscf/dft/rks.py RKS class for the usage of the attributes
     Rewritten UKS class. ''' # This part is directly taken from the RKS class.
-    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid_level=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOO',vsic_every=1, init_dm=None):
+    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOO',vsic_every=1, init_dm=None):
         uhf.UHF.__init__(self, mol)
         rks._dft_common_init_(self)
         
@@ -264,8 +267,7 @@ class FLOSIC(uhf.UHF):
         self.nuclei = nuclei 
         self.ldax = ldax # If True, LDA exchange is used for FLO-SIC (debugging mainly).
         self.is_first = True # Used to determine which SCF cycle we are in.
-        self.grid_level = grid_level # Grid level.
-        self.grids.level = grid_level 
+        self.grids.level = grid # grid level
         self.calc_forces = calc_forces # Determines whether or not FOD forces are calculated in every step. Default: False.
         self.debug = debug # enable debugging output 		
         self.l_ij = l_ij # Lagrangian multiplier output 
@@ -278,7 +280,8 @@ class FLOSIC(uhf.UHF):
         calc_uks = UKS(mol)
         calc_uks.xc = self.xc
         calc_uks.max_cycle = 1 # pyscf 1.6.6 and older: 0 also works
-        calc_uks.grids.level = grid_level
+        calc_uks.grids.level = grid
+        calc_uks.verbose = 4
         
         # if an initial density matrix is given
         # initialize the subclass with it
@@ -344,7 +347,7 @@ class FLOSIC(uhf.UHF):
         self.vsic_every = vsic_every # Calculate the vsic after e.g 50 cycles 
         self.ham_sic = ham_sic # SIC hamiltonian 
         # This is needed that the PySCF mother class get familiar with all new variables. 
-        self._keys = self._keys.union(['grid_level','fod1','homo_flosic','exc','evalues','calc_uks','esic','flo',
+        self._keys = self._keys.union(['fod1','homo_flosic','exc','evalues','calc_uks','esic','flo',
             'fforces','fod2','ldax','calc_forces','is_first','debug','nuclei','AF','l_ij','ods','lambda_ij',
             'num_iter','vsic_every','fixed_vsic','ham_sic','preopt_fix1s','cesicc','nspin','opt_mxstep','preopt',
             'opt_init_mxstep','pflo','preopt_start_cycle','preopt_conv_tol','on','preopt_fmin',
@@ -380,7 +383,7 @@ class FLOSIC(uhf.UHF):
                 'spin'      : self.calc_uks.mol.spin,
                 'max_memory': self.calc_uks.mol.max_memory,
                 'xc'        : self.calc_uks.xc,
-                'grid_level': self.calc_uks.grids.level
+                'grid': self.calc_uks.grids.level
             }
             for inode in range(1,wsize):
                 comm.send(info, dest=inode, tag=12)
@@ -741,7 +744,7 @@ if __name__ == '__main__':
     
     # Calculation parameters.
     max_cycle = 40
-    grid_level = 7
+    grid = 7
     conv_tol = 1e-6
     xc = 'LDA,PW'
     
@@ -750,13 +753,13 @@ if __name__ == '__main__':
         xc=xc,
         fod1=fod1,
         fod2=fod2,
-        grid_level=grid_level
+        grid=grid
     )
     m.max_cycle = max_cycle
     m.conv_tol = conv_tol
     
     from onstuff import ON
-    myon = ON(mol,[fod1.positions,fod2.positions], grid_level=grid_level)
+    myon = ON(mol,[fod1.positions,fod2.positions], grid=grid)
     myon.nshell = 2
     myon.build()
     

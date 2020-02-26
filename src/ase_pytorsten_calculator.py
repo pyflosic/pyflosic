@@ -206,7 +206,7 @@ if __name__ == "__main__":
                 spin=spin,
                 charge=charge)
 
-    grid_level  = 5
+    grid  = 5
     mol.verbose = 4
     mol.max_memory = 2000
     mol.build()
@@ -222,7 +222,7 @@ if __name__ == "__main__":
     mflosic = FLOSIC(mol, xc=xc,
         fod1=fodup,
         fod2=foddn,
-        grid_level=grid_level,
+        grid=grid,
         init_dm=mdft.make_rdm1()
     )
     mflosic.max_cycle = 40

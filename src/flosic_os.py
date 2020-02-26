@@ -26,6 +26,7 @@
 #   CHANGELOG 24.02.2020:   bugfix in get_fermi_forces(): calc_forces = True now works for spin != 0 (consistency with flosic_scf.py)
 #                           deprecated fix in flosic: fod.get_number_of_atoms() -> len(fod)
 #                           modified imports
+#                           increased print level for dipole moment
 import os, sys
 import numpy as np 
 import glob 
@@ -1172,7 +1173,7 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
     # The FLOs.
     return_dict['flo'] = flo
     # The dipole momemt. 
-    return_dict['dipole'] = mf.dip_moment(verbose=0)
+    return_dict['dipole'] = mf.dip_moment()
     # The FLO-SIC evalues.     
     return_dict['evalues'] = eval_flo
     # The lambda_ij

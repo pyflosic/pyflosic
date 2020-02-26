@@ -11,7 +11,7 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-#
+#   CHANGELOG 26.02.2020  grid_level -> grids.level or grid (JaK)
 import time
 import os
 import sys
@@ -231,7 +231,7 @@ def mpi_worker():
                 max_memory=info['max_memory']
             )
             mf = dft.UKS(mol)
-            mf.grids.level = info['grid_level']
+            mf.grids.level = info['grids.level']
             mf.xc          = info['xc']
             mf.max_cycle   = 0
             mf.kernel()
@@ -1769,7 +1769,7 @@ def fo(mf, fod, s=0):
     return fo
 
 
-def lorb2fod(mf, lo_coeff, s=0, grid_level=7):
+def lorb2fod(mf, lo_coeff, s=0, grid=7):
     """
     lo_coeff[:] localized orbital
     """
@@ -1863,7 +1863,7 @@ def lorb2fod(mf, lo_coeff, s=0, grid_level=7):
 
     _mdft = dft.UKS(onmol)
     _mdft.max_cycle = 0
-    _mdft.grids.level = grid_level
+    _mdft.grids.level = grid
     _mdft.kernel()
     ongrid = copy(_mdft.grids)
 
@@ -1929,7 +1929,7 @@ def lorb2fod(mf, lo_coeff, s=0, grid_level=7):
     return res.x
 
 
-def initial_guess(m, grid_level):
+def initial_guess(m, grid):
     """docstring for initial_guess"""
     #print nspin
     #sys.exit()
@@ -1982,7 +1982,7 @@ def initial_guess(m, grid_level):
                 sstr = 'DN'
             print("  density fit for spin {0} orb #{1} ...".format(sstr,j+1), flush=True)
             #print("find initial fod: {0}".format(j))
-            initial_fods[j,:] = lorb2fod(m,loc_orb[:,j], s=spin, grid_level=grid_level-1)
+            initial_fods[j,:] = lorb2fod(m,loc_orb[:,j], s=spin, grid=grid-1)
             fodout.extend(Atom(osym, position=initial_fods[j,:]*units.Bohr))
 
     return (fodup, foddn)
@@ -2151,7 +2151,7 @@ if __name__ == '__main__':
                 spin=spin,
                 charge=charge)
 
-    grid_level  = 6
+    grid  = 6
     mol.verbose = 2
     mol.max_memory = 1000
     mol.build()
@@ -2162,15 +2162,15 @@ if __name__ == '__main__':
     m.diis_start_cycle=2
     m.diis_space = 7
     m.small_rho_cutoff = 1e-9
-    m.grids.level = grid_level
+    m.grids.level = grid
     m.xc=xc
     m.kernel()
     #m.analyze()
 
 
-    m = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level)
+    m = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid=grid)
 
-    myon = ON(mol,[fod1.positions,fod2.positions], grid_level=grid_level)
+    myon = ON(mol,[fod1.positions,fod2.positions], grid=grid)
     myon.build()
 
     #myon.print_stats()
@@ -2272,7 +2272,7 @@ if __name__ == '__main__':
                 sstr = 'DN'
             print("  density fit for spin {0} orb #{1} ...".format(sstr,j+1))
             #print("find initial fod: {0}".format(j))
-            initial_fods[j,:] = lorb2fod(m,loc_orb[:,j], grid_level=grid_level)
+            initial_fods[j,:] = lorb2fod(m,loc_orb[:,j], grid=grid)
             fodout.extend(Atom(osym, position=initial_fods[j,:]*units.Bohr))
 
 
