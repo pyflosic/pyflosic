@@ -37,7 +37,7 @@
 #                           reintroduce mode 'both' in updated form?
 #                           include pbc for DFT?
 #                           include PCM for DFT
-#
+#                           manage output via loggers
 
 import os
 import numpy as np
@@ -316,6 +316,7 @@ class PYFLOSIC(FileIOCalculator):
             # conversion to e*A to match ase
             self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) 
             # conversion to A**3 to match ase
+            self.results['fodforces'] = None
             self.results['evalues'] = self.mf.mo_energy*Ha
             # conversion to eV to match ase
             n_up, n_dn = self.mf.mol.nelec
@@ -334,8 +335,6 @@ class PYFLOSIC(FileIOCalculator):
             else:
                 self.results['homo'] = None
 
-            self.results['fodforces'] = None
-            
             if self.xc != 'SCAN,SCAN': # no gradients for meta-GGAs!
                 gf = self.mf.nuc_grad_method()
                 gf.verbose = self.verbose
@@ -386,13 +385,14 @@ class PYFLOSIC(FileIOCalculator):
             # conversion to eV to match ase
             self.results['dipole'] = mf['dipole']*Debye
             # conversion to e*A to match ase
-            self.results['fodforces'] = -1.*mf['fforces']*(Ha/Bohr) 
-            # conversion to eV/A to match ase
             self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) 
             # conversion to A**3 to match ase
-            print('Analytic FOD force [Ha/Bohr]')
-            print(-1.*mf['fforces'])
-            print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((mf['fforces']**2).sum(axis=1).max()))
+            self.results['fodforces'] = -1.*mf['fforces']*(Ha/Bohr) 
+            # conversion to eV/A to match ase
+            if self.verbose >= 4:
+                print('Analytic FOD force [Ha/Bohr]')
+                print(-1.*mf['fforces'])
+                print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((mf['fforces']**2).sum(axis=1).max()))
             self.results['evalues'] = mf['evalues']*Ha
             # conversion to eV to match ase
             n_up, n_dn = self.mf.mol.nelec
@@ -445,10 +445,14 @@ class PYFLOSIC(FileIOCalculator):
             # conversion to eV to match ase
             self.results['energy'] = e*Ha
             # conversion to eV to match ase
-            self.results['dipole'] =  self.mf.dip_moment()*Debye
+            self.results['dipole'] =  self.mf.dip_moment(verbose=self.verbose)*Debye
             # conversion to e*A to match ase
-            self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) 
+            p = Polarizability(self.mf).polarizability()
+            self.results['polarizability'] = p*(Bohr**3)
             # conversion to A**3 to match ase
+            if self.verbose >= 4:
+                print('Isotropic polarizability %.12g' % ((p[0,0]+p[1,1]+p[2,2])/3))
+                print('Polarizability anisotropy %.12g' % ((.5 * ((p[0,0]-p[1,1])**2 + (p[1,1]-p[2,2])**2 + (p[2,2]-p[0,0])**2))**.5))
             self.results['fixed_vsic'] = self.mf.fixed_vsic  
             
             if self.fopt == 'force' or self.fopt == 'esic-force':
@@ -456,9 +460,10 @@ class PYFLOSIC(FileIOCalculator):
                 fforces = self.mf.get_fforces()
                 self.results['fodforces'] = fforces*(Ha/Bohr)
                 # conversion to eV/A to match ase
-                print('Analytic FOD force [Ha/Bohr]')
-                print(fforces)
-                print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((fforces**2).sum(axis=1).max()))
+                if self.verbose >=4:
+                    print('Analytic FOD force [Ha/Bohr]')
+                    print(fforces)
+                    print('fmax = %0.6f [Ha/Bohr]' % np.sqrt((fforces**2).sum(axis=1).max()))
 
             if self.fopt == 'lij':
                 #
