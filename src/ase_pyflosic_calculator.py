@@ -32,8 +32,8 @@
 #                           replaced calculation example at the bottom
 # CHANGELOG 18.02.2020:     moved class BasicFLOSICC by Torsten Hahn to ase_pytorsten_calculator.py
 # CHANGELOG 25.02.2020:     implemented polarizability for modes 'flosic-os' (just the DFT polarizability) and 'flosic-scf'
-# FUTURELOG 25.02.2020:     include finite_differences polarizability?
-#                           include hyperpolarizability?
+# CHANGELOG 03.03.2020:     removed valid_args, removed keyword 'mf', removed get_energy()
+# FUTURELOG 03.03.2020:     include hyperpolarizability?
 #                           reintroduce mode 'both' in updated form?
 #                           include pbc for DFT?
 #                           include PCM for DFT
@@ -50,8 +50,6 @@ from pyscf.prop.polarizability.uhf import polarizability, Polarizability
 from flosic_os import xyz_to_nuclei_fod, ase2pyscf, flosic 
 from flosic_scf import FLOSIC
 from pyscf.solvent.ddcosmo import DDCOSMO, ddcosmo_for_scf
-from pyscf.data import radii
-#from pyscf.lib import logger
 
 def force_max_lij(lambda_ij):
     # calculate the RMS of the l_ij matrix 
@@ -96,7 +94,6 @@ class PYFLOSIC(FileIOCalculator):
         conv_tol = 1e-5,            # energy convergence threshold 
         grid = 3,                   # numerical mesh (lowest: 0, highest: 9)
         ghost= False,               # ghost atoms at FOD positions 
-        mf = None,                  # PySCF calculation object
         use_newton=False,           # use the Newton SCF cycle 
         use_chk=False,              # restart from checkpoint file 
         verbose=0,                  # output verbosity 
@@ -116,8 +113,9 @@ class PYFLOSIC(FileIOCalculator):
         lmax = 10,                  # maximum l for basis expansion in spherical harmonics for solvation
         eta = 0.1,                  # smearing parameter in solvation model
         lebedev_order = 89,         # order of integration for solvation model
-        radii_table = radii.VDW,    # vdW radii for solvation model
-        eps = 78.3553               # dielectric constant of solvent
+        radii_table = None,         # vdW radii for solvation model
+        eps = 78.3553,              # dielectric constant of solvent
+        pol = False                 # calculate polarizability
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -125,17 +123,15 @@ class PYFLOSIC(FileIOCalculator):
         """ Constructor """
         FileIOCalculator.__init__(self, restart, ignore_bad_restart_file,
                                   label, atoms, **kwargs)
-        valid_args = ('fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic','dm','cart','output','solvation','lmax','eta','lebedev_order','radii_table','eps')
         # set any additional keyword arguments
         for arg, val in self.parameters.items():
-            if arg in valid_args:
+            if arg in self.default_parameters.keys():
                 setattr(self, arg, val)
             else:
-                raise RuntimeError('unknown keyword arg "%s" : not in %s'% (arg, valid_args))
+                raise RuntimeError('unknown keyword arg "%s" : not in %s'% (arg,self.default_parameters.keys()))
         
         self.set_atoms(atoms)
-            
-            
+    
     def initialize(self,atoms=None,properties=['energy'],system_changes=all_changes):
         self.atoms = atoms.copy()
 
@@ -143,7 +139,7 @@ class PYFLOSIC(FileIOCalculator):
         if self.atoms != atoms:
             self.atoms = atoms.copy()
             self.results = {}       
-
+    
     def get_atoms(self):
         if self.atoms is None:
             raise ValueError('Calculator has no atoms')
@@ -195,12 +191,7 @@ class PYFLOSIC(FileIOCalculator):
             
         h1 = mf.get_hcore()
         mf.get_hcore = lambda *args, **kwargs: h1 + np.einsum('x,xij->ij',efield, ao_dip)
-        return mf
     
-    def get_energy(self,atoms=None):
-        # wrapper for get_potential_energy()
-        return self.get_potential_energy(atoms) 
-
     def calculation_required(self, atoms, properties):
         # check if a list of properties has to be calculated or not 
         assert not isinstance(properties, str)
@@ -275,7 +266,7 @@ class PYFLOSIC(FileIOCalculator):
             self.set_atoms(atoms)
         if self.mode == 'dft':
             [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
-            mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart,output=self.output)
+            mol = gto.M(atom=ase2pyscf(nuclei),basis=self.basis,spin=self.spin,charge=self.charge,cart=self.cart,output=self.output)
             if self.solvation is None:
                 mf = scf.UKS(mol)
             elif self.solvation == 'cosmo':
@@ -295,7 +286,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
             if self.use_chk and not self.use_newton:
-                    mf.chkfile = 'pyflosic.chk'
+                mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.use_newton and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
@@ -304,7 +295,7 @@ class PYFLOSIC(FileIOCalculator):
                 mf = mf.as_scanner()
                 mf = mf.newton()
             if self.efield is not None:
-                mf = self.apply_electric_field(mf,self.efield)
+                self.apply_electric_field(mf,self.efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
@@ -314,8 +305,11 @@ class PYFLOSIC(FileIOCalculator):
             # conversion to eV to match ase
             self.results['dipole'] = self.mf.dip_moment(verbose=self.verbose)*Debye 
             # conversion to e*A to match ase
-            self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) 
-            # conversion to A**3 to match ase
+            if self.pol:
+                self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) 
+                # conversion to A**3 to match ase
+            else:
+                self.results['polarizability'] = None 
             self.results['fodforces'] = None
             self.results['evalues'] = self.mf.mo_energy*Ha
             # conversion to eV to match ase
@@ -327,7 +321,7 @@ class PYFLOSIC(FileIOCalculator):
                 homo_dn = e_dn[n_dn-1]
                 self.results['homo'] = max(homo_up,homo_dn)
             elif n_up != 0:
-                e_up = np.sort(Iself.results['evalues'][0])
+                e_up = np.sort(self.results['evalues'][0])
                 self.results['homo'] = e_up[n_up-1]
             elif n_dn != 0:
                 e_dn = np.sort(self.results['evalues'][1])
@@ -343,6 +337,10 @@ class PYFLOSIC(FileIOCalculator):
                 # conversion to eV/A to match ase
                 totalforces = []
                 totalforces.extend(forces)
+                fod1forces = np.zeros_like(fod1.get_positions())
+                fod2forces = np.zeros_like(fod2.get_positions())
+                totalforces.extend(fod1forces)
+                totalforces.extend(fod2forces)
                 totalforces = np.array(totalforces)
                 self.results['forces'] = totalforces
             else:
@@ -374,7 +372,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
             if self.efield is not None:
-                mf = self.apply_electric_field(mf,self.efield)
+                self.apply_electric_field(mf,self.efield)
             self.mf = mf
             if self.dm is None :
                 e = self.mf.kernel()
@@ -385,8 +383,11 @@ class PYFLOSIC(FileIOCalculator):
             # conversion to eV to match ase
             self.results['dipole'] = mf['dipole']*Debye
             # conversion to e*A to match ase
-            self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) 
-            # conversion to A**3 to match ase
+            if self.pol:
+                self.results['polarizability'] = Polarizability(self.mf).polarizability()*(Bohr**3) 
+                # conversion to A**3 to match ase
+            else:
+                self.results['polarizability'] = None
             self.results['fodforces'] = -1.*mf['fforces']*(Ha/Bohr) 
             # conversion to eV/A to match ase
             if self.verbose >= 4:
@@ -435,7 +436,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             if self.efield is not None:
-                mf = self.apply_electric_field(mf,self.efield)
+                self.apply_electric_field(mf,self.efield)
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
@@ -445,14 +446,17 @@ class PYFLOSIC(FileIOCalculator):
             # conversion to eV to match ase
             self.results['energy'] = e*Ha
             # conversion to eV to match ase
-            self.results['dipole'] =  self.mf.dip_moment(verbose=self.verbose)*Debye
+            self.results['dipole'] = self.mf.dip_moment(verbose=self.verbose)*Debye
             # conversion to e*A to match ase
-            p = Polarizability(self.mf).polarizability()
-            self.results['polarizability'] = p*(Bohr**3)
-            # conversion to A**3 to match ase
-            if self.verbose >= 4:
-                print('Isotropic polarizability %.12g' % ((p[0,0]+p[1,1]+p[2,2])/3))
-                print('Polarizability anisotropy %.12g' % ((.5 * ((p[0,0]-p[1,1])**2 + (p[1,1]-p[2,2])**2 + (p[2,2]-p[0,0])**2))**.5))
+            if self.pol:
+                p = Polarizability(self.mf).polarizability()
+                self.results['polarizability'] = p*(Bohr**3)
+                # conversion to A**3 to match ase
+                if self.verbose >= 4:
+                    print('Isotropic polarizability %.12g' % ((p[0,0]+p[1,1]+p[2,2])/3))
+                    print('Polarizability anisotropy %.12g' % ((.5 * ((p[0,0]-p[1,1])**2 + (p[1,1]-p[2,2])**2 + (p[2,2]-p[0,0])**2))**.5))
+            else:
+                self.results['polarizability'] = None
             self.results['fixed_vsic'] = self.mf.fixed_vsic  
             
             if self.fopt == 'force' or self.fopt == 'esic-force':
@@ -470,8 +474,8 @@ class PYFLOSIC(FileIOCalculator):
                 # This is under development. 
                 # Trying to replace the FOD forces. 
                 #
-                self.lambda_ij = self.mf.lambda_ij
-                self.results['lambda_ij'] = self.mf.lambda_ij
+                self.lambda_ij = mf.lambda_ij
+                self.results['lambda_ij'] = mf.lambda_ij
                 #fforces = []
                 #nspin = 2  
                 #for s in range(nspin):
@@ -506,7 +510,7 @@ class PYFLOSIC(FileIOCalculator):
                 except:
                     # 
                     # If we are in the first iteration 
-                    # we can still use the analystical FOD forces 
+                    # we can still use the analytical FOD forces 
                     # as starting values 
                     # 
                     fforces = self.mf.get_fforces()
