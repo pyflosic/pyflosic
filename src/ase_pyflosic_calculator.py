@@ -209,53 +209,53 @@ class PYFLOSIC(FileIOCalculator):
             self.calculate(atoms)
         if self.fopt == 'lij':
             # res = force_max_lij(self.lambda_ij)
-            res = self.results['energy'].copy()
+            res = self.results['energy']
         if self.fopt == 'force':
-            res = self.results['energy'].copy()
+            res = self.results['energy']
         if self.fopt == 'esic-force':
-            res = self.results['esic'].copy()
+            res = self.results['esic']
         return res 
 
     def get_forces(self, atoms=None):
         # calculate forces if required
         if self.calculation_required(atoms,['forces']):
             self.calculate(atoms)
-        self.forces = self.results['forces'].copy()
+        self.forces = self.results['forces']
         return self.forces
 
     def get_fodforces(self, atoms=None):
         # calculate FOD forces if required
         if self.calculation_required(atoms,['fodforces']):
             self.calculate(atoms)
-        self.fodforces = self.results['fodforces'].copy() 
+        self.fodforces = self.results['fodforces']
         return self.fodforces 
 	
     def get_dipole_moment(self,atoms=None):
         # calculate dipole moment if required
         if self.calculation_required(atoms,['dipole']):
             self.calculate(atoms)
-        self.dipole_moment = self.results['dipole'].copy()
+        self.dipole_moment = self.results['dipole']
         return self.dipole_moment
 
     def get_polarizability(self,atoms=None):  
         # calculate polarizability  if required
         if self.calculation_required(atoms,['polarizability']):
             self.calculate(atoms)
-        self.polarizability = self.results['polarizability'].copy()
+        self.polarizability = self.results['polarizability']
         return self.polarizability
 
     def get_evalues(self,atoms=None):
         # calculate eigenvalues if required
         if self.calculation_required(atoms,['evalues']):
             self.calculate(atoms)
-        self.evalues = self.results['evalues'].copy()
+        self.evalues = self.results['evalues']
         return self.evalues
 
     def get_homo(self,atoms=None):
         # calculate HOMO energy if required
         if self.calculation_required(atoms,['homo']):
             self.calculate(atoms)
-        self.homo = self.results['homo'].copy()
+        self.homo = self.results['homo']
         return self.homo
 
     def calculate(self, atoms = None, properties = ['energy','dipole','evalues','fodforces','forces','homo','polarizability'], system_changes = all_changes):
