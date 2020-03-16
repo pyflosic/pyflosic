@@ -39,7 +39,7 @@ We recommend the following package versions.
 * numba 0.43.1
 * scipy 1.2.1
 * numpy 1.16.2
-* pyscf 1.6.1-1
+* pyscf 1.6.1
 
 ## Dependencies (optional)
 
