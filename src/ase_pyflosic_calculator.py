@@ -33,7 +33,10 @@
 # CHANGELOG 18.02.2020:     moved class BasicFLOSICC by Torsten Hahn to ase_pytorsten_calculator.py
 # CHANGELOG 25.02.2020:     implemented polarizability for modes 'flosic-os' (just the DFT polarizability) and 'flosic-scf'
 # CHANGELOG 03.03.2020:     removed valid_args, removed keyword 'mf', removed get_energy()
-# FUTURELOG 03.03.2020:     include hyperpolarizability?
+# CHANGELOG 01.04.2020:     use_newton -> newton, newton(default) = True, added default values for charge (0), spin (0), basis (STO-3G)
+#                           removed argument mol, added argument df (default: True), changed default value for conv_tol to 1e-6
+#
+# FUTURELOG 01.04.2020:     include hyperpolarizability?
 #                           reintroduce mode 'both' in updated form?
 #                           include pbc for DFT?
 #                           include PCM for DFT
@@ -82,21 +85,21 @@ class PYFLOSIC(FileIOCalculator):
     default_parameters = dict(
         fod1 = None,                # ase atoms object FODs spin channel 1 
         fod2 = None,                # ase atoms objects FODs spin channnel 2 
-        mol= None,                  # PySCF mole object 
-        charge = None,              # charge of the system 
-        spin = None,                # spin of the system, equal to 2S 
-        basis = None,               # basis set
+        charge = 0,                 # charge of the system 
+        spin = 0,                   # spin of the system, equal to 2S 
+        basis = 'STO-3G',           # basis set
         ecp = None,                 # only needed if ecp basis set is used 
         xc = 'LDA,PW',              # exchange-correlation potential - must be available in libxc 
         mode = 'flosic-os',         # calculation method (dft,flosic-os or flosic-scf) 
         efield=None,                # perturbative electric field
         max_cycle = 300,            # maximum number of SCF cycles 
-        conv_tol = 1e-5,            # energy convergence threshold 
+        conv_tol = 1e-6,            # energy convergence threshold 
         grid = 3,                   # numerical mesh (lowest: 0, highest: 9)
         ghost= False,               # ghost atoms at FOD positions 
-        use_newton=False,           # use the Newton SCF cycle 
+        newton=True,                # use the Newton second-order SCF cycle
+        df=True,                    # apply density fitting
         use_chk=False,              # restart from checkpoint file 
-        verbose=0,                  # output verbosity 
+        verbose=4,                  # output verbosity 
         calc_forces=False,          # calculate FOD forces 
         debug=False,                # extra ouput for debugging purpose 
         l_ij=None,                  # developer option: alternative optimization target  
@@ -285,17 +288,19 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
-            if self.use_chk and not self.use_newton:
+            if self.use_chk and not self.newton:
                 mf.chkfile = 'pyflosic.chk'
-            if self.use_chk and not self.use_newton and os.path.isfile('pyflosic.chk'):
+            if self.use_chk and not self.newton and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
-            if self.use_newton and self.xc != 'SCAN,SCAN':
+            if self.newton and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(mf,self.efield)
+            if self.df:
+                mf = mf.density_fit()
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
@@ -359,13 +364,13 @@ class PYFLOSIC(FileIOCalculator):
             mf = scf.UKS(mol)
             mf.xc = self.xc 
             mf.verbose = self.verbose
-            if self.use_chk and not self.use_newton:
+            if self.use_chk and not self.newton:
                 mf.chkfile = 'pyflosic.chk'
-            if self.use_chk and not self.use_newton and os.path.isfile('pyflosic.chk'):
+            if self.use_chk and not self.newton and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
-            if self.use_newton and self.xc != 'SCAN,SCAN':
+            if self.newton and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton()
             mf.max_cycle = self.max_cycle
@@ -373,6 +378,8 @@ class PYFLOSIC(FileIOCalculator):
             mf.grids.level = self.grid
             if self.efield is not None:
                 self.apply_electric_field(mf,self.efield)
+            if self.df:
+                mf = mf.density_fit()
             self.mf = mf
             if self.dm is None :
                 e = self.mf.kernel()
@@ -424,19 +431,21 @@ class PYFLOSIC(FileIOCalculator):
                 mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp,cart=self.cart,output=self.output)
             mf = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid=self.grid,calc_forces=self.calc_forces,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
             mf.verbose = self.verbose 
-            if self.use_chk and not self.use_newton:
+            if self.use_chk and not self.newton:
                 mf.chkfile = 'pyflosic.chk'
-            if self.use_chk and not self.use_newton and os.path.isfile('pyflosic.chk'):
+            if self.use_chk and not self.newton and os.path.isfile('pyflosic.chk'):
                 mf.init_guess = 'chk'
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
-            if self.use_newton and self.xc != 'SCAN,SCAN':
+            if self.newton and self.xc != 'SCAN,SCAN':
                 mf = mf.as_scanner()
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             if self.efield is not None:
                 self.apply_electric_field(mf,self.efield)
+            if self.df:
+                mf = mf.density_fit()
             self.mf = mf
             if self.dm is None:
                 e = self.mf.kernel()
