@@ -17,7 +17,7 @@ ase_atoms = read("LiH_rattle.xyz")
 t1_start = time.time()
 # The actual pyflosic-scf optimization. 
 # Note: We choose here a smaller basis set and the 2nd order scf cycle to speed up the calculation. 
-flosic = flosic_optimize('flosic-scf',ase_atoms,0,0,'LDA,PW','sto3g',None,opt='FIRE',maxstep=0.1,use_newton=True,use_chk=False,verbose=4,steps=1)
+flosic = flosic_optimize('flosic-scf',ase_atoms,0,0,'LDA,PW','sto3g',opt='FIRE',maxstep=0.1,use_newton=True,use_chk=False,verbose=4,steps=1)
 # End timing. 
 t1_end = time.time()
 run_time1 = t1_end - t1_start
@@ -36,7 +36,7 @@ ase_atoms = read("LiH_rattle.xyz")
 t2_start = time.time()
 # The actual pyflosic-scf optimization. 
 # Note: We choose here a smaller basis set and the 2nd order scf cycle to speed up the calculation. 
-flosic = flosic_optimize('flosic-scf',ase_atoms,0,0,'LDA,PW','sto3g',None,opt='FIRE',maxstep=0.1,use_newton=True,use_chk=False,verbose=4,vsic_every=8,steps=1)
+flosic = flosic_optimize('flosic-scf',ase_atoms,0,0,'LDA,PW','sto3g',opt='FIRE',maxstep=0.1,use_newton=True,use_chk=False,verbose=4,vsic_every=8,steps=1)
 # End timing. 
 t2_end = time.time()
 run_time2 = t2_end - t2_start
