@@ -25,7 +25,7 @@ from ase.io import read
 #from nrlmol_basis import get_dfo_basis
 from ase.constraints import FixAtoms 
 
-def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,force_consistent=False,fopt='force',fix_fods=False,ham_sic='HOO',vsic_every=1):
+def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,force_consistent=False,fopt='force',fix_fods=False,ham_sic='HOO',vsic_every=1):
     # -----------------------------------------------------------------------------------
     # Input 
     # -----------------------------------------------------------------------------------
