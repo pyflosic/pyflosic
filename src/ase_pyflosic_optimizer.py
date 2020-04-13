@@ -153,4 +153,4 @@ if __name__ == '__main__':
     opt = ['FIRE','BFGS','LBFGS','CG','LineSearch'][0]
 
     # Do the optimization. 
-    os_flosic = flosic_optimize('flosic-os',atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2)	
+    os_flosic = flosic_optimize('flosic-os',atoms,charge,spin,xc,basis,ecp=ecp,opt='FIRE',maxstep=0.2)	
