@@ -46,6 +46,7 @@ def calc_localized_orbitals(mf,mol,method='ER',jmol=False):
     
     # Spin 1. 
     # only occupied orbitals 
+    method = method.upper()
     mo_occ = mf.mo_coeff[0][:,mf.mo_occ[0]>0]
     if method == 'ER':
         loc1 = edmiston.Edmiston(mol, mo_occ)
@@ -149,6 +150,7 @@ def get_guess(atoms,spin1_cube,spin2_cube,method='ER'):
     # spin1_cube	...	list of cubes in spin channel 1 
     # spin2_cube    ...     list of cubes in spin channel 2
     # method 	...	localization method: ER, FB, PM  
+    method = method.upper()
     f1 = spin1_cube
     f2 = spin2_cube
     
@@ -212,7 +214,8 @@ def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newt
     # BS		   ...  broken symmetry
     # calc	 	   ,,,  UKS or UHF 
     # Performe a DFT calculation. 
-    
+    method = method.upper()
+    calc = calc.upper()
     ase_atoms = ase_nuclei
     if ecp is None:
         mol = gto.M(atom=ase2pyscf(ase_atoms), basis=basis,spin=spin,charge=charge,symmetry=symmetry)
@@ -278,12 +281,13 @@ def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newt
     # Calculate the guess. 
     get_guess(atoms=ase_atoms,spin1_cube=f1,spin2_cube=f2,method=method)
 
+pycom_guess = automatic_guessing
 
 if __name__ == '__main__':
     import os
 
     # Path to the xyz file 
-    f_xyz = os.path.dirname(os.path.realpath(__file__))+'/../examples/automatic_guessing/O3.xyz'
+    f_xyz = os.path.dirname(os.path.realpath(__file__))+'/../examples/pycom/O3.xyz'
 
     ase_nuclei = read(f_xyz)
     charge = 0

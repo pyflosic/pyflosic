@@ -74,6 +74,11 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp,opt='FIRE',maxstep=0.2,l
     # radii_table               vdW radii for solvation model
     # eps                       dielectric constant of solvent
     
+    
+    opt = opt.upper()
+    mode = mode.lower()
+    
+    
     if fix_fods != False:
         c = FixAtoms(fix_fods)
         atoms.set_constraint(c)
