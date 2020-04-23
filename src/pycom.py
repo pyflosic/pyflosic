@@ -288,7 +288,7 @@ if __name__ == '__main__':
     import os
 
     # Path to the xyz file 
-    f_xyz = os.path.dirname(os.path.realpath(__file__))+'/../examples/automatic_guessing/O3.xyz'
+    f_xyz = os.path.dirname(os.path.realpath(__file__))+'/../examples/pycom/O3.xyz'
 
     ase_nuclei = read(f_xyz)
     charge = 0
