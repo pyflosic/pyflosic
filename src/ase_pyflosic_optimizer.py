@@ -62,6 +62,12 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     # fix_fods		...	freeze FODS during the optimization, might use for 1s/2s FODs 
     # ham_sic		...	the different unified Hamiltonians HOO and HOOOV 
 
+    
+    
+    opt = opt.upper()
+    mode = mode.lower()
+    
+    
     if fix_fods != False:
         c = FixAtoms(fix_fods)
         atoms.set_constraint(c)
