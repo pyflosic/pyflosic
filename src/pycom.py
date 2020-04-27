@@ -200,7 +200,7 @@ def get_guess(atoms,spin1_cube,spin2_cube,method='ER'):
         f.write('He %0.6f %0.6f %0.6f \n' % (x+shift,y+shift,z+shift))
     f.close()
 
-def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newton=True,grid=3,BS=None,calc='UKS',symmetry=False):
+def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newton=False,grid=3,BS=None,calc='UKS',symmetry=False):
     # ase_nuclei_atoms ...	ase.atoms.object containg only nuclei positions 
     # charge	   ...  charge of the system 
     # spin		   ...  spin state of the system 
