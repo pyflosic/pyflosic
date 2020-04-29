@@ -197,7 +197,7 @@ def get_guess(atoms,spin1_cube,spin2_cube,method='ER'):
         f.write('He %0.6f %0.6f %0.6f \n' % (x+shift,y+shift,z+shift))
     f.close()
 
-def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newton=False,grid=3,BS=None,calc='UKS',symmetry=False):
+def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newton=False,grid=3,BS=None,calc='UKS',symmetry=False,verbose=4):
     # ase_nuclei_atoms ...	ase.atoms.object containg only nuclei positions 
     # charge	   ...  charge of the system 
     # spin		   ...  spin state of the system 
@@ -219,7 +219,7 @@ def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newt
         mol = gto.M(atom=ase2pyscf(ase_atoms), basis=basis,spin=spin,charge=charge,symmetry=symmetry)
     if ecp is not None:
         mol = gto.M(atom=ase2pyscf(ase_atoms), basis=basis,ecp=ecp,spin=spin,charge=charge,symmetry=symmetry)
-    mol.verbose = 4 
+    mol.verbose = verbose 
     if calc == 'UKS':
         mf = scf.UKS(mol)
     if calc == 'UHF':
@@ -243,7 +243,7 @@ def automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',ecp=None,newt
             mol = gto.M(atom=ase2pyscf(ase_atoms), basis=basis,spin=0,charge=charge,symmetry=symmetry)
         if ecp is not None:
             mol = gto.M(atom=ase2pyscf(ase_atoms), basis=basis,ecp=ecp,spin=0,charge=charge,symmetry=symmetry)
-        mol.verbose = 4
+        mol.verbose = verbose
         mf = scf.UKS(mol)
         mf.grids.level = grid
         mf.max_cycle = 3000
