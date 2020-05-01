@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/185756742.svg)](https://zenodo.org/badge/latestdoi/185756742)
 ![GitHub Logo](/images/pyflosic_logo.png)
 
 
