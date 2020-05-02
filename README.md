@@ -73,6 +73,10 @@ If you use the PyFLOSIC code for a scientific article or contribution, please ci
   S. Sebastian, L. Fiedler, J. Kraus, J. Kortus, K. Trepte, S. Lehtola
   arXiv e-prints, Physics - Computational Physics, 2019, arXiv:1905.02631  
   
+Applications of the PyFLOSIC code:     
+* [Interpretation and Automatic Generation of Fermi‐Orbital Descriptors](https://onlinelibrary.wiley.com/doi/full/10.1002/jcc.26062)
+* [Stretched or noded orbital densities and self-interaction correction in density functional theory](https://aip.scitation.org/doi/10.1063/1.5087065)
+  
 ## Milestones 
   * **30.04.2020** 
 Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13)
