@@ -1,0 +1,5 @@
+*.cube
+*.pyc
+*.log
+*.tmp
+log 
