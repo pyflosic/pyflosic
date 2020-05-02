@@ -81,3 +81,5 @@ Applications of the PyFLOSIC code:
   * **30.04.2020** 
 Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13)
 
+## Social media acitvities 
+* [Researchgate group](https://www.researchgate.net/project/Fermi-Loewdin-orbital-self-interaction-correction-developed-in-Freiberg-FLO-SICFG)
