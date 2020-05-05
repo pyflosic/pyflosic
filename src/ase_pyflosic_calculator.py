@@ -552,7 +552,7 @@ class PYFLOSIC(FileIOCalculator):
         if self.mode == 'flosic-scf' or self.mode == 'flosic-os':
             totalforces = []
             forces = np.zeros_like(nuclei.get_positions()) 
-            fodforces = self.results['fodforces'].copy()
+            fodforces = self.results['fodforces']
             totalforces.extend(forces)
             totalforces.extend(fodforces)
             totalforces = np.array(totalforces)
