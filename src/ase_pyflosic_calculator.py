@@ -295,7 +295,6 @@ class PYFLOSIC(FileIOCalculator):
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.as_scanner()
                 mf = mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(mf,self.efield)
@@ -371,7 +370,6 @@ class PYFLOSIC(FileIOCalculator):
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.as_scanner()
                 mf = mf.newton()
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
@@ -438,7 +436,6 @@ class PYFLOSIC(FileIOCalculator):
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.as_scanner()
                 mf = mf.newton() 
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
