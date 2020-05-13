@@ -110,7 +110,7 @@ class PYFLOSIC(Calculator):
 
     def initialize(self):
         for arg, val in self.parameters.items():
-            if arg in self.default_parameters():
+            if arg in self.default_parameters:
                 setattr(self, arg, val)
             else:
                 raise RuntimeError(
