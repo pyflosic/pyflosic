@@ -244,7 +244,7 @@ class PYFLOSIC(Calculator):
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.fast_newton()
+                mf = mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(mf, self.efield)
             if self.df:
@@ -300,7 +300,7 @@ class PYFLOSIC(Calculator):
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.fast_newton()
+                mf = mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(mf, self.efield)
             if self.df:
@@ -355,7 +355,7 @@ class PYFLOSIC(Calculator):
                 mf.update('pyflosic.chk')
                 self.dm = mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.fast_newton()
+                mf = mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(mf, self.efield)
             if self.df:
