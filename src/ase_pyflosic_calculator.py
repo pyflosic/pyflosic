@@ -282,7 +282,7 @@ class PYFLOSIC(Calculator):
                 totalforces.extend(fod2forces)
                 totalforces = np.array(totalforces)
                 self.results['forces'] = totalforces
-            except:
+            except BaseException:
                 self.results['forces'] = None
 
         if self.mode == 'flosic-os':
