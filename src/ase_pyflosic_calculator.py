@@ -81,7 +81,7 @@ class PYFLOSIC(Calculator):
         max_cycle=300,            # maximum number of SCF cycles
         conv_tol=1e-6,            # energy convergence threshold
         grid=3,                   # numerical mesh (lowest: 0, highest: 9)
-        newton=True,                # use the Newton second-order SCF cycle
+        newton=False,                # use the Newton second-order SCF cycle
         df=True,                    # apply density fitting
         use_chk=False,              # restart from checkpoint file
         verbose=4,                  # output verbosity
