@@ -129,7 +129,7 @@ class PYFLOSIC(Calculator):
 
     def apply_electric_field(self, mf, efield):
         # based on pyscf/pyscf/prop/polarizability/uks.py and
-        # pyscf/pyscf/scf/40_apply_electric_field.py
+        # pyscf/examples/scf/40_apply_electric_field.py
         mol = mf.mol
         charges = mol.atom_charges()
         coords = mol.atom_coords()
