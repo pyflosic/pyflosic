@@ -68,7 +68,6 @@ class PYFLOSIC(Calculator):
         'homo',
         'polarizability']
 
-    # Note: If you need to add keywords, please also add them in valid_args
     default_parameters = dict(
         charge=0,                 # charge of the system
         spin=0,                   # spin of the system, equal to 2S
