@@ -382,7 +382,7 @@ class PYFLOSIC(Calculator):
                         (.5 * ((p[0, 0] - p[1, 1])**2 + (p[1, 1] - p[2, 2])**2 + (p[2, 2] - p[0, 0])**2))**.5))
             else:
                 self.results['polarizability'] = None
-            self.results['fodforces'] = self.mf.get_fforces * (Ha / Bohr)
+            self.results['fodforces'] = self.mf.get_fforces() * (Ha / Bohr)
             # conversion to eV/A to match ase
             if self.verbose >= 4:
                 print('Analytic FOD force [Ha/Bohr]')
