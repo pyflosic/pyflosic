@@ -372,8 +372,8 @@ class PYFLOSIC(Calculator):
                 verbose=self.verbose) * Debye
             # conversion to e*A to match ase
             if self.pol:
-                p = Polarizability(self.mf).polarizability()
-                self.results['polarizability'] = p * (Bohr**3)
+                self.results['polarizability'] = Polarizability(
+                    self.mf).polarizability() * (Bohr**3)
                 # conversion to A**3 to match ase
                 if self.verbose >= 4:
                     print('Isotropic polarizability %.12g' %
