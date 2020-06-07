@@ -372,8 +372,8 @@ class PYFLOSIC(Calculator):
                 verbose=self.verbose) * Debye
             # conversion to e*A to match ase
             if self.pol:
-                self.results['polarizability'] = Polarizability(
-                    self.mf).polarizability() * (Bohr**3)
+                p = Polarizability(self.mf).polarizability()
+                self.results['polarizability'] = p * (Bohr**3)
                 # conversion to A**3 to match ase
                 if self.verbose >= 4:
                     print('Isotropic polarizability %.12g' %
@@ -382,13 +382,14 @@ class PYFLOSIC(Calculator):
                         (.5 * ((p[0, 0] - p[1, 1])**2 + (p[1, 1] - p[2, 2])**2 + (p[2, 2] - p[0, 0])**2))**.5))
             else:
                 self.results['polarizability'] = None
-            self.results['fodforces'] = self.mf.get_fforces() * (Ha / Bohr)
+            f = self.mf.get_fforces() 
+            self.results['fodforces'] = f * (Ha / Bohr)
             # conversion to eV/A to match ase
             if self.verbose >= 4:
                 print('Analytic FOD force [Ha/Bohr]')
-                print(fforces)
+                print(f)
                 print('fmax = %0.6f [Ha/Bohr]' %
-                      np.sqrt((fforces**2).sum(axis=1).max()))
+                      np.sqrt((f**2).sum(axis=1).max()))
             self.results['evalues'] = self.mf.evalues * Ha
             # conversion to eV to match ase
         if self.mode == 'flosic-scf' or self.mode == 'flosic-os':
