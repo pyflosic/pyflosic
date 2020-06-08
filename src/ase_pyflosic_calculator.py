@@ -103,10 +103,10 @@ class PYFLOSIC(Calculator):
     )
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
-                 label='PyFLOSIC', atoms=None, scratch=None, **kwargs):
+                 label='PyFLOSIC', atoms=None, directory='.', **kwargs):
         """ Constructor """
         Calculator.__init__(self, restart, ignore_bad_restart_file,
-                            label, atoms, scratch, **kwargs)
+                            label, atoms, directory, **kwargs)
         self.set_atoms(atoms)
         self.initialize()
 
