@@ -59,6 +59,12 @@ class PYFLOSIC(Calculator):
         Notes: ase      -> units [eV,Angstroem,eV/Angstroem,e*A,A**3]
                pyscf	-> units [Ha,Bohr,Ha/Bohr,Debye,Bohr**3]
     """
+    
+    
+    PYFLOSIC_CMD = os.environ.get('ASE_PYFLOSIC_COMMAND')
+    command =  PYFLOSIC_CMD
+    
+    
     implemented_properties = [
         'energy',
         'forces',
