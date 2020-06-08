@@ -61,9 +61,6 @@ class PYFLOSIC(Calculator):
     """
     
     
-    PYFLOSIC_CMD = os.environ.get('ASE_PYFLOSIC_COMMAND')
-    command =  PYFLOSIC_CMD
-    
     
     implemented_properties = [
         'energy',
