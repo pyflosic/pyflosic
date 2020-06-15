@@ -23,7 +23,7 @@
 #                               modified imports
 
  
-from ase.optimize import LBFGS, BFGS, BFGSLineSearch, LBFGSLineSearch, FIRE, GPMin
+from ase.optimize import LBFGS, BFGS, BFGSLineSearch, LBFGSLineSearch, FIRE, GPMin, Berny
 from ase.optimize.sciopt import SciPyFminCG
 from ase_pyflosic_calculator import PYFLOSIC
 from ase.constraints import FixAtoms 
@@ -65,8 +65,7 @@ def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='S
     # eps                       dielectric constant of solvent
     
     
-    opt = opt.upper()
-    mode = mode.lower()
+    opt = opt.lower()
     
     
 	
@@ -77,14 +76,14 @@ def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='S
     atoms.set_calculator(calc)
 	
     # select an ase optimizer 
-    if opt == 'FIRE':
+    if opt == 'fire':
         dyn = FIRE(atoms,
                    logfile=label+'.log',
                    trajectory=label+'.traj',
                    dt=0.15,
                    maxmove=maxstep)
 	
-    if opt == 'LBFGS':
+    elif opt == 'lbfgs':
         dyn = LBFGS(atoms,
                     logfile=label+'.log',
                     trajectory=label+'.traj',
@@ -92,25 +91,25 @@ def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='S
                     maxstep=maxstep,
                     memory=10)
 	
-    if opt == 'BFGS':
+    elif opt == 'bfgs':
         dyn = BFGS(atoms,
                    logfile=label+'.log',
                    trajectory=label+'.traj',
                    maxstep=maxstep)
 	
-    if opt == 'BFGSLineSearch':
+    elif opt == 'bfgslinesearch':
         dyn = BFGSLineSearch(atoms,
                              logfile=label+'.log',
                              trajectory=label+'.traj',
                              maxstep=maxstep)
     
-    if opt == 'LBFGSLineSearch':
+    elif opt == 'lbfgslinesearch':
         dyn = LBFGSLineSearch(atoms,
                              logfile=label+'.log',
                              trajectory=label+'.traj',
                              maxstep=maxstep)
 	
-    if opt == 'CG':
+    elif opt == 'cg':
         dyn = SciPyFminCG(atoms,
                           logfile=label+'.log',
                           trajectory=label+'.traj',
@@ -118,13 +117,20 @@ def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='S
                           alpha=70.0,
                           master=None)
     
-    if opt == 'GPMin':
+    elif opt == 'gpmin':
         dyn = GPMin(atoms,
                     logfile=label+'.log',
                     trajectory=label+'.traj',
                     update_prior_strategy='average',
                     update_hyperparams=True)
-        
+    
+
+    elif opt == 'berny':
+        dyn = Berny(atoms,
+                    logfile=label+'.log',
+                    trajectory=label+'.traj',
+                    master=None)
+
     # run the actual optimization
     dyn.run(fmax=fmax, steps=steps)
     return atoms 
