@@ -27,7 +27,6 @@ from ase.optimize import LBFGS, BFGS, BFGSLineSearch, LBFGSLineSearch, FIRE, GPM
 from ase.optimize.sciopt import SciPyFminCG
 from ase_pyflosic_calculator import PYFLOSIC
 from ase.constraints import FixAtoms 
-from pyscf.data import radii
 from ase.units import Ha,Bohr
 
 def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='STO-3G',ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=1.5e-4*(Ha/Bohr),steps=1000,max_cycle=300,conv_tol=1e-6,grid=3,df=True,newton=False,use_chk=False,verbose=4,efield=None,ham_sic='HOOOV',dm=None,cart=False,output=None,solvation=None,lmax=10,eta=0.1,lebedev_order=89,radii_table=None,eps=78.3553):
