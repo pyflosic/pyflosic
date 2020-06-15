@@ -10,4 +10,4 @@ atoms = read('LiH.xyz')
 # We want to use the use the NRLMOL DFO basis set. 
 basis = get_dfo_basis('LiH')
 # Set up ase flosic_optimizer for nuclei optimization and performe optimization.
-flosic = flosic_optimize('dft',atoms,0,0,'LDA,PW',basis,None,opt='FIRE',maxstep=0.1,label='OPT_NUCLEI')
+flosic = flosic_optimize(mode='dft',atoms=atoms,spin=0,charge=0,xc='LDA,PW',basis=basis,opt='FIRE',maxstep=0.1,label='OPT_NUCLEI')

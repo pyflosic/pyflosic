@@ -9,7 +9,7 @@ atoms = read('LiH.xyz')
 basis = get_dfo_basis('LiH')
 
 # Set up ase calculator. 
-calc = PYFLOSIC(atoms=atoms,charge=0,spin=0,xc='LDA,PW',basis=basis,mode='dft')
+calc = PYFLOSIC(mode='dft',atoms=atoms,charge=0,spin=0,xc='LDA,PW',basis=basis)
 # Asign the calculator to the ase.atoms object. 
 atoms.set_calculator(calc)
 
