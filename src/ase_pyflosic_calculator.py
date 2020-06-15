@@ -305,6 +305,8 @@ class PYFLOSIC(Calculator):
                 mf = mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(mf, self.efield)
+            if self.df:
+                mf = mf.density_fit()
             self.mf = mf
             if self.dm is None:
                 self.mf.kernel()
