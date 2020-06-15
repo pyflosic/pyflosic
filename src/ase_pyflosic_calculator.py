@@ -33,7 +33,7 @@
 # CHANGELOG 18.02.2020:     moved class BasicFLOSICC by Torsten Hahn to ase_pytorsten_calculator.py
 # CHANGELOG 25.02.2020:     implemented polarizability for modes 'flosic-os' (just the DFT polarizability) and 'flosic-scf'
 # CHANGELOG 03.03.2020:     removed valid_args, removed keyword 'mf', removed get_energy()
-# CHANGELOG 01.04.2020:     use_newton -> newton, newton(default) = True, added default values for charge (0), spin (0), basis (STO-3G)
+# CHANGELOG 01.04.2020:     use_newton -> newton, newton(default) = False, added default values for charge (0), spin (0), basis (STO-3G)
 #                           removed argument mol, added argument df (default: True), changed default value for conv_tol to 1e-6, changed default value for verbose to 4
 #
 # FUTURELOG 01.04.2020:     include hyperpolarizability?
