@@ -20,5 +20,5 @@ fmax = 0.0001
 steps = 1000 
 
 # Perform the nuclei optimization. 
-dyn = FIRE(atoms,logfile=label+'.log',trajectory=label+'.traj',force_consistent=True)
+dyn = FIRE(atoms,logfile=label+'.log',trajectory=label+'.traj')
 dyn.run(fmax=fmax, steps=steps)
