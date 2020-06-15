@@ -281,7 +281,6 @@ class FLOSIC(uhf.UHF):
         calc_uks.xc = self.xc
         calc_uks.max_cycle = 1 # pyscf 1.6.6 and older: 0 also works
         calc_uks.grids.level = grid
-        calc_uks.verbose = 4
         
         # if an initial density matrix is given
         # initialize the subclass with it
