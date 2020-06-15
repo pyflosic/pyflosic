@@ -17,7 +17,7 @@
 # task:  	optimzation of FOD positions/electronic geometry 
 # todo:		spearate core functions and tests
  
-from ase.optimize import LBFGS, BFGS, BFGSLineSearch, FIRE, MDMin
+from ase.optimize import LBFGS, BFGS, BFGSLineSearch, FIRE, GPMin
 from ase.optimize.sciopt import SciPyFminCG
 from ase_pyflosic_calculator import PYFLOSIC
 from flosic_os import xyz_to_nuclei_fod,ase2pyscf
@@ -64,7 +64,7 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
 
     
     
-    opt = opt.upper()
+    opt = opt.lower()
     mode = mode.lower()
     
     
@@ -89,7 +89,7 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     atoms.set_calculator(calc)
 	
     # Select the wisehd ase-optimizer. 
-    if opt == 'FIRE':
+    if opt == 'fire':
         dyn = FIRE(atoms,
                    logfile=label+'.log',
                    trajectory=label+'.traj',
@@ -97,7 +97,7 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
                    maxmove=maxstep)
                    #force_consistent=force_consistent)
 	
-    if opt == 'LBFGS':
+    if opt == 'lbfgs':
         dyn = LBFGS(atoms,
                     logfile=label+'.log',
                     trajectory=label+'.traj',
@@ -106,20 +106,20 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
                     memory=10)
                     #force_consistent=force_consistent)
 	
-    if opt == 'BFGS':
+    if opt == 'bfgs':
         dyn = BFGS(atoms,
                    logfile=label+'.log',
                    trajectory=label+'.traj',
                    maxstep=maxstep)
 	
-    if opt == 'LineSearch':
+    if opt == 'linesearch':
         dyn = BFGSLineSearch(atoms,
                              logfile=label+'.log',
                              trajectory=label+'.traj',
                              maxstep=maxstep)
                              #force_consistent = force_consistent)
 	
-    if opt == 'CG':
+    if opt == 'cg':
         dyn = SciPyFminCG(atoms,
                           logfile=label+'.log',
                           trajectory=label+'.traj',
@@ -127,7 +127,7 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
                           alpha=70.0,
                           master=None)
                           #force_consistent=force_consistent)
-    if opt == 'GPMin':
+    if opt == 'gpmin':
         from ase.optimize import GPMin 
         dyn = GPMin(atoms,
                     logfile=label+'.log',
