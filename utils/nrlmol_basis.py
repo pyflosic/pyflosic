@@ -14,15 +14,10 @@
 #
 from pyscf import gto, dft
 from pyscf.gto.basis.parse_gaussian import load 
-import numpy as np
-try:
-    from ase.atoms import string2symbols
-except:
-    # moved in 3.17 to
-    from ase.symbols import string2symbols
+from ase.symbols import string2symbols
 import os
 
-def get_dfo_basis(ase_sym,basis='nrlmol_dfo.gbs'):
+def get_dfo_basis(ase_sym,basis='dfo.gbs'):
     # ase_sym	...	string of symbols for the elements found in the substance (e.g., 'LiH' for LiH, 'CH' for alkanes) 
     # output	...	dict/basis format of pyscf 
     # 
