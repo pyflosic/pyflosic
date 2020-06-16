@@ -21,7 +21,7 @@ except:
     from ase.symbols import string2symbols
 import os
 
-def get_dfo_basis(ase_sym,basis='dfo+.gbs'):
+def get_dfo_basis(ase_sym,basis='dfo.gbs'):
     # ase_sym	...	string of atoms/chemical symbols (e.g. 'LiH', 'H2') 
     # output	...	dict/basis format of pyscf 
     # 
