@@ -14,7 +14,6 @@
 #
 from pyscf import gto, dft
 from pyscf.gto.basis.parse_gaussian import load 
-import numpy as np
 try:
     from ase.atoms import string2symbols
 except:
@@ -22,7 +21,7 @@ except:
     from ase.symbols import string2symbols
 import os
 
-def get_dfo_basis(ase_sym,basis='nrlmol_dfo.gbs'):
+def get_dfo_basis(ase_sym,basis='dfo+.gbs'):
     # ase_sym	...	string of atoms/chemical symbols (e.g. 'LiH', 'H2') 
     # output	...	dict/basis format of pyscf 
     # 
