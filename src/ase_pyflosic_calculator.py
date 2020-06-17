@@ -43,7 +43,7 @@
 #                           manage output via loggers
 import os
 import numpy as np
-from ase.calculators.calculator import Calculator, all_changes
+from ase.calculators.calculator import Calculator, all_changes, PropertyNotImplementedError
 from ase import Atoms
 from ase.units import Ha, Bohr, Debye
 from pyscf import scf, gto
