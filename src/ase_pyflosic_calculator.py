@@ -59,9 +59,7 @@ class PYFLOSIC(Calculator):
         Notes: ase      -> units [eV,Angstroem,eV/Angstroem,e*A,A**3]
                pyscf	-> units [Ha,Bohr,Ha/Bohr,Debye,Bohr**3]
     """
-    
-    
-    
+
     implemented_properties = [
         'energy',
         'forces',
@@ -154,9 +152,15 @@ class PYFLOSIC(Calculator):
 
     def get_potential_energy(self, atoms=None, force_consistent=False):
         # calculate total energy if required
-        if self.calculation_required(atoms, ['energy']):
-            self.calculate(atoms)
-        return self.results['energy']
+        if force_consistent:
+            name = self.__class__.__name__
+            raise PropertyNotImplementedError(
+                'Force consistent/free energy ("free_energy") '
+                'not provided by {0} calculator'.format(name))
+        else:
+            if self.calculation_required(atoms, ['energy']):
+                self.calculate(atoms)
+            return self.results['energy']
 
     def get_forces(self, atoms=None):
         # calculate forces if required
@@ -385,7 +389,7 @@ class PYFLOSIC(Calculator):
                         (.5 * ((p[0, 0] - p[1, 1])**2 + (p[1, 1] - p[2, 2])**2 + (p[2, 2] - p[0, 0])**2))**.5))
             else:
                 self.results['polarizability'] = None
-            f = self.mf.get_fforces() 
+            f = self.mf.get_fforces()
             self.results['fodforces'] = f * (Ha / Bohr)
             # conversion to eV/A to match ase
             if self.verbose >= 4:
