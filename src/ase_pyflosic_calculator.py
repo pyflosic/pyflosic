@@ -262,18 +262,7 @@ class PYFLOSIC(Calculator):
                 e = self.mf.kernel(self.dm)
             self.results['energy'] = e * Ha
             # conversion to eV to match ase
-            self.results['dipole'] = self.mf.dip_moment(
-                verbose=self.verbose) * Debye
-            # conversion to e*A to match ase
-            if self.pol:
-                self.results['polarizability'] = Polarizability(
-                    self.mf).polarizability() * (Bohr**3)
-                # conversion to A**3 to match ase
-            else:
-                self.results['polarizability'] = None
             self.results['fodforces'] = None
-            self.results['evalues'] = self.mf.mo_energy * Ha
-            # conversion to eV to match ase
             try:  # no gradients for meta-GGAs!
                 gf = self.mf.nuc_grad_method()
                 gf.verbose = self.verbose
@@ -290,6 +279,17 @@ class PYFLOSIC(Calculator):
                 self.results['forces'] = totalforces
             except BaseException:
                 self.results['forces'] = None
+            self.results['evalues'] = self.mf.mo_energy * Ha
+            # conversion to eV to match ase
+            self.results['dipole'] = self.mf.dip_moment(
+                verbose=self.verbose) * Debye
+            # conversion to e*A to match ase
+            if self.pol:
+                self.results['polarizability'] = Polarizability(
+                    self.mf).polarizability() * (Bohr**3)
+                # conversion to A**3 to match ase
+            else:
+                self.results['polarizability'] = None
 
         if self.mode == 'flosic-os':
             mf = scf.UKS(mol)
@@ -325,6 +325,16 @@ class PYFLOSIC(Calculator):
                 ham_sic=self.ham_sic)
             self.results['energy'] = mf['etot_sic'] * Ha
             # conversion to eV to match ase
+            f = -1. * mf['fforces'] 
+            self.results['fodforces'] = f * (Ha / Bohr)
+            # conversion to eV/A to match ase
+            if self.verbose >= 4:
+                print('Analytic FOD force [Ha/Bohr]')
+                print(f)
+                print('fmax = %0.6f [Ha/Bohr]' %
+                      np.sqrt((f**2).sum(axis=1).max()))
+            self.results['evalues'] = mf['evalues'] * Ha
+            # conversion to eV to match ase
             self.results['dipole'] = mf['dipole'] * Debye
             # conversion to e*A to match ase
             if self.pol:
@@ -333,15 +343,6 @@ class PYFLOSIC(Calculator):
                 # conversion to A**3 to match ase
             else:
                 self.results['polarizability'] = None
-            self.results['fodforces'] = -1. * mf['fforces'] * (Ha / Bohr)
-            # conversion to eV/A to match ase
-            if self.verbose >= 4:
-                print('Analytic FOD force [Ha/Bohr]')
-                print(-1. * mf['fforces'])
-                print('fmax = %0.6f [Ha/Bohr]' %
-                      np.sqrt((mf['fforces']**2).sum(axis=1).max()))
-            self.results['evalues'] = mf['evalues'] * Ha
-            # conversion to eV to match ase
         if self.mode == 'flosic-scf':
             mf = FLOSIC(
                 mol=mol,
@@ -374,6 +375,15 @@ class PYFLOSIC(Calculator):
             self.results['esic'] = self.mf.esic * Ha
             # conversion to eV to match ase
             self.results['energy'] = e * Ha
+            f = self.mf.get_fforces()
+            self.results['fodforces'] = f * (Ha / Bohr)
+            # conversion to eV/A to match ase
+            if self.verbose >= 4:
+                print('Analytic FOD force [Ha/Bohr]')
+                print(f)
+                print('fmax = %0.6f [Ha/Bohr]' %
+                      np.sqrt((f**2).sum(axis=1).max()))
+            self.results['evalues'] = self.mf.evalues * Ha
             # conversion to eV to match ase
             self.results['dipole'] = self.mf.dip_moment(
                 verbose=self.verbose) * Debye
@@ -389,16 +399,6 @@ class PYFLOSIC(Calculator):
                         (.5 * ((p[0, 0] - p[1, 1])**2 + (p[1, 1] - p[2, 2])**2 + (p[2, 2] - p[0, 0])**2))**.5))
             else:
                 self.results['polarizability'] = None
-            f = self.mf.get_fforces()
-            self.results['fodforces'] = f * (Ha / Bohr)
-            # conversion to eV/A to match ase
-            if self.verbose >= 4:
-                print('Analytic FOD force [Ha/Bohr]')
-                print(f)
-                print('fmax = %0.6f [Ha/Bohr]' %
-                      np.sqrt((f**2).sum(axis=1).max()))
-            self.results['evalues'] = self.mf.evalues * Ha
-            # conversion to eV to match ase
         if self.mode == 'flosic-scf' or self.mode == 'flosic-os':
             totalforces = []
             forces = np.zeros_like(nuclei.get_positions())
