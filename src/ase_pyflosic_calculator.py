@@ -225,7 +225,7 @@ class PYFLOSIC(Calculator):
             output=self.output)
         if self.mode == 'dft':
             if self.solvation is None:
-                mf = scf.UKS(mol)
+                self.mf = scf.UKS(mol)
             elif self.solvation == 'cosmo':
                 cm = DDCOSMO(mol)
                 cm.verbose = self.verbose
@@ -236,26 +236,25 @@ class PYFLOSIC(Calculator):
                 cm.max_cycle = self.max_cycle
                 cm.conv_tol = self.conv_tol
                 cm.eps = self.eps
-                mf = ddcosmo_for_scf(scf.UKS(mol), cm)
-            mf.xc = self.xc
-            mf.verbose = self.verbose
-            mf.max_cycle = self.max_cycle
-            mf.conv_tol = self.conv_tol
-            mf.grids.level = self.grid
+                self.mf = ddcosmo_for_scf(scf.UKS(mol), cm)
+            self.mf.xc = self.xc
+            self.mf.verbose = self.verbose
+            self.mf.max_cycle = self.max_cycle
+            self.mf.conv_tol = self.conv_tol
+            self.mf.grids.level = self.grid
             if self.use_chk and not self.newton:
-                mf.chkfile = 'pyflosic.chk'
+                self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
                     'pyflosic.chk'):
-                mf.init_guess = 'chk'
-                mf.update('pyflosic.chk')
-                self.dm = mf.make_rdm1()
+                self.mf.init_guess = 'chk'
+                self.mf.update('pyflosic.chk')
+                self.dm = self.mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.newton()
+                self.mf = self.mf.newton()
             if self.efield is not None:
-                self.apply_electric_field(mf, self.efield)
+                self.apply_electric_field(self.mf, self.efield)
             if self.df:
-                mf = mf.density_fit()
-            self.mf = mf
+                self.mf = self.mf.density_fit()
             if self.dm is None:
                 e = self.mf.kernel()
             else:
@@ -292,40 +291,39 @@ class PYFLOSIC(Calculator):
                 self.results['polarizability'] = None
 
         if self.mode == 'flosic-os':
-            mf = scf.UKS(mol)
-            mf.xc = self.xc
-            mf.verbose = self.verbose
-            mf.max_cycle = self.max_cycle
-            mf.conv_tol = self.conv_tol
-            mf.grids.level = self.grid
+            self.mf = scf.UKS(mol)
+            self.mf.xc = self.xc
+            self.mf.verbose = self.verbose
+            self.mf.max_cycle = self.max_cycle
+            self.mf.conv_tol = self.conv_tol
+            self.mf.grids.level = self.grid
             if self.use_chk and not self.newton:
-                mf.chkfile = 'pyflosic.chk'
+                self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
                     'pyflosic.chk'):
-                mf.init_guess = 'chk'
-                mf.update('pyflosic.chk')
-                self.dm = mf.make_rdm1()
+                self.mf.init_guess = 'chk'
+                self.mf.update('pyflosic.chk')
+                self.dm = self.mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.newton()
+                self.mf = self.mf.newton()
             if self.efield is not None:
-                self.apply_electric_field(mf, self.efield)
+                self.apply_electric_field(self.mf, self.efield)
             if self.df:
-                mf = mf.density_fit()
-            self.mf = mf
+                self.mf = self.mf.density_fit()
             if self.dm is None:
                 self.mf.kernel()
             else:
                 self.mf.kernel(self.dm)
-            mf = flosic(
+            self.mf = flosic(
                 mol,
                 self.mf,
                 fod1,
                 fod2,
                 calc_forces=True,
                 ham_sic=self.ham_sic)
-            self.results['energy'] = mf['etot_sic'] * Ha
+            self.results['energy'] = self.mf['etot_sic'] * Ha
             # conversion to eV to match ase
-            f = -1. * mf['fforces'] 
+            f = -1. * self.mf['fforces'] 
             self.results['fodforces'] = f * (Ha / Bohr)
             # conversion to eV/A to match ase
             if self.verbose >= 4:
@@ -333,9 +331,9 @@ class PYFLOSIC(Calculator):
                 print(f)
                 print('fmax = %0.6f [Ha/Bohr]' %
                       np.sqrt((f**2).sum(axis=1).max()))
-            self.results['evalues'] = mf['evalues'] * Ha
+            self.results['evalues'] = self.mf['evalues'] * Ha
             # conversion to eV to match ase
-            self.results['dipole'] = mf['dipole'] * Debye
+            self.results['dipole'] = self.mf['dipole'] * Debye
             # conversion to e*A to match ase
             if self.pol:
                 self.results['polarizability'] = Polarizability(
@@ -344,30 +342,29 @@ class PYFLOSIC(Calculator):
             else:
                 self.results['polarizability'] = None
         if self.mode == 'flosic-scf':
-            mf = FLOSIC(
+            self.mf = FLOSIC(
                 mol=mol,
                 xc=self.xc,
                 fod1=fod1,
                 fod2=fod2,
                 grid=self.grid,
                 ham_sic=self.ham_sic)
-            mf.verbose = self.verbose
-            mf.max_cycle = self.max_cycle
-            mf.conv_tol = self.conv_tol
+            self.mf.verbose = self.verbose
+            self.mf.max_cycle = self.max_cycle
+            self.mf.conv_tol = self.conv_tol
             if self.use_chk and not self.newton:
-                mf.chkfile = 'pyflosic.chk'
+                self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
                     'pyflosic.chk'):
-                mf.init_guess = 'chk'
-                mf.update('pyflosic.chk')
-                self.dm = mf.make_rdm1()
+                self.mf.init_guess = 'chk'
+                self.mf.update('pyflosic.chk')
+                self.dm = self.mf.make_rdm1()
             if self.newton and self.xc != 'SCAN,SCAN':
-                mf = mf.newton()
+                self.mf = self.mf.newton()
             if self.efield is not None:
-                self.apply_electric_field(mf, self.efield)
+                self.apply_electric_field(self.mf, self.efield)
             if self.df:
-                mf = mf.density_fit()
-            self.mf = mf
+                self.mf = self.mf.density_fit()
             if self.dm is None:
                 e = self.mf.kernel()
             else:
