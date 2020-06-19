@@ -279,7 +279,7 @@ class FLOSIC(uhf.UHF):
         mol.verbose = 0
         calc_uks = UKS(mol)
         calc_uks.xc = self.xc
-        calc_uks.max_cycle = 300
+        calc_uks.max_cycle = 0
         calc_uks.grids.level = grid
         calc_uks.conv_tol = 1e-6
         
