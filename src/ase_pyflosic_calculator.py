@@ -261,7 +261,7 @@ class PYFLOSIC(Calculator):
                 mesh.build()
                 self.mf.grids = mesh
 
-            self.mf.prune = prune_dict[self.prune]
+            self.mf.grids.prune = prune_dict[self.prune]
 
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
@@ -325,7 +325,7 @@ class PYFLOSIC(Calculator):
                     mesh.atom_grid[key] = (self.n_rad, self.n_ang)
                 mesh.build()
                 self.mf.grids = mesh
-            self.mf.prune = prune_dict[self.prune]
+            self.mf.grids.prune = prune_dict[self.prune]
 
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
@@ -389,7 +389,7 @@ class PYFLOSIC(Calculator):
                     mesh.atom_grid[key] = (self.n_rad, self.n_ang)
                 mesh.build()
                 self.mf.grids = mesh
-            self.mf.prune = prune_dict[self.prune]
+            self.mf.grids.prune = prune_dict[self.prune]
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
