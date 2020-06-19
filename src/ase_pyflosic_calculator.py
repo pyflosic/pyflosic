@@ -46,11 +46,15 @@ import numpy as np
 from ase.calculators.calculator import Calculator, all_changes, PropertyNotImplementedError
 from ase import Atoms
 from ase.units import Ha, Bohr, Debye
-from pyscf import scf, gto
+from pyscf import scf, gto, dft
 from pyscf.prop.polarizability.uhf import polarizability, Polarizability
 from flosic_os import xyz_to_nuclei_fod, ase2pyscf, flosic
 from flosic_scf import FLOSIC
 from pyscf.solvent.ddcosmo import DDCOSMO, ddcosmo_for_scf
+
+
+prune_dict = {'nwchem': dft.gen_grid.nwchem_prune, 'sg1': dft.gen_grid.sg1_prune,
+              'treutler': dft.gen_grid.treutler_prune, 'no': None}
 
 
 class PYFLOSIC(Calculator):
@@ -97,7 +101,10 @@ class PYFLOSIC(Calculator):
         lebedev_order=89,         # order of integration for solvation model
         radii_table=None,         # vdW radii for solvation model
         eps=78.3553,              # dielectric constant of solvent
-        pol=False                 # calculate polarizability
+        pol=False,              # calculate polarizability
+        n_rad = None,             # radial grid                
+        n_ang = None              # angular grid
+        prune = 'nwchem'              # grid pruning
     )
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -242,6 +249,17 @@ class PYFLOSIC(Calculator):
             self.mf.max_cycle = self.max_cycle
             self.mf.conv_tol = self.conv_tol
             self.mf.grids.level = self.grid
+            
+            if self.n_rad is not None and self.n_ang is not None:
+                mesh = dft.Grids(mol)
+                for i in range(len(mol.atom)):
+                    key = mol.atom_symbol(i)
+                    mesh.atom_grid[key] = (self.n_rad, self.n_ang)
+                mesh.build()
+                self.mf.grids = mesh
+            
+            self.mf.prune = prune_dict[self.prune]
+
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
@@ -297,6 +315,15 @@ class PYFLOSIC(Calculator):
             self.mf.max_cycle = self.max_cycle
             self.mf.conv_tol = self.conv_tol
             self.mf.grids.level = self.grid
+            if self.n_rad is not None and self.n_ang is not None:
+                mesh = dft.Grids(mol)
+                for i in range(len(mol.atom)):
+                    key = mol.atom_symbol(i)
+                    mesh.atom_grid[key] = (self.n_rad, self.n_ang)
+                mesh.build()
+                self.mf.grids = mesh
+            self.mf.prune = prune_dict[self.prune]
+            
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
@@ -352,6 +379,14 @@ class PYFLOSIC(Calculator):
             self.mf.verbose = self.verbose
             self.mf.max_cycle = self.max_cycle
             self.mf.conv_tol = self.conv_tol
+            if self.n_rad is not None and self.n_ang is not None:
+                mesh = dft.Grids(mol)
+                for i in range(len(mol.atom)):
+                    key = mol.atom_symbol(i)
+                    mesh.atom_grid[key] = (self.n_rad, self.n_ang)
+                mesh.build()
+                self.mf.grids = mesh
+            self.mf.prune = prune_dict[self.prune]
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
