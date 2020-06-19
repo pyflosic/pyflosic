@@ -53,8 +53,11 @@ from flosic_scf import FLOSIC
 from pyscf.solvent.ddcosmo import DDCOSMO, ddcosmo_for_scf
 
 
-prune_dict = {'nwchem': dft.gen_grid.nwchem_prune, 'sg1': dft.gen_grid.sg1_prune,
-              'treutler': dft.gen_grid.treutler_prune, 'no': None}
+prune_dict = {
+    'nwchem': dft.gen_grid.nwchem_prune,
+    'sg1': dft.gen_grid.sg1_prune,
+    'treutler': dft.gen_grid.treutler_prune,
+    'no': None}
 
 
 class PYFLOSIC(Calculator):
@@ -102,9 +105,9 @@ class PYFLOSIC(Calculator):
         radii_table=None,         # vdW radii for solvation model
         eps=78.3553,              # dielectric constant of solvent
         pol=False,              # calculate polarizability
-        n_rad = None,             # radial grid                
-        n_ang = None              # angular grid
-        prune = 'nwchem'              # grid pruning
+        n_rad=None,               # radial grid
+        n_ang=None,               # angular grid
+        prune='nwchem'              # grid pruning
     )
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -249,7 +252,7 @@ class PYFLOSIC(Calculator):
             self.mf.max_cycle = self.max_cycle
             self.mf.conv_tol = self.conv_tol
             self.mf.grids.level = self.grid
-            
+
             if self.n_rad is not None and self.n_ang is not None:
                 mesh = dft.Grids(mol)
                 for i in range(len(mol.atom)):
@@ -257,7 +260,7 @@ class PYFLOSIC(Calculator):
                     mesh.atom_grid[key] = (self.n_rad, self.n_ang)
                 mesh.build()
                 self.mf.grids = mesh
-            
+
             self.mf.prune = prune_dict[self.prune]
 
             if self.use_chk and not self.newton:
@@ -323,7 +326,7 @@ class PYFLOSIC(Calculator):
                 mesh.build()
                 self.mf.grids = mesh
             self.mf.prune = prune_dict[self.prune]
-            
+
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
@@ -350,7 +353,7 @@ class PYFLOSIC(Calculator):
                 ham_sic=self.ham_sic)
             self.results['energy'] = self.mf['etot_sic'] * Ha
             # conversion to eV to match ase
-            f = -1. * self.mf['fforces'] 
+            f = -1. * self.mf['fforces']
             self.results['fodforces'] = f * (Ha / Bohr)
             # conversion to eV/A to match ase
             if self.verbose >= 4:
