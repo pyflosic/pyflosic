@@ -399,7 +399,7 @@ class PYFLOSIC(Calculator):
                 self.mf.grids = mesh
                 self.mf.calc_uks.grids = mesh
             self.mf.grids.prune = prune_dict[self.prune]
-            self.mf.calc_uks.prune = prune_dict[self.prune]
+            self.mf.calc_uks.grids.prune = prune_dict[self.prune]
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
