@@ -51,13 +51,20 @@ from pyscf.prop.polarizability.uhf import polarizability, Polarizability
 from flosic_os import xyz_to_nuclei_fod, ase2pyscf, flosic
 from flosic_scf import FLOSIC
 from pyscf.solvent.ddcosmo import DDCOSMO, ddcosmo_for_scf
-
+from pyscf.data import radii
 
 prune_dict = {
     'nwchem': dft.gen_grid.nwchem_prune,
     'sg1': dft.gen_grid.sg1_prune,
     'treutler': dft.gen_grid.treutler_prune,
     'no': None}
+
+rad_dict = {
+    'bragg': radii.BRAGG,
+    'covalent': radii.COVALENT,
+    'vdw': radii.VDW,
+    'uff': radii.UFF,
+    'mm3': radii.MM3}
 
 
 class PYFLOSIC(Calculator):
@@ -102,7 +109,8 @@ class PYFLOSIC(Calculator):
         lmax=10,                  # maximum l for basis expansion in spherical harmonics for solvation
         eta=0.1,                  # smearing parameter in solvation model
         lebedev_order=89,         # order of integration for solvation model
-        radii_table=None,         # vdW radii for solvation model
+        rad_sol='vdw',         # vdW radii for solvation model
+        rad_sol_scal=1.0,           # scaling factor for the solvation model radii
         eps=78.3553,              # dielectric constant of solvent
         pol=False,              # calculate polarizability
         n_rad=None,               # radial grid
@@ -242,7 +250,7 @@ class PYFLOSIC(Calculator):
                 cm.lmax = self.lmax
                 cm.eta = self.eta
                 cm.lebedev_order = self.lebedev_order
-                cm.radii_table = self.radii_table
+                cm.radii_table = rad_dict[self.rad_sol] * self.rad_sol_scal
                 cm.max_cycle = self.max_cycle
                 cm.conv_tol = self.conv_tol
                 cm.eps = self.eps
@@ -389,7 +397,9 @@ class PYFLOSIC(Calculator):
                     mesh.atom_grid[key] = (self.n_rad, self.n_ang)
                 mesh.build()
                 self.mf.grids = mesh
+                self.mf.calc_uks.grids = mesh
             self.mf.grids.prune = prune_dict[self.prune]
+            self.mf.calc_uks.prune = prune_dict[self.prune]
             if self.use_chk and not self.newton:
                 self.mf.chkfile = 'pyflosic.chk'
             if self.use_chk and not self.newton and os.path.isfile(
