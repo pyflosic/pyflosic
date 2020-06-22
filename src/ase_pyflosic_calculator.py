@@ -262,12 +262,7 @@ class PYFLOSIC(Calculator):
             self.mf.grids.level = self.grid
 
             if self.n_rad is not None and self.n_ang is not None:
-                mesh = dft.Grids(mol)
-                for i in range(len(mol.atom)):
-                    key = mol.atom_symbol(i)
-                    mesh.atom_grid[key] = (self.n_rad, self.n_ang)
-                mesh.build()
-                self.mf.grids = mesh
+                self.mf.grids.atom_grid = (self.n_rad,self.n_ang)
 
             self.mf.grids.prune = prune_dict[self.prune]
 
@@ -327,12 +322,7 @@ class PYFLOSIC(Calculator):
             self.mf.conv_tol = self.conv_tol
             self.mf.grids.level = self.grid
             if self.n_rad is not None and self.n_ang is not None:
-                mesh = dft.Grids(mol)
-                for i in range(len(mol.atom)):
-                    key = mol.atom_symbol(i)
-                    mesh.atom_grid[key] = (self.n_rad, self.n_ang)
-                mesh.build()
-                self.mf.grids = mesh
+                self.mf.grids.atom_grid = (self.n_rad,self.n_ang)
             self.mf.grids.prune = prune_dict[self.prune]
 
             if self.use_chk and not self.newton:
@@ -391,13 +381,8 @@ class PYFLOSIC(Calculator):
             self.mf.max_cycle = self.max_cycle
             self.mf.conv_tol = self.conv_tol
             if self.n_rad is not None and self.n_ang is not None:
-                mesh = dft.Grids(mol)
-                for i in range(len(mol.atom)):
-                    key = mol.atom_symbol(i)
-                    mesh.atom_grid[key] = (self.n_rad, self.n_ang)
-                mesh.build()
-                self.mf.grids = mesh
-                self.mf.calc_uks.grids = mesh
+                self.mf.grids.atom_grid = (self.n_rad,self.n_ang)
+                self.mf.calc_uks.grids.atom_grid = (self.n_rad,self.n_ang)
             self.mf.grids.prune = prune_dict[self.prune]
             self.mf.calc_uks.grids.prune = prune_dict[self.prune]
             if self.use_chk and not self.newton:
