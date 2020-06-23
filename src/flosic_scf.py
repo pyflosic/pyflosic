@@ -280,7 +280,7 @@ class FLOSIC(uhf.UHF):
         calc_uks = UKS(mol)
         calc_uks.xc = self.xc
         calc_uks.max_cycle = 0
-        calc_uks.grids.level = grid
+        calc_uks.grids.level = self.grids.level
         
         # if an initial density matrix is given
         # initialize the subclass with it
