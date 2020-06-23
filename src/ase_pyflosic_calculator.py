@@ -424,7 +424,9 @@ class PYFLOSIC(FileIOCalculator):
             mf.grids.level = self.grid
             if self.n_rad is not None and self.n_ang is not None:
                 mf.grids.atom_grid = (self.n_rad,self.n_ang)
+                mf.calc_uks.grids.atom_grid = (self.n_rad,self.n_ang)
             mf.grids.prune = prune_dict[self.prune]
+            mf.calc_uks.grids.prune = prune_dict[self.prune]
             e = mf.kernel()
             self.mf = mf 
             # Return some results to the pyflosic_ase_caculator object. 
