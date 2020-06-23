@@ -33,6 +33,16 @@ import copy
 from flosic_os import xyz_to_nuclei_fod,ase2pyscf,flosic 
 from flosic_scf import FLOSIC
 from ase.calculators.calculator import Calculator, all_changes
+from pyscf import dft
+
+prune_dict = {
+    'nwchem': dft.gen_grid.nwchem_prune,
+    'sg1': dft.gen_grid.sg1_prune,
+    'treutler': dft.gen_grid.treutler_prune,
+    'no': None}
+
+
+
 
 def force_max_lij(lambda_ij):
     # 
@@ -101,7 +111,10 @@ class PYFLOSIC(FileIOCalculator):
         fixed_vsic=None,        # fixed SIC one body values Veff, Exc, Ecoul
         num_iter=0,             # scf iteration number 
         vsic_every=1,           # calculate vsic after this number on num_iter cycles 
-        ham_sic ='HOO'          # unified SIC Hamiltonian HOO or HOOOV 
+        ham_sic ='HOO',          # unified SIC Hamiltonian HOO or HOOOV 
+        n_rad = None,           # radial grid
+        n_ang = None,           # angular grid
+        prune = 'nwchem'        # grid pruning
         ) 
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
@@ -109,7 +122,7 @@ class PYFLOSIC(FileIOCalculator):
         """ Constructor """
         FileIOCalculator.__init__(self, restart, ignore_bad_restart_file,
                                   label, atoms, **kwargs)
-        valid_args = ('atoms','fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic')
+        valid_args = ('atoms','fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic','n_rad','n_ang','prune')
         # set any additional keyword arguments
         for arg, val in self.parameters.items():
             if arg in valid_args:
@@ -186,6 +199,13 @@ class PYFLOSIC(FileIOCalculator):
                 mol = gto.M(atom=nuclei, basis=self.basis,spin=self.spin,charge=self.charge)
                 mf = scf.UKS(mol)
                 mf.xc = self.xc 
+                mf.conv_tol = self.conv_tol
+                mf.max_cycle = self.max_cycle
+                mf.verbose = self.verbose
+                mf.grids.level = self.grid
+                if self.n_rad is not None and self.n_ang is not None:
+                    mf.grids.atom_grid = (self.n_rad,self.n_ang)
+                mf.grids.prune = prune_dict[self.prune]
                 if self.xc == 'LDA,PW' or self.xc == 'PBE,PBE':
                     # The 2nd order scf cycle (Newton) speed up calculations,  
                     # but does not work for MGGAs like SCAN,SCAN.   
@@ -302,6 +322,9 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
+            if self.n_rad is not None and self.n_ang is not None:
+                mf.grids.atom_grid = (self.n_rad,self.n_ang)
+            mf.grids.prune = prune_dict[self.prune]
             e = mf.kernel()
             self.mf = mf 
             self.results['energy'] = e*Ha
@@ -341,6 +364,9 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
+            if self.n_rad is not None and self.n_ang is not None:
+                mf.grids.atom_grid = (self.n_rad,self.n_ang)
+            mf.grids.prune = prune_dict[self.prune]
             e = mf.kernel()
             self.mf = mf
             mf = flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,calc_forces=True)
@@ -396,6 +422,9 @@ class PYFLOSIC(FileIOCalculator):
             mf.max_cycle = self.max_cycle
             mf.conv_tol = self.conv_tol
             mf.grids.level = self.grid
+            if self.n_rad is not None and self.n_ang is not None:
+                mf.grids.atom_grid = (self.n_rad,self.n_ang)
+            mf.grids.prune = prune_dict[self.prune]
             e = mf.kernel()
             self.mf = mf 
             # Return some results to the pyflosic_ase_caculator object. 
