@@ -72,7 +72,7 @@ def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='S
     calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode=mode,ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,df=df,newton=newton,verbose=verbose,efield=efield,ham_sic=ham_sic,use_chk=use_chk,dm=dm,cart=cart,output=output,solvation=solvation,lmax=lmax,eta=eta,lebedev_order=lebedev_order,radii_table=radii_table,eps=eps)
     
     # assign the ase calculator to the ase atoms object
-    atoms.set_calculator(calc)
+    atoms.calc = calc
 	
     # select an ase optimizer 
     if opt == 'fire':
