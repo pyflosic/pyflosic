@@ -1,5 +1,5 @@
 from ase.io import read 
-from pycom import automatic_guessing
+from pycom import pycom_guess
 
 ase_nuclei = read('CH4.xyz')
 charge = 0

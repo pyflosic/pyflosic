@@ -1,5 +1,5 @@
 from ase.io import read 
-from pycom import automatic_guessing
+from pycom import pycom_guess
 
 # Note this xyz files only contain nuclei information. 
 ase_nuclei = read('TCNE.xyz')
