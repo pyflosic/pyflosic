@@ -109,8 +109,8 @@ class PYFLOSIC(Calculator):
         lmax=10,                  # maximum l for basis expansion in spherical harmonics for solvation
         eta=0.1,                  # smearing parameter in solvation model
         lebedev_order=89,         # order of integration for solvation model
-        rad_sol='vdw',         # vdW radii for solvation model
-        rad_sol_scal=1.0,           # scaling factor for the solvation model radii
+        rad_sol='vdw',         # radii for solvation model
+        rad_sol_scal=1.0,           # scaling factor for the radii
         eps=78.3553,              # dielectric constant of solvent
         pol=False,              # calculate polarizability
         n_rad=None,               # radial grid
