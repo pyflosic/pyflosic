@@ -25,12 +25,12 @@ from ase.io import read
 #from nrlmol_basis import get_dfo_basis
 from ase.constraints import FixAtoms 
 
-def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,force_consistent=False,fopt='force',fix_fods=False,ham_sic='HOO',vsic_every=1):
+def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,force_consistent=False,fopt='force',fix_fods=False,ham_sic='HOO',vsic_every=1,n_rad=None,n_ang=None,prune='nwchem'):
     # -----------------------------------------------------------------------------------
     # Input 
     # -----------------------------------------------------------------------------------
-    # mode 			...	dft only optimize nuclei positions 
-    #				flosic only optimize FOD positions (one-shot)
+    # mode 			...	dft only optimize nuclear positions 
+    #				flosic-os only optimize FOD positions (one-shot)
     #				flosic-scf only optimize FOD positions (self-consistent)
     # atoms 		...	ase atoms object 
     # charge 		... 	charge 
@@ -61,6 +61,10 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     # fopt			...	optimization trarget, default FOD forces 
     # fix_fods		...	freeze FODS during the optimization, might use for 1s/2s FODs 
     # ham_sic		...	the different unified Hamiltonians HOO and HOOOV 
+    # vsic_every        ...     calculate vsic after this number on num_iter cycles
+    # n_rad             ...     radial grid
+    # n_ang             ...     angular grid
+    # prune             ...     grid pruning
 
     
     
@@ -77,13 +81,13 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     if mode == 'dft':
         [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
         atoms = nuclei 
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='dft',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='dft',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune)
     # FLO-SIC one-shot (os) mode 
     if mode == 'flosic-os':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-os',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-os',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune)
     # FLO-SIC scf mode 
     if mode == 'flosic-scf':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-scf',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-scf',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune)
 	
     # Assign the ase-calculator to the ase-atoms object. 
     atoms.set_calculator(calc)
