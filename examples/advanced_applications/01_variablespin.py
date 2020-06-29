@@ -49,11 +49,11 @@ fod1_spin2 = fod1.copy()
 fod2_spin2 = fod2.copy()
 fod1_spin2.append(fod2_spin2[0])
 del fod2_spin2[0]
-sic_2 = FLOSIC(mol_2,xc=xc,fod1=fod1_spin2,fod2=fod2_spin2,grid_level=grid_level)
+sic_2 = FLOSIC(mol_2,xc=xc,fod1=fod1_spin2,fod2=fod2_spin2,grid=grid)
 
 # To enable a variable spin configuration, we simply have to load the routine sic_occ_
 
-sic_variable = FLOSIC(mol_0,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level)
+sic_variable = FLOSIC(mol_0,xc=xc,fod1=fod1,fod2=fod2,grid=grid)
 sic_variable = sic_occ_(sic_variable)
 
 # Now we can run the calculation.

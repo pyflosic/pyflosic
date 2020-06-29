@@ -112,7 +112,7 @@ def fo(mf, fod, s=0):
     return fo
 
 
-def lorb2fod(mf, lo_coeff, s=0, grid_level=7):
+def lorb2fod(mf, lo_coeff, s=0, grid=7):
     """
     lo_coeff[:] localized orbital
     """
@@ -206,7 +206,7 @@ def lorb2fod(mf, lo_coeff, s=0, grid_level=7):
 
     _mdft = dft.UKS(onmol)
     _mdft.max_cycle = 0
-    _mdft.grids.level = grid_level
+    _mdft.grids.level = grid
     _mdft.kernel()
     ongrid = copy.copy(_mdft.grids)
 
@@ -410,7 +410,7 @@ if __name__ == '__main__':
                 spin=spin,
                 charge=charge)
 
-    grid_level  = 6
+    grid  = 6
     mol.verbose = _verbose
     fqdn = socket.getfqdn()
     # give the code some memory to breath
@@ -424,7 +424,7 @@ if __name__ == '__main__':
     m.init_guess = 'chkfile'
     m.chkfile = ifile + '.chk'
     m.small_rho_cutoff = 1e-9
-    m.grids.level = grid_level
+    m.grids.level = grid
     m.xc=xc
 
     print('\nPerforming DFT calculation ...\n')
@@ -527,7 +527,7 @@ if __name__ == '__main__':
                 sstr = 'DN'
             print("  density fit for spin {0} orb #{1} ...".format(sstr,j+1), flush=True)
             #print("find initial fod: {0}".format(j))
-            initial_fods[j,:] = lorb2fod(m,loc_orb[:,j], s=spin, grid_level=grid_level-1)
+            initial_fods[j,:] = lorb2fod(m,loc_orb[:,j], s=spin, grid=grid-1)
             fodout.extend(Atom(osym, position=initial_fods[j,:]*units.Bohr))
 
     print("\nWriting output file: {0}".format(ofname))

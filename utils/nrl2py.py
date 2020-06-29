@@ -223,7 +223,7 @@ def nrl_to_py(path='./'):
     run_1.write("geo,nuclei,fod1,fod2,included = xyz_to_nuclei_fod(molecule)\n")
     run_1.write("b = get_dfo_basis('"+sysname+"')\n")
     run_1.write("mol = gto.M(atom=ase2pyscf(nuclei), basis=b,spin="+str(spin)+",charge="+str(charge)+")\n")
-    run_1.write("sic_object = FLOSIC(mol,xc='"+xc+"',fod1=fod1,fod2=fod2,grid_level=3)\n")
+    run_1.write("sic_object = FLOSIC(mol,xc='"+xc+"',fod1=fod1,fod2=fod2,grid=3)\n")
     run_1.write("total_energy_sic = sic_object.kernel()\n")
     run_1.write("homo_flosic = sic_object.homo_flosic\n")
     run_1.write("print('Pyflosic total energy: ',total_energy_sic)\n")

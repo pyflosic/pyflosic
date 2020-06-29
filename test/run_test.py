@@ -52,9 +52,9 @@ class KnownValues(unittest.TestCase):
     def test_flosic_scf(self):
         # FLO-SIC SCF 
         xc = 'LDA,PW'      # Exchange-correlation functional in the form: (exchange,correlation)
-        grid_level = 3     # Level of the numerical grid. 3 is the standard value
+        grid = 3     # Level of the numerical grid. 3 is the standard value
         vsic_every = 1     # Calculate VSIC after 3 iterations  
-        mf = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level,vsic_every=vsic_every)
+        mf = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid=grid,vsic_every=vsic_every)
         mf.max_cycle = 300 # Number of SCF iterations.
         mf.conv_tol = 1e-6 # Accuracy of the SCF cycle.
         mf.verbose = 4     # Amount of output. 4: full output.
