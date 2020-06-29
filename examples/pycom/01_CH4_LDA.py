@@ -8,5 +8,5 @@ basis = 'cc-pvtz'
 xc = 'LDA,PW'
 
 # We now have the newton flag also for the automatic guessing procedure 
-automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB',newton=True)
+pycom_guess(ase_nuclei,charge,spin,basis,xc,method='FB',newton=True)
 

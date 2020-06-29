@@ -9,5 +9,5 @@ spin = 0
 basis = 'cc-pvdz'
 xc = 'LDA,PW'
 # Create the guess. 
-automatic_guessing(ase_nuclei,charge,spin,basis,xc,method='FB')
+pycom_guess(ase_nuclei,charge,spin,basis,xc,method='FB')
 
