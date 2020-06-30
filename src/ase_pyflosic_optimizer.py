@@ -29,7 +29,7 @@ from ase_pyflosic_calculator import PYFLOSIC
 from ase.constraints import FixAtoms 
 from ase.units import Ha,Bohr
 
-def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='STO-3G',ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=1.5e-4*(Ha/Bohr),steps=1000,max_cycle=300,conv_tol=1e-6,grid=3,df=False,newton=False,use_chk=False,verbose=4,efield=None,ham_sic='HOOOV',dm=None,cart=False,output=None,solvation=None,lmax=10,eta=0.1,lebedev_order=89,rad_sol='vdw',rad_sol_scal=1.0,eps=78.3553,pol=False,n_rad=None,n_ang=None,prune='nwchem'):
+def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='STO-3G',ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=1.5e-4*(Ha/Bohr),steps=1000,max_cycle=300,conv_tol=1e-6,grid=3,df=False,newton=False,use_chk=False,verbose=4,efield=None,ham_sic='HOOOV',dm=None,cart=False,output=None,solvation=None,lmax=10,eta=0.1,lebedev_order=89,rad_sol='vdw',rad_sol_scal=1.0,eps=78.3553,pol=False,n_rad=None,n_ang=None,prune='no'):
     # mode 			dft only optimizes nuclear positions 
     #				flosic-os only optimizes FOD positions (one-shot)
     #				flosic-scf only optimizes FOD positions (self-consistently)
