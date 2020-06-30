@@ -115,7 +115,7 @@ class PYFLOSIC(Calculator):
         pol=False,              # calculate polarizability
         n_rad=None,               # radial grid
         n_ang=None,               # angular grid
-        prune='nwchem'              # grid pruning
+        prune='no'              # grid pruning
     )
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,

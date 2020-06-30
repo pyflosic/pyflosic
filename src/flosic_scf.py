@@ -268,6 +268,7 @@ class FLOSIC(uhf.UHF):
         self.ldax = ldax # If True, LDA exchange is used for FLO-SIC (debugging mainly).
         self.is_first = True # Used to determine which SCF cycle we are in.
         self.grids.level = grid # grid level
+        self.grids.prune = None
         self.calc_forces = calc_forces # Determines whether or not FOD forces are calculated in every step. Default: False.
         self.debug = debug # enable debugging output 		
         self.l_ij = l_ij # Lagrangian multiplier output 
@@ -281,6 +282,7 @@ class FLOSIC(uhf.UHF):
         calc_uks.xc = self.xc
         calc_uks.max_cycle = 0
         calc_uks.grids.level = self.grids.level
+        calc_uks.grids.prune = None
         
         # if an initial density matrix is given
         # initialize the subclass with it
