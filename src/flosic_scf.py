@@ -254,7 +254,7 @@ class FLOSIC(uhf.UHF):
     '''FLOSIC 
     See pyscf/dft/rks.py RKS class for the usage of the attributes
     Rewritten UKS class. ''' # This part is directly taken from the RKS class.
-    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOO',vsic_every=1, init_dm=None):
+    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOOOV',vsic_every=1, init_dm=None):
         uhf.UHF.__init__(self, mol)
         rks._dft_common_init_(self)
         

@@ -436,7 +436,7 @@ def write_force(frc,name='fforce.dat'):
 # positions. Everything else is optional. For the output, see the dictionary initialized
 # below.
     
-def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=False,calc_forces=False,nuclei=None,l_ij=None,ods=None,idx_1s=[0,0],fixed_vsic=None,ham_sic='HOO'):
+def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=False,calc_forces=False,nuclei=None,l_ij=None,ods=None,idx_1s=[0,0],fixed_vsic=None,ham_sic='HOOOV'):
 
     # Get the atomic overlap and set the number of spins to two. 
     s1e = mf.get_ovlp(mol)
