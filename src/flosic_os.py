@@ -420,8 +420,9 @@ def get_fermi_forces(nspin, pflo):
     assert len(pflo) == nspin, "List of FLO() objects must have nspin {} size: {}"\
         .format(nspin, len(pflo))
     
-    # get the forces from each FLO object
-    ff = [pflo[s].get_desic_dai() for s in range(nspin)]
+    ff = list()
+    for s in range(nspin):
+        ff.extend(pflo[s].get_desic_dai().tolist())
     
     return np.reshape(np.array(ff),(-1,3))
 
