@@ -250,7 +250,7 @@ class FLOSIC(uhf.UHF):
     '''FLOSIC 
     See pyscf/dft/rks.py RKS class for the usage of the attributes
     Rewritten UKS class. ''' # This part is directly taken from the RKS class.
-    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid_level=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOO',vsic_every=1, init_dm=None):
+    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid_level=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOOOV',vsic_every=1, init_dm=None):
         uhf.UHF.__init__(self, mol)
         rks._dft_common_init_(self)
         
@@ -265,6 +265,7 @@ class FLOSIC(uhf.UHF):
         self.is_first = True # Used to determine which SCF cycle we are in.
         self.grid_level = grid_level # Grid level.
         self.grids.level = grid_level 
+        self.grids.prune = None
         self.calc_forces = calc_forces # Determines whether or not FOD forces are calculated in every step. Default: False.
         self.debug = debug # enable debugging output 		
         self.l_ij = l_ij # Lagrangian multiplier output 
@@ -278,6 +279,7 @@ class FLOSIC(uhf.UHF):
         calc_uks.xc = self.xc
         calc_uks.max_cycle = 0
         calc_uks.grids.level = grid_level
+        calc_uks.grids.prune = None
         
         # if an initial density matrix is given
         # initialize the subclass with it
