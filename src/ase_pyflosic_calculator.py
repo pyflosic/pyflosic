@@ -273,7 +273,7 @@ class PYFLOSIC(Calculator):
                 self.mf.init_guess = 'chk'
                 self.mf.update('pyflosic.chk')
                 self.dm = self.mf.make_rdm1()
-            if self.newton and self.xc != 'SCAN,SCAN':
+            if self.newton:
                 self.mf = self.mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(self.mf, self.efield)
@@ -286,22 +286,19 @@ class PYFLOSIC(Calculator):
             self.results['energy'] = e * Ha
             # conversion to eV to match ase
             self.results['fodforces'] = None
-            try:  # no gradients for meta-GGAs!
-                gf = self.mf.nuc_grad_method()
-                gf.verbose = self.verbose
-                gf.grid_response = True
-                forces = -1. * gf.kernel() * (Ha / Bohr)
-                # conversion to eV/A to match ase
-                totalforces = []
-                totalforces.extend(forces)
-                fod1forces = np.zeros_like(fod1.get_positions())
-                fod2forces = np.zeros_like(fod2.get_positions())
-                totalforces.extend(fod1forces)
-                totalforces.extend(fod2forces)
-                totalforces = np.array(totalforces)
-                self.results['forces'] = totalforces
-            except BaseException:
-                self.results['forces'] = None
+            gf = self.mf.nuc_grad_method()
+            gf.verbose = self.verbose
+            gf.grid_response = True
+            forces = -1. * gf.kernel() * (Ha / Bohr)
+            # conversion to eV/A to match ase
+            totalforces = []
+            totalforces.extend(forces)
+            fod1forces = np.zeros_like(fod1.get_positions())
+            fod2forces = np.zeros_like(fod2.get_positions())
+            totalforces.extend(fod1forces)
+            totalforces.extend(fod2forces)
+            totalforces = np.array(totalforces)
+            self.results['forces'] = totalforces
             self.results['evalues'] = self.mf.mo_energy * Ha
             # conversion to eV to match ase
             self.results['dipole'] = self.mf.dip_moment(
@@ -332,7 +329,7 @@ class PYFLOSIC(Calculator):
                 self.mf.init_guess = 'chk'
                 self.mf.update('pyflosic.chk')
                 self.dm = self.mf.make_rdm1()
-            if self.newton and self.xc != 'SCAN,SCAN':
+            if self.newton:
                 self.mf = self.mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(self.mf, self.efield)
@@ -392,7 +389,7 @@ class PYFLOSIC(Calculator):
                 self.mf.init_guess = 'chk'
                 self.mf.update('pyflosic.chk')
                 self.dm = self.mf.make_rdm1()
-            if self.newton and self.xc != 'SCAN,SCAN':
+            if self.newton:
                 self.mf = self.mf.newton()
             if self.efield is not None:
                 self.apply_electric_field(self.mf, self.efield)
