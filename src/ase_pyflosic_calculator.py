@@ -84,38 +84,35 @@ class PYFLOSIC(Calculator):
         'polarizability']
 
     default_parameters = dict(
-        charge=0,                 # charge of the system
-        spin=0,                   # spin of the system, equal to 2S
-        basis='STO-3G',           # basis set
-        ecp=None,                 # only needed if ecp basis set is used
-        xc='LDA,PW',              # exchange-correlation potential - must be available in libxc
-        # calculation method (dft,flosic-os or flosic-scf)
-        mode='flosic-scf',
+        charge=0,                   # charge of the system
+        spin=0,                     # spin of the system, equal to 2S
+        basis='STO-3G',             # basis set
+        ecp=None,                   # only needed if ecp basis set is used
+        xc='LDA,PW',                # exchange-correlation potential - must be available in libxc
+        mode='flosic-scf',          # calculation method (dft,flosic-os or flosic-scf)
         efield=None,                # perturbative electric field
-        max_cycle=300,            # maximum number of SCF cycles
-        conv_tol=1e-6,            # energy convergence threshold
-        grid=3,                   # numerical mesh (lowest: 0, highest: 9)
-        newton=False,                # use the Newton second-order SCF cycle
-        df=False,                    # apply density fitting
+        max_cycle=300,              # maximum number of SCF cycles
+        conv_tol=1e-6,              # energy convergence threshold
+        grid=3,                     # numerical mesh (lowest: 0, highest: 9)
+        newton=False,               # use the Newton second-order SCF cycle
+        df=False,                   # apply density fitting
         use_chk=False,              # restart from checkpoint file
         verbose=4,                  # output verbosity
-        ham_sic='HOOOV',           # choose a unified SIC Hamiltonian - HOO or HOOOV
-        dm=None,                  # density matrix
-        # use Cartesian GTO basis and integrals (6d,10f,15g)
-        cart=False,
-        output=None,              # specify an output file, if None: standard output is used
-        # specify if solvation model should be applied (COSMO)
-        solvation=None,
-        lmax=10,                  # maximum l for basis expansion in spherical harmonics for solvation
-        eta=0.1,                  # smearing parameter in solvation model
-        lebedev_order=89,         # order of integration for solvation model
-        rad_sol='vdw',         # radii for solvation model
+        ham_sic='HOOOV',            # choose a unified SIC Hamiltonian - HOO or HOOOV
+        dm=None,                    # density matrix
+        cart=False,                 # use Cartesian GTO basis and integrals (6d,10f,15g)
+        output=None,                # specify an output file, if None: standard output is used
+        solvation=None,             # specify if solvation model should be applied (COSMO)
+        lmax=10,                    # maximum l for basis expansion in spherical harmonics for solvation
+        eta=0.1,                    # smearing parameter in solvation model
+        lebedev_order=89,           # order of integration for solvation model
+        rad_sol='vdw',              # radii for solvation model
         rad_sol_scal=1.0,           # scaling factor for the radii
-        eps=78.3553,              # dielectric constant of solvent
-        pol=False,              # calculate polarizability
-        n_rad=None,               # radial grid
-        n_ang=None,               # angular grid
-        prune='no'              # grid pruning
+        eps=78.3553,                # dielectric constant of solvent
+        pol=False,                  # calculate polarizability
+        n_rad=None,                 # radial grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
+        n_ang=None,                 # angular grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
+        prune='no'                  # grid pruning
     )
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,

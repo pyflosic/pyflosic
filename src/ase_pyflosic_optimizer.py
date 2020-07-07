@@ -64,8 +64,8 @@ def flosic_optimize(mode='flosic-scf',atoms,charge=0,spin=0,xc='lda,pw',basis='S
     # rad_sol_scal              scaling factor for the radii
     # eps                       dielectric constant of solvent
     # pol                       calculate polarizability
-    # n_rad                     radial grid
-    # n_ang                     angular grid
+    # n_rad                     radial grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
+    # n_ang                     angular grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
     # prune                     grid pruning
     
     
