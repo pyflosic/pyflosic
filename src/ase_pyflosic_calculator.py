@@ -112,8 +112,8 @@ class PYFLOSIC(FileIOCalculator):
         num_iter=0,             # scf iteration number 
         vsic_every=1,           # calculate vsic after this number on num_iter cycles 
         ham_sic ='HOOOV',          # unified SIC Hamiltonian HOO or HOOOV 
-        n_rad = None,           # radial grid
-        n_ang = None,           # angular grid
+        n_rad = None,           # radial grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
+        n_ang = None,           # angular grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
         prune = 'no'        # grid pruning
         ) 
 

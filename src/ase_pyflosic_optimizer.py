@@ -62,8 +62,8 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     # fix_fods		...	freeze FODS during the optimization, might use for 1s/2s FODs 
     # ham_sic		...	the different unified Hamiltonians HOO and HOOOV 
     # vsic_every        ...     calculate vsic after this number on num_iter cycles
-    # n_rad             ...     radial grid
-    # n_ang             ...     angular grid
+    # n_rad             ...     radial grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
+    # n_ang             ...     angular grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
     # prune             ...     grid pruning
 
     
