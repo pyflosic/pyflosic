@@ -2,7 +2,7 @@
 ![GitHub Logo](/images/pyflosic_logo.png)
 
 
-# PyFLOSIC 
+# PyFLOSIC   
 Python-based Fermi-Löwdin orbital self-interaction-correction  
 [![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
 [![language](https://img.shields.io/badge/language-Python3-blue)](https://www.python.org/)
@@ -84,7 +84,7 @@ Applications of the PyFLOSIC code:
 * [Stretched or noded orbital densities and self-interaction correction in density functional theory](https://aip.scitation.org/doi/10.1063/1.5087065)
   
 ## Milestones 
-  * **30.04.2020** 
+  * **April 30, 2020** 
 Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13)
 
 
