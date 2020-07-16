@@ -6,7 +6,7 @@
 **Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC)**   
 [![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
 [![language](https://img.shields.io/badge/language-Python3-blue)](https://www.python.org/)
-[![version](https://img.shields.io/badge/version-1.1.0-lightgrey)]()  
+[![version](https://img.shields.io/badge/version-1.0.1-lightgrey)]()  
 
 
 [![researchgate](https://img.shields.io/static/v1?label=researchgate&message=OpenSIC&style=social&logo=researchgate)](https://www.researchgate.net/project/Fermi-Loewdin-orbital-self-interaction-correction-developed-in-Freiberg-FLO-SICFG)
