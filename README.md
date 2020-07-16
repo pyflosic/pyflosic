@@ -3,7 +3,7 @@
 
 
 # PyFLOSIC   
-Python-based Fermi-Löwdin orbital self-interaction-correction  
+Python-based Fermi-Löwdin orbital self-interaction correction  
 [![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
 [![language](https://img.shields.io/badge/language-Python3-blue)](https://www.python.org/)
 [![version](https://img.shields.io/badge/version-1.1.0-lightgrey)]()
