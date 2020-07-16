@@ -3,7 +3,7 @@
 
 
 # PyFLOSIC   
-Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC) 
+**Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC)** 
 [![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
 [![language](https://img.shields.io/badge/language-Python3-blue)](https://www.python.org/)
 [![version](https://img.shields.io/badge/version-1.1.0-lightgrey)]()
@@ -70,7 +70,7 @@ Please note that the code is in the open beta testing phase now. If you discover
 ### previously 
 * Torsten Hahn (torstenhahn@fastmail.fm)
 
-The development of PyFLOSIC started with the master thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
+The development of PyFLOSIC started with the master's thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
 
 ## Citation
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article. 
