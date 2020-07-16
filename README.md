@@ -4,8 +4,14 @@
 
 # PyFLOSIC 
 Python-based Fermi-Löwdin orbital self-interaction-correction  
-Coding language: python3   
-Licence: APACHE2   
+[![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
+[![language](https://img.shields.io/badge/language-Python3-blue)](https://www.python.org/)
+[![version](https://img.shields.io/badge/version-1.1.0-lightgrey)]()
+
+
+[![researchgate](https://img.shields.io/static/v1?label=researchgate&message=OpenSIC&style=social&logo=researchgate)](https://www.researchgate.net/project/Fermi-Loewdin-orbital-self-interaction-correction-developed-in-Freiberg-FLO-SICFG)
+[![youtube](https://img.shields.io/static/v1?label=YouTube&message=OpenSIC&logo=youtube&style=social)](https://www.youtube.com/watch?v=-1bxmCwn7Sw)
+[![twitter](https://img.shields.io/static/v1?label=twitter&message=OpenSIC&style=social&logo=twitter)](https://twitter.com/OpenSIC_project)
 
 The following document will guide you through the setup and show you how to get started with this Python-based FLO-SIC code.
 
@@ -81,5 +87,4 @@ Applications of the PyFLOSIC code:
   * **30.04.2020** 
 Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13)
 
-## Social media acitvities 
-* [Researchgate group](https://www.researchgate.net/project/Fermi-Loewdin-orbital-self-interaction-correction-developed-in-Freiberg-FLO-SICFG)
+
