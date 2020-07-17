@@ -336,16 +336,16 @@ class PYFLOSIC(Calculator):
                 self.mf.kernel()
             else:
                 self.mf.kernel(self.dm)
-            self.mf = flosic(
+            flodic = flosic(
                 mol,
                 self.mf,
                 fod1,
                 fod2,
                 calc_forces=True,
                 ham_sic=self.ham_sic)
-            self.results['energy'] = self.mf['etot_sic'] * Ha
+            self.results['energy'] = flodic['etot_sic'] * Ha
             # conversion to eV to match ase
-            f = -1. * self.mf['fforces']
+            f = -1. * flodic['fforces']
             self.results['fodforces'] = f * (Ha / Bohr)
             # conversion to eV/A to match ase
             if self.verbose >= 4:
@@ -353,9 +353,9 @@ class PYFLOSIC(Calculator):
                 print(f)
                 print('fmax = %0.6f [Ha/Bohr]' %
                       np.sqrt((f**2).sum(axis=1).max()))
-            self.results['evalues'] = self.mf['evalues'] * Ha
+            self.results['evalues'] = flodic['evalues'] * Ha
             # conversion to eV to match ase
-            self.results['dipole'] = self.mf['dipole'] * Debye
+            self.results['dipole'] = flodic['dipole'] * Debye
             # conversion to e*A to match ase
             if self.pol:
                 self.results['polarizability'] = Polarizability(
