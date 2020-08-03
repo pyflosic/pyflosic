@@ -2,10 +2,16 @@
 ![GitHub Logo](/images/pyflosic_logo.png)
 
 
-# PyFLOSIC 
-Python-based Fermi-Löwdin orbital self-interaction-correction  
-Coding language: python3   
-Licence: APACHE2   
+# PyFLOSIC   
+**Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC)**   
+[![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
+[![language](https://img.shields.io/badge/language-Python3-blue)](https://www.python.org/)
+[![version](https://img.shields.io/badge/version-1.0.1-lightgrey)]()  
+
+
+[![researchgate](https://img.shields.io/static/v1?label=researchgate&message=OpenSIC&style=social&logo=researchgate)](https://www.researchgate.net/project/Fermi-Loewdin-orbital-self-interaction-correction-developed-in-Freiberg-FLO-SICFG)
+[![youtube](https://img.shields.io/static/v1?label=YouTube&message=OpenSIC&logo=youtube&style=social)](https://www.youtube.com/watch?v=-1bxmCwn7Sw)
+[![twitter](https://img.shields.io/static/v1?label=twitter&message=OpenSIC&style=social&logo=twitter)](https://twitter.com/OpenSIC_project)
 
 The following document will guide you through the setup and show you how to get started with this Python-based FLO-SIC code.
 
@@ -64,22 +70,21 @@ Please note that the code is in the open beta testing phase now. If you discover
 ### previously 
 * Torsten Hahn (torstenhahn@fastmail.fm)
 
-The development of PyFLOSIC started with the master thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Our overall theoretical guide and head of decisions is Prof. Jens Kortus.
+The development of PyFLOSIC started with the master's thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.
 
 ## Citation
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article. 
 
-* **PyFLOSIC - Python based Fermi-Löwdin orbital self-interaction correction**  
+* **PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction**  
   S. Sebastian, L. Fiedler, J. Kraus, J. Kortus, K. Trepte, S. Lehtola
-  arXiv e-prints, Physics - Computational Physics, 2019, arXiv:1905.02631  
+  arXiv e-prints, Physics - Computational Physics, 2020,  [arXiv:1905.02631](https://arxiv.org/abs/1905.02631)
   
 Applications of the PyFLOSIC code:     
 * [Interpretation and Automatic Generation of Fermi‐Orbital Descriptors](https://onlinelibrary.wiley.com/doi/full/10.1002/jcc.26062)
 * [Stretched or noded orbital densities and self-interaction correction in density functional theory](https://aip.scitation.org/doi/10.1063/1.5087065)
   
 ## Milestones 
-  * **30.04.2020** 
+  * **April 30, 2020** 
 Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13)
 
-## Social media acitvities 
-* [Researchgate group](https://www.researchgate.net/project/Fermi-Loewdin-orbital-self-interaction-correction-developed-in-Freiberg-FLO-SICFG)
+
