@@ -3,4 +3,4 @@
 *.log
 *.tmp
 log
-venc  
+venv 
