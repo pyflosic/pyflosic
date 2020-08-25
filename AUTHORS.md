@@ -2,14 +2,6 @@
 
 Core routines, code structure and working examples.   
 
-#### Lenz Fiedler,  M. Sc.  
-email: fiedler.lenz@gmail.com  
-- all original core FLO-SIC rountines (flosic_os.py, flosic_scf.py)   
-- FOD visualization (e.g. cube files and density plots)  
-- basic and advanced tests   
-- documentation  
-- NRLMOL2pyflosic routine    
-
 #### Sebastian Schwalbe, M. Sc.  
 email: theonov13@gmail.com 
 - different SIC Hamiltonians (different unified Hamiltonians)   
@@ -19,18 +11,6 @@ email: theonov13@gmail.com
 - G2-1 benchmark post-processing (see pyG21 code)    
 - DFO basis set (pyscf interface and testing with various codes)    
 - pyflosic2NRLMOL routine (see pyNRLMOL code)   
-
-# co-developers: 
-
-Additional features, code testing and improvements.  
-
-#### Prof. Jens Kortus    
-- DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
-- theoretical concepts   
-
-#### Simon Liebing, M. Sc.    
-- DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
-- licence issues  
 
 #### Kai Trepte, PhD  
 email: kai.trepte1987@gmail.com
@@ -46,6 +26,19 @@ email: jakob.kraus@student.tu-freiberg.de
 - combination with solvation models
 
 
+# co-developers: 
+
+Additional features, code testing and improvements.  
+
+#### Prof. Jens Kortus    
+- DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
+- theoretical concepts   
+
+#### Simon Liebing, M. Sc.    
+- DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
+- licence issues  
+
+
 # former developers:
 
 #### Torsten Hahn, PhD     
@@ -54,3 +47,10 @@ email: hahn@physik.tu-freiberg.de
 - linearly scaling FLO-SIC SCF cycle and FOD forces   
 - MPI paralellization   
 
+#### Lenz Fiedler,  M. Sc.  
+email: fiedler.lenz@gmail.com  
+- all original core FLO-SIC rountines (flosic_os.py, flosic_scf.py)   
+- FOD visualization (e.g. cube files and density plots)  
+- basic and advanced tests   
+- documentation  
+- NRLMOL2pyflosic routine    
