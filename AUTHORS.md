@@ -27,7 +27,7 @@ email: jakob.kraus@student.tu-freiberg.de
 - ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py)     
 
 #### Susi Lehtola, PhD 
-email: 
+email: susi.lehtola@helsinki.fi
 - DFO/DFO+ basis testing, debugging 
 - new concepts 
 - theoretical guiding 
