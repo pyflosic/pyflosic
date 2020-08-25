@@ -54,7 +54,7 @@ $ pip3 install numba
 $ pip3 install h5py 
 ```
 
-To check which versions you have installed you might can use 
+To check which versions you have installed you can use 
 
 ```bash 
 $ python3 python_package_versions.py
