@@ -1,4 +1,4 @@
-Date: August 25th, 2020      
+# Date: August 25th, 2020      
 To install the code with all its dependencies, simply type    
 
 ```bash
@@ -18,7 +18,7 @@ $ source venv/bin/activate
 ```
 while the ending procedure is the same. 
 
-Date: 16.04.2019  
+# Date: 16.04.2019  
 Installation checked on:  
 
 - Ubuntu 18.10 (Cosmic Cuttlefish)
