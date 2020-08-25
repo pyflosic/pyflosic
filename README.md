@@ -25,7 +25,7 @@ The following document will guide you through the setup and show you how to get 
 - *examples/*: Contains useful examples to get started with PyFLOSIC. 
 - *utils/*: Utilities that are useful for PyFLOSIC.
 - *test/*: Contains a version control test.
-- *LICENCE*: APACHE2 licence file.
+- *LICENSE*: APACHE2 licence file.
 
 Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
 
@@ -97,8 +97,8 @@ Applications of the PyFLOSIC code:
 * [Stretched or noded orbital densities and self-interaction correction in density functional theory](https://aip.scitation.org/doi/10.1063/1.5087065)
   
 ## Milestones 
-  * **April 30, 2020** 
+  * **April 30, 2020**   
 Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13) 
-  * **August 24, 2020**
+  * **August 24, 2020**  
 We are very happy to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics! 
 
