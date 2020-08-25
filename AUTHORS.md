@@ -23,8 +23,8 @@ email: kai.trepte1987@gmail.com
 email: jakob.kraus@student.tu-freiberg.de
 - code testing
 - application to large molecules
-- combination with solvation models
-
+- combination with solvation models   
+- ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py)     
 
 # co-developers: 
 
