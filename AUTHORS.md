@@ -39,7 +39,7 @@ Additional features, code testing and improvements.
 - licence issues  
 
 #### Kai Trepte, PhD  
-email: trept1k@cmich.edu  
+email: kai.trepte1987@gmail.com
 - intensive code testing  
 - FOD guessing   
 - benchmarking again NRLMOL code   
