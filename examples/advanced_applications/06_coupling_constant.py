@@ -87,7 +87,7 @@ mol = gto.M(atom=ase2pyscf(nuclei), basis=b,spin=spin,charge=charge)
 
 # Now we set up the calculator.
 
-sic_object = FLOSIC(mol=mol,xc=xc,fod1=fod1,fod2=fod2)
+sic_object = FLOSIC(mol=mol,xc=xc,fod1=fod1,fod2=fod2,ham_sic='HOO')
 sic_object.conv_tol = 1e-7
 sic_object.max_cycle = 300
 
@@ -105,7 +105,7 @@ b = 'cc-pVQZ'
 [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(atoms)
 mol = gto.M(atom=ase2pyscf(nuclei), basis=b,spin=spin,charge=charge)
 #mol.verbose = 4
-sic_object = FLOSIC(mol=mol,xc=xc,fod1=fod1,fod2=fod2)
+sic_object = FLOSIC(mol=mol,xc=xc,fod1=fod1,fod2=fod2,ham_sic='HOO')
 sic_object.conv_tol = 1e-7
 sic_object.max_cycle = 300
 

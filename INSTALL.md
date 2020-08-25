@@ -1,4 +1,50 @@
-Date: 16.04.2019  
+# PyFLOSIC installation, Date: August 25, 2020      
+
+Clone this git directory:
+```bash 
+$ git clone https://github.com/pyflosic/pyflosic.git
+```
+
+Add the pyflosic directory to your PYTHONPATH environment variable globally or in bash/job scripts:
+
+```bash
+export PYTHONPATH=[path_to_pyflosic]/pyflosic/src/:$PYTHONPATH
+export PYTHONPATH=[path_to_pyflosic]/pyflosic/utils/:$PYTHONPATH
+```
+Note: The variable path_to_pyflosic describes the absolute path pointing towards the pyflosic folder (not including the pyflosic folder itself). 
+
+PyFLOSIC depends on several Python packages.   
+These packages and their recommended versions are:
+
+- ase 3.17.0
+- h5py 2.10.0
+- numba 0.48.0
+- scipy 1.5.2
+- numpy 1.19.1
+- pyscf 1.7.1
+
+Install all Python packages required for PyFLOSIC in the recommended versions:
+
+```bash
+$ cd pyflosic/
+$ source init_venv.sh
+```
+After the installation, you enter a virtual environment where you have access to 
+the installed packages, while packages installed outside the environment remain unaffected.
+   
+Deactivate the environment:    
+
+```bash
+$ deactivate
+```
+
+After the first installation, you can alternatively start the environment with:
+```bash
+$ source venv/bin/activate 
+```
+while the deactivation procedure remains the same. 
+
+# PyFLOSIC installation, Date: April 16, 2019  
 Installation checked on:  
 
 - Ubuntu 18.10 (Cosmic Cuttlefish)
@@ -6,9 +52,7 @@ Installation checked on:
 - Debian GNU/Linux 9.8 (stretch)
 - Debian 10 (buster)
 
-Another (older) implementation on different operating systems (OS) can be found in the INSTALL_OLD file. 
-
-# PySCF installation 
+## PySCF installation 
 
 ```bash
  $ git clone https://github.com/sunqm/pyscf  
@@ -44,7 +88,7 @@ export LD_PRELOAD=$LD_PRELOAD:$MKLROOT/lib/intel64/libmkl_core.so
 
 The value of $MKLROOT depends on your specific system.
 
-# Python packages (required)  
+## Python packages (required)  
 
 ```bash 
 $ pip3 install numpy 
@@ -80,7 +124,7 @@ $ pip3 install numba --upgrade
 $ pip3 install h5py --upgrade
 ```
 
-# Python packages (optional) 
+## Python packages (optional) 
 
 For visualization and plotting, you might want to have the following packages. 
 ```bash 
@@ -93,7 +137,7 @@ Further, if you want to use the pyberny geometry optimizer, you need to install 
 $ pip3 install -U pyberny
 ```
 
-# PyFLOSIC installation 
+## Cloning PyFLOSIC and adding it to your PYTHONPATH
 
 ```bash 
 $ git clone https://github.com/pyflosic/pyflosic.git

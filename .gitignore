@@ -2,4 +2,5 @@
 *.pyc
 *.log
 *.tmp
-log 
+log
+venv 
