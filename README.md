@@ -89,7 +89,7 @@ If you use the PyFLOSIC code for a scientific article or contribution, please ci
 
 * **PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction**  
   Sebastian Schwalbe, Lenz Fiedler, Jakob Kraus, Jens Kortus, Kai Trepte, and Susi Lehtola
-  Journal of Chemical Physics 153:084104, August 2020. [DOI:10.1063/5.0012519](https://doi.org/10.1063/5.0012519)
+  Journal of Chemical Physics 153:084104, August 2020. [DOI:10.1063/5.0012519](https://doi.org/10.1063/5.0012519) [arXiv](https://arxiv.org/abs/1905.02631)
   
 Applications of the PyFLOSIC code:     
 * [Interpretation and Automatic Generation of Fermi‐Orbital Descriptors](https://onlinelibrary.wiley.com/doi/full/10.1002/jcc.26062)
