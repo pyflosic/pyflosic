@@ -30,8 +30,8 @@ dftx = dft.UKS(mol)
 dftx.xc = x
 dftxc = dft.UKS(mol)
 dftxc.xc = xc
-sicx = FLOSIC(mol,xc=x,fod1=fod1,fod2=fod2)
-sicxc = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2)
+sicx = FLOSIC(mol,xc=x,fod1=fod1,fod2=fod2,ham_sic='HOO')
+sicxc = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,ham_sic='HOO')
 
 # Now we need to do the ground state calculations.
 

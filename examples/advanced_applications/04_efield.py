@@ -23,7 +23,7 @@ mol = gto.M(atom=ase2pyscf(nuclei), basis=b,spin=spin,charge=charge)
 
 dft_object = dft.UKS(mol)
 dft_object.xc = xc
-sic_object = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2)
+sic_object = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,ham_sic='HOO')
 
 # To calculate alpha we first calculate mu WITHOUT an electric field.
 

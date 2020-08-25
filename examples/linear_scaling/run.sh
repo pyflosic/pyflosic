@@ -4,13 +4,13 @@
 # Specify your PySCF path here.
 
 #export PYTHONPATH=/home/SHARE/for_sebastian/pyscf_sebastian/pyscf/:$PYTHONPATH
-export PYTHONPATH=/home/schwalbe/__Programms__/pyscf_v3/pyscf/:$PYTHONPATH
+#export PYTHONPATH=/home/schwalbe/__Programms__/pyscf_v3/pyscf/:$PYTHONPATH
 
 
 # Pyflosic path.
 cd ..
 pyflosic="$(dirname "$(pwd)")"
-cd advanced_applications
+cd linear_scaling
 export PYTHONPATH=$pyflosic/src/:$PYTHONPATH
 export PYTHONPATH=$pyflosic/utils/:$PYTHONPATH
 

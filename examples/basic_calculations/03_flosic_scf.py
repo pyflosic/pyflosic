@@ -36,7 +36,7 @@ xc = 'LDA,PW' # Exchange-correlation functional in the form: (exchange,correlati
 
 # Now we can initiliaze the SIC object.
 
-sic_object = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level)	
+sic_object = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level,ham_sic='HOO')	
 
 # We can the modify the SIC object now if wished.
 
