@@ -5,7 +5,6 @@ from flosic_scf import FLOSIC
 import time
 import numpy as np
 
-
 # This example visualizes how a second order self-consistency solver can be used to drastically speed up and stabilize calculations.
 # Second order here refers to the second derivatives of the energy w.r.t. the density.
 # Drawing on these, the PySCF intrinsic functions .newton() and .scanner() allow the usage of a Newton optimization algorithm.
