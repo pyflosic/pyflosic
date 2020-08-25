@@ -29,7 +29,7 @@ Install all Python packages required for PyFLOSIC in the recommended versions:
 $ cd pyflosic/
 $ source init_venv.sh
 ```
-After the installation, you enter a virtual environment, where you have access to 
+After the installation, you enter a virtual environment where you have access to 
 the installed packages, while packages installed outside the environment remain unaffected.
    
 Deactivate the environment:    
@@ -44,7 +44,7 @@ $ source venv/bin/activate
 ```
 while the deactivation procedure remains the same. 
 
-# Date: 16.04.2019  
+# PyFLOSIC installation, Date: 16.04.2019  
 Installation checked on:  
 
 - Ubuntu 18.10 (Cosmic Cuttlefish)
@@ -52,7 +52,7 @@ Installation checked on:
 - Debian GNU/Linux 9.8 (stretch)
 - Debian 10 (buster)
 
-# PySCF installation 
+## PySCF installation 
 
 ```bash
  $ git clone https://github.com/sunqm/pyscf  
@@ -88,7 +88,7 @@ export LD_PRELOAD=$LD_PRELOAD:$MKLROOT/lib/intel64/libmkl_core.so
 
 The value of $MKLROOT depends on your specific system.
 
-# Python packages (required)  
+## Python packages (required)  
 
 ```bash 
 $ pip3 install numpy 
@@ -124,7 +124,7 @@ $ pip3 install numba --upgrade
 $ pip3 install h5py --upgrade
 ```
 
-# Python packages (optional) 
+## Python packages (optional) 
 
 For visualization and plotting, you might want to have the following packages. 
 ```bash 
@@ -137,7 +137,7 @@ Further, if you want to use the pyberny geometry optimizer, you need to install 
 $ pip3 install -U pyberny
 ```
 
-# PyFLOSIC installation 
+## Cloning PyFLOSIC and adding it to your PYTHONPATH
 
 ```bash 
 $ git clone https://github.com/pyflosic/pyflosic.git
