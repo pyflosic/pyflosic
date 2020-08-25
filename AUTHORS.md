@@ -20,12 +20,6 @@ email: theonov13@gmail.com
 - DFO basis set (pyscf interface and testing with various codes)    
 - pyflosic2NRLMOL routine (see pyNRLMOL code)   
 
-#### Torsten Hahn, PhD     
-email: hahn@physik.tu-freiberg.de     
-- FOD forces   
-- linearly scaling FLO-SIC SCF cycle and FOD forces   
-- MPI paralellization   
-
 # co-developers: 
 
 Additional features, code testing and improvements.  
@@ -50,3 +44,13 @@ email: jakob.kraus@student.tu-freiberg.de
 - code testing
 - application to large molecules
 - combination with solvation models
+
+
+# former developers:
+
+#### Torsten Hahn, PhD     
+email: hahn@physik.tu-freiberg.de     
+- FOD forces   
+- linearly scaling FLO-SIC SCF cycle and FOD forces   
+- MPI paralellization   
+
