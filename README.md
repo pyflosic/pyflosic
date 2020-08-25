@@ -86,7 +86,7 @@ Please note that the code is in the open beta testing phase now. If you discover
 The development of PyFLOSIC started with the master's thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.
 
 ## Citation
-If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article. 
+If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article: 
 
 * **PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction**  
   Sebastian Schwalbe, Lenz Fiedler, Jakob Kraus, Jens Kortus, Kai Trepte, and Susi Lehtola
