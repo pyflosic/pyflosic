@@ -16,7 +16,7 @@ email: theonov13@gmail.com
 email: kai.trepte1987@gmail.com
 - intensive code testing  
 - FOD guessing   
-- benchmarking again NRLMOL code   
+- benchmarking against NRLMOL code   
 - porting to python3   
 
 #### Jakob Kraus, B. Sc.
