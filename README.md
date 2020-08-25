@@ -102,4 +102,4 @@ Thanks to all the people who have read our article. We are happy that our articl
 We are very happy to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics! 
 
 ## Final Remarks
-PyFLOSIC is still a relatively young code subject to regular significant changes. If you discover any issues while working with PyFLOSIC, feel free to contact us. 
+PyFLOSIC is still a relatively young code subject to regular significant changes.  If you discover any issues while working with PyFLOSIC, feel free to contact us. 
