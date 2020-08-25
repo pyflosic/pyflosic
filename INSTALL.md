@@ -1,22 +1,48 @@
-# Date: August 25th, 2020      
-To install the code with all its dependencies, simply type    
+# PyFLOSIC installation, Date: August 25th, 2020      
 
-```bash
-$ source init_venv.sh
+Clone this git directory:
+```bash 
+$ git clone https://github.com/pyflosic/pyflosic.git
 ```
 
-All Python packages. including PySCF, are installed using pip.      
-For the deactivation of the environment simply type    
+Add the pyflosic directory to your PYTHONPATH environment variable globally or in bash/job scripts:
+
+```bash
+export PYTHONPATH=[path_to_pyflosic]/pyflosic/src/:$PYTHONPATH
+export PYTHONPATH=[path_to_pyflosic]/pyflosic/utils/:$PYTHONPATH
+```
+Note: The variable path_to_pyflosic describes the absolute path pointing towards the pyflosic folder (not including the pyflosic folder itself). 
+
+PyFLOSIC depends on several Python packages.   
+These packages and their recommended versions are:
+
+- ase 3.17.0
+- h5py 2.10.0
+- numba 0.48.0
+- scipy 1.5.2
+- numpy 1.19.1
+- pyscf 1.7.1
+
+Install all Python packages required for PyFLOSIC in the recommended versions:
+
+```bash
+$ cd pyflosic/
+$ source init_venv.sh
+```
+After the installation, you enter a virtual environment, where you have access to 
+the installed packages, while packages installed outside the environment remain unaffected.
+   
+Deactivate the environment:    
 
 ```bash
 $ deactivate
 ```
 
-After the first installation, the environment can alternatively be started using 
+After the first installation, you can alternatively start the environment with:
 ```bash
 $ source venv/bin/activate 
 ```
-while the ending procedure is the same. 
+while the deactivation procedure remains the same. 
 
 # Date: 16.04.2019  
 Installation checked on:  
@@ -78,7 +104,7 @@ To check which versions you have installed you might can use
 $ python3 python_package_versions.py
 ```
 
-We recommand the following versions 
+We recommend the following versions 
 
 - ase 3.17.0
 - h5py 2.9.0
