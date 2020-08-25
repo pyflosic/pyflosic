@@ -120,8 +120,9 @@ class PYFLOSIC(Calculator):
         """ Constructor """
         Calculator.__init__(self, restart, ignore_bad_restart_file,
                             label, atoms, directory, **kwargs)
-        self.set_atoms(atoms)
         self.initialize()
+        self.set_atoms(atoms)
+        self.ignored_changes=['cell','pbc']
 
     def initialize(self):
         for arg, val in self.parameters.items():
@@ -166,6 +167,8 @@ class PYFLOSIC(Calculator):
             np.einsum('x,xij->ij', efield, ao_dip)
 
     def get_potential_energy(self, atoms=None, force_consistent=False):
+        if atoms is None:
+            atoms = self.get_atoms()
         # calculate total energy if required
         if force_consistent:
             name = self.__class__.__name__
@@ -178,36 +181,48 @@ class PYFLOSIC(Calculator):
             return self.results['energy']
 
     def get_forces(self, atoms=None):
+        if atoms is None:
+            atoms = self.get_atoms()
         # calculate forces if required
         if self.calculation_required(atoms, ['forces']):
             self.calculate(atoms)
         return self.results['forces']
 
     def get_fodforces(self, atoms=None):
+        if atoms is None:
+            atoms = self.get_atoms()
         # calculate FOD forces if required
         if self.calculation_required(atoms, ['fodforces']):
             self.calculate(atoms)
         return self.results['fodforces']
 
     def get_dipole_moment(self, atoms=None):
+        if atoms is None:
+            atoms = self.get_atoms()
         # calculate dipole moment if required
         if self.calculation_required(atoms, ['dipole']):
             self.calculate(atoms)
         return self.results['dipole']
 
     def get_polarizability(self, atoms=None):
+        if atoms is None:
+            atoms = self.get_atoms()
         # calculate polarizability  if required
         if self.calculation_required(atoms, ['polarizability']):
             self.calculate(atoms)
         return self.results['polarizability']
 
     def get_evalues(self, atoms=None):
+        if atoms is None:
+            atoms = self.get_atoms()
         # calculate eigenvalues if required
         if self.calculation_required(atoms, ['evalues']):
             self.calculate(atoms)
         return self.results['evalues']
 
     def get_homo(self, atoms=None):
+        if atoms is None:
+            atoms = self.get_atoms()
         # calculate HOMO energy if required
         if self.calculation_required(atoms, ['homo']):
             self.calculate(atoms)
