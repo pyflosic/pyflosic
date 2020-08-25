@@ -1,10 +1,22 @@
-Date: August 25th, 2020 
-To install the code with all its dependencies, simply type
+Date: August 25th, 2020      
+To install the code with all its dependencies, simply type    
 
 ```bash
 $ source init_venv.sh
 ```
 
+All Python packages. including PySCF, are installed using pip.      
+For the deactivation of the environment simply type    
+
+```bash
+$ deactivate
+```
+
+After the first installation, the environment can alternativly started     
+```bash
+$ source venv/bin/activate 
+```
+while the ending procedure is the same. 
 
 Date: 16.04.2019  
 Installation checked on:  
