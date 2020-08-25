@@ -1,4 +1,4 @@
-Date: August 25th, 2020
+Date: August 25th, 2020 
 To install the code with all its dependencies, simply type
 
 ```bash
