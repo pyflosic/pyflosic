@@ -1,4 +1,4 @@
-# PyFLOSIC installation, Date: August 25th, 2020      
+# PyFLOSIC installation, Date: August 25, 2020      
 
 Clone this git directory:
 ```bash 
@@ -44,7 +44,7 @@ $ source venv/bin/activate
 ```
 while the deactivation procedure remains the same. 
 
-# PyFLOSIC installation, Date: 16.04.2019  
+# PyFLOSIC installation, Date: April 16, 2019  
 Installation checked on:  
 
 - Ubuntu 18.10 (Cosmic Cuttlefish)
