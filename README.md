@@ -39,7 +39,7 @@ The self-interaction error (SIE) is one of the mayor drawbacks of one of the mos
 You need a working pyscf installation on your system. 
 
 ## Dependencies (required)
-We recommend the following package versions. 
+We recommend the following package versions: 
 
 * ase 3.17.0
 * h5py 2.10.0
@@ -53,7 +53,7 @@ In order to make sure you use the recommended package versions for your PyFLOSIC
 ```bash
 $ source init_venv.sh
 ```
-This will create a virtual environment which has all required packages in the versions listed above available.
+This will create a virtual environment which has all required packages in the versions listed above available.  
 Most importantly, your previous installations of ase, h5py, etc. outside the virtual environment are not affected at all by this procedure.
 If you want to leave the virtual environment, type the following shell command:
 
@@ -68,8 +68,7 @@ $ deactivate
 * pyberny
 
 
-## Note:heavy_exclamation_mark:
-Please note that the code is in the open beta testing phase now. If you discover any problem while working with the code, please do not hesitate to contact one of the developers.      
+  
 
 ## Authors 
 
@@ -85,7 +84,7 @@ Please note that the code is in the open beta testing phase now. If you discover
 
 The development of PyFLOSIC started with the master's thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.
 
-## Citation
+## Referencing this code
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article: 
 
 * **PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction**  
@@ -100,5 +99,7 @@ Applications of the PyFLOSIC code:
   * **April 30, 2020**   
 Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13) 
   * **August 24, 2020**  
-We are very happy to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics! 
+We are very happy to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics (JCP)! 
 
+## Final Remarks
+PyFLOSIC is still a relatively young code subject to regular significant changes.  If you discover any issues while working with PyFLOSIC, feel free to contact us. 
