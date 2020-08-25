@@ -367,7 +367,7 @@ class FLOSIC(uhf.UHF):
             #sys.exit()
             if wsize > 1: self.use_mpi = True
         
-    
+
     def kernel(self, *args, **kwargs):
         # signal all slaves that wanne do update_vsic
         # with mpi
@@ -418,8 +418,8 @@ class FLOSIC(uhf.UHF):
 #    
     
     # Flags that might be helpful for debugging.
-    def dump_flags(self):
-        uhf.UHF.dump_flags(self)
+    def dump_flags(self,verbose=None):
+        uhf.UHF.dump_flags(self,verbose)
         logger.info(self, 'XC functionals = %s', self.xc)
         logger.info(self, 'small_rho_cutoff = %g', self.small_rho_cutoff)
         self.grids.dump_flags()
