@@ -1,3 +1,11 @@
+Date: August 25th, 2020
+To install the code with all its dependencies, simply type
+
+```bash
+$ source init_venv.sh
+```
+
+
 Date: 16.04.2019  
 Installation checked on:  
 
@@ -5,8 +13,6 @@ Installation checked on:
 - Elementary OS 0.4.1 Loki
 - Debian GNU/Linux 9.8 (stretch)
 - Debian 10 (buster)
-
-Another (older) implementation on different operating systems (OS) can be found in the INSTALL_OLD file. 
 
 # PySCF installation 
 
