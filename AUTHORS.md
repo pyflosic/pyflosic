@@ -7,7 +7,7 @@ email: theonov13@gmail.com
 - different SIC Hamiltonians (different unified Hamiltonians)   
 - object-oriented aspects (e.g. class design for flosic_scf.py)   
 - ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py)   
-- automatic guessing  
+- PyCOM 
 - G2-1 benchmark post-processing (see pyG21 code)    
 - DFO basis set (pyscf interface and testing with various codes)    
 - pyflosic2NRLMOL routine (see pyNRLMOL code)   
