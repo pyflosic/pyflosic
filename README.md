@@ -54,7 +54,6 @@ In order to make sure you use the recommended package versions for your PyFLOSIC
 $ source init_venv.sh
 ```
 This will create a virtual environment and install all of the required packages in the versions listed above.  
-When you enter the virtual environment the next time, the installation step is skipped.  
 Most importantly, your previous installations of ase, h5py, etc. outside the virtual environment are not affected at all by this procedure.
 If you want to leave the virtual environment, type the following shell command:
 
