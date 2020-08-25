@@ -12,7 +12,7 @@ For the deactivation of the environment simply type
 $ deactivate
 ```
 
-After the first installation, the environment can alternativly started     
+After the first installation, the environment can alternatively be started using 
 ```bash
 $ source venv/bin/activate 
 ```
