@@ -50,7 +50,7 @@ To check which versions you have installed you might can use
 $ python3 python_package_versions.py
 ```
 
-We recommand the following versions 
+We recommend the following versions 
 
 - ase 3.17.0
 - h5py 2.9.0
