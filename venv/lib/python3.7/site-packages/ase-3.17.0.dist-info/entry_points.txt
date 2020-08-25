@@ -1,0 +1,8 @@
+[console_scripts]
+ase = ase.cli.main:main
+ase-build = ase.cli.main:old
+ase-db = ase.cli.main:old
+ase-gui = ase.cli.main:old
+ase-info = ase.cli.main:old
+ase-run = ase.cli.main:old
+
