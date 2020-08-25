@@ -19,8 +19,8 @@ email: kai.trepte1987@gmail.com
 - benchmarking against NRLMOL code   
 - porting to python3   
 
-#### Jakob Kraus, B. Sc.
-email: jakob.kraus@student.tu-freiberg.de
+#### Jakob Kraus, M. Sc.
+email: jakob.kraus@physik.tu-freiberg.de
 - code testing
 - application to large molecules
 - combination with solvation models   
@@ -51,7 +51,7 @@ Additional features, code testing and improvements.
 # former developers:
 
 #### Torsten Hahn, PhD     
-email: hahn@physik.tu-freiberg.de     
+email:      
 - FOD forces   
 - linearly scaling FLO-SIC SCF cycle and FOD forces   
 - MPI paralellization   
