@@ -24,7 +24,7 @@ from pyscf.dft import numint
 from pyscf import dft
 from pyscf import lo
 from ase import neighborlist as NL
-from ase.utils import natural_cutoffs
+from ase.neighborlist import natural_cutoffs
 from pyscf.lib import logger
 from pyscf import lib
 import multiprocessing as mp
@@ -1988,7 +1988,6 @@ def initial_guess(m, grid_level):
     return (fodup, foddn)
 
 
-from ase.test import NotAvailable
 from ase.calculators.calculator import Calculator, all_changes
 import os, time
 
