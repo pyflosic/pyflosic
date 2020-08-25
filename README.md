@@ -17,7 +17,7 @@ The following document will guide you through the setup and show you how to get 
 
 #### Contents
 
-- *INSTALL.md*: Installation guide in Markdown (md) language. For older installations see INSTALL_OLD.  
+- *INSTALL.md*: Installation guide in Markdown (md) language. 
 - *AUTHORS.md*: The authors of PyFLOSIC along with contact information.
 - *VERSION.md*: The version of PyFLOSIC you have acquired.
 - *doc/*: It is strongly recommended to read this before using PyFLOSIC.
@@ -42,11 +42,24 @@ You need a working pyscf installation on your system.
 We recommend the following package versions. 
 
 * ase 3.17.0
-* h5py 2.9.0
-* numba 0.43.1
-* scipy 1.2.1
-* numpy 1.16.2
-* pyscf 1.6.1
+* h5py 2.10.0
+* numba 0.48.0
+* scipy 1.5.2
+* numpy 1.19.1
+* pyscf 1.7.1
+
+In order to make sure you use the recommended package versions for your PyFLOSIC calculations, you can type the following shell command:
+
+```bash
+$ source init_venv.sh
+```
+This will create a virtual environment which has all required packages in the versions listed above available.
+Most importantly, your previous installations of ase, h5py, etc. outside the virtual environment are not affected at all by this procedure.
+If you want to leave the virtual environment, type the following shell command:
+
+```bash
+$ deactivate
+```
 
 ## Dependencies (optional)
 
@@ -63,9 +76,9 @@ Please note that the code is in the open beta testing phase now. If you discover
 * Sebastian Schwalbe (theonov13@gmail.com) 
 * Lenz Fiedler (fiedler.lenz@gmail.com)
 * Jakob Kraus (jakob.kraus@physik.tu-freiberg.de) 
-* Kai Trepte (trept1k@cmich.edu) 
+* Kai Trepte (kai.trepte1987@gmail.com)
 * Susi Lehtola (susi.lehtola@helsinki.fi)
-* Jens Kortus (Jens.Kortus@physik.tu-freiberg.de)
+* Jens Kortus (jens.kortus@physik.tu-freiberg.de)
 
 ### previously 
 * Torsten Hahn (torstenhahn@fastmail.fm)
@@ -76,8 +89,8 @@ The development of PyFLOSIC started with the master's thesis of Lenz Fiedler. Ov
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article. 
 
 * **PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction**  
-  S. Sebastian, L. Fiedler, J. Kraus, J. Kortus, K. Trepte, S. Lehtola
-  arXiv e-prints, Physics - Computational Physics, 2020,  [arXiv:1905.02631](https://arxiv.org/abs/1905.02631)
+  Sebastian Schwalbe, Lenz Fiedler, Jakob Kraus, Jens Kortus, Kai Trepte, and Susi Lehtola
+  Journal of Chemical Physics 153:084104, August 2020. [DOI:10.1063/5.0012519](https://doi.org/10.1063/5.0012519)
   
 Applications of the PyFLOSIC code:     
 * [Interpretation and Automatic Generation of Fermi‐Orbital Descriptors](https://onlinelibrary.wiley.com/doi/full/10.1002/jcc.26062)
@@ -85,6 +98,7 @@ Applications of the PyFLOSIC code:
   
 ## Milestones 
   * **April 30, 2020** 
-Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13)
-
+Thanks to all the people who have read our article. We are happy that our article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", where every results was produced with our PyFLOSIC code, published in the Journal of Computational Chemistry (JCC) was promoted to one of the top 10% downloaded articles. [1](https://twitter.com/theonov13) 
+  * **August 24, 2020**
+We are very happy to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics! 
 
