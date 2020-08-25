@@ -26,6 +26,15 @@ email: jakob.kraus@student.tu-freiberg.de
 - combination with solvation models   
 - ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py)     
 
+#### Susi Lehtola, PhD 
+email: 
+- DFO/DFO+ basis testing, debugging 
+- new concepts 
+- theoretical guiding 
+- code layout 
+- recommendations for default settings (grid, unified Hamiltonian)
+
+
 # co-developers: 
 
 Additional features, code testing and improvements.  
