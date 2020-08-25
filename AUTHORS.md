@@ -51,7 +51,7 @@ Additional features, code testing and improvements.
 # former developers:
 
 #### Torsten Hahn, PhD     
-email:      
+email: torstenhahn@fastmail.fm    
 - FOD forces   
 - linearly scaling FLO-SIC SCF cycle and FOD forces   
 - MPI paralellization   
