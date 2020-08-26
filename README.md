@@ -13,9 +13,7 @@
 [![youtube](https://img.shields.io/static/v1?label=YouTube&message=OpenSIC&logo=youtube&style=social)](https://www.youtube.com/watch?v=-1bxmCwn7Sw)
 [![twitter](https://img.shields.io/static/v1?label=twitter&message=OpenSIC&style=social&logo=twitter)](https://twitter.com/OpenSIC_project)
 
-The following document will guide you through the setup and show you how to get started with this Python-based FLO-SIC code.
-
-#### Contents
+#### Contents of the PyFLOSIC repository
 
 - *INSTALL.md*: Installation guide. 
 - *CONTRIBUTING.md*: The main developers and co-developers of PyFLOSIC along with contact information.
