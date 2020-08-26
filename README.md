@@ -53,9 +53,7 @@ We recommend the following package versions:
 
 ## Installation
 
-See here:
-
-* [Installation](/INSTALL.md)
+See here: [Installation](/INSTALL.md)
   
 
 ## Authors 
