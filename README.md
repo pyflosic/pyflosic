@@ -15,7 +15,7 @@
 [![youtube](https://img.shields.io/static/v1?label=YouTube&message=OpenSIC&logo=youtube&style=social)](https://www.youtube.com/watch?v=-1bxmCwn7Sw)
 [![twitter](https://img.shields.io/static/v1?label=twitter&message=OpenSIC&style=social&logo=twitter)](https://twitter.com/OpenSIC_project)
 
-### Contents of the PyFLOSIC repository
+### PyFLOSIC structure
 
 - *INSTALL.md*: Installation guide. 
 - *CONTRIBUTING.md*: The main developers and co-developers of PyFLOSIC along with contact information.
@@ -34,7 +34,7 @@ The self-interaction error (SIE) is one of the mayor drawbacks of one of the mos
 * Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
 * Zeng-hui Yang, Mark R. Pederson, and John P. Perdew. Full self-consistency in the Fermi-orbital self-interaction correction. Physical Review A, 95(5):052505, May 2017.  
 
-## Dependencies (required)
+## PyFLOSIC dependencies (required)
 We recommend the following package versions: 
 
 * ase 3.17.0
@@ -44,19 +44,19 @@ We recommend the following package versions:
 * numpy 1.19.1
 * pyscf 1.7.1
 
-## Dependencies (optional)
+## PyFLOSIC dependencies (optional)
 
 * matplotlib 
 * python3-tk
 * pyberny
 
-## Installation
+## PyFLOSIC installation
 See [INSTALL.md](/INSTALL.md). 
 
-## Documentation
+## PyFLOSIC documentation
 See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 
-## Authors 
+## PyFLOSIC authors 
 
 ### current
 * Sebastian Schwalbe (theonov13@gmail.com) 
@@ -90,6 +90,6 @@ Thanks to all the people who have read our article! We are very happy that our J
   * **August 24, 2020**  
 We are glad to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics (JCP)! 
 
-## Some Remarks
+## Some remarks
 PyFLOSIC is still a relatively young code subject to regular significant changes.  
 If you discover any issues while working with PyFLOSIC, feel free to contact us or raise an issue [here](https://github.com/pyflosic/pyflosic/issues). 
