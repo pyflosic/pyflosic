@@ -75,7 +75,7 @@ See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 
 The development of PyFLOSIC started with the master's thesis of Lenz Fiedler.  
 Over the last year, we had many updates and complete code rewrites by Sebastian Schwalbe (ase-backends, classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe, and Jakob Kraus. Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.  
-For more details on the individual contributions of the PyFLOSIC main developers and co-developers, see [here](CONTRIBUTING.md).
+For more details on the PyFLOSIC main developers and co-developers, see [here](CONTRIBUTING.md).
 
 ## Citing PyFLOSIC
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article: 
