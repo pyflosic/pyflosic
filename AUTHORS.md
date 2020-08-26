@@ -1,11 +1,11 @@
 # main developers: 
 
-Core routines, code structure and working examples.   
+Core routines, code structure, and working examples.   
 
 #### Sebastian Schwalbe, M. Sc.  
 email: theonov13@gmail.com 
-- different SIC Hamiltonians (different unified Hamiltonians)   
-- object-oriented aspects (e.g. class design for flosic_scf.py)   
+- different (unified) SIC Hamiltonians  
+- object-oriented aspects (e.g., class design for flosic_scf.py)   
 - ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py)   
 - PyCOM 
 - G2-1 benchmark post-processing (see pyG21 code)    
@@ -39,7 +39,8 @@ email: susi.lehtola@helsinki.fi
 
 Additional features, code testing and improvements.  
 
-#### Prof. Jens Kortus    
+#### Prof. Jens Kortus 
+email: jens.kortus@physik.tu-freiberg.de
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
 - theoretical concepts   
 
