@@ -51,9 +51,8 @@ We recommend the following package versions:
 * python3-tk
 * pyberny
 
-## Installation: see [here](/INSTALL.md)
-
- 
+## Installation
+See [here](/INSTALL.md). 
 
 ## Authors 
 
