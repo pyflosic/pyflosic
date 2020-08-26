@@ -37,16 +37,16 @@ email: susi.lehtola@helsinki.fi
 
 # current co-developers 
 
-Additional features, code testing and improvements.  
+Additional features, code testing, and improvements.  
 
 #### Prof. Jens Kortus 
 email: jens.kortus@physik.tu-freiberg.de
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
 - theoretical concepts   
 
-#### Simon Liebing, M. Sc.    
+#### Simon Liebing, PhD    
 - DFO basis set in gbs format (see utils/basis/nrlmol_dfo.gbs)  
-- licence issues  
+- license issues  
 
 
 # former developers
