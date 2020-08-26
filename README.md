@@ -81,9 +81,9 @@ Applications of the PyFLOSIC code:
   
 ## Milestones 
   * **April 30, 2020**   
-Thanks to all the people who have read our article. We are happy that our Journal of Computational Chemistry (JCC) article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", in which every result was produced using our PyFLOSIC code, was promoted to one of the top 10% downloaded articles. [twitter](https://twitter.com/theonov13) 
+Thanks to all the people who have read our article! We are very happy that our Journal of Computational Chemistry (JCC) article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", in which every result was produced using our PyFLOSIC code, was promoted to one of the top 10% downloaded articles. [twitter](https://twitter.com/theonov13) 
   * **August 24, 2020**  
-We are very happy to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics (JCP)! 
+We are glad to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics (JCP)! 
 
 ## Some Remarks
 PyFLOSIC is still a relatively young code subject to regular significant changes.  If you discover any issues while working with PyFLOSIC, feel free to contact us. 
