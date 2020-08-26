@@ -26,9 +26,7 @@
 - *testing/*: Contains a version control test.
 
 
-The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT).  
-Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC).  
-We implemented this method using the highly modular PySCF electronic structure and quantum chemistry code as basis.   
+The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the highly modular PySCF electronic structure and quantum chemistry code as basis.   
 
 #### Theoretical foundations of FLO-SIC
 * Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
@@ -58,6 +56,7 @@ See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 
 ## Authors 
 
+# current
 * Sebastian Schwalbe (theonov13@gmail.com) 
 * Lenz Fiedler (fiedler.lenz@gmail.com)
 * Jakob Kraus (jakob.kraus@physik.tu-freiberg.de) 
@@ -65,13 +64,12 @@ See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 * Susi Lehtola (susi.lehtola@helsinki.fi)
 * Jens Kortus (jens.kortus@physik.tu-freiberg.de)
 
-### previously 
+## former 
 * Torsten Hahn (torstenhahn@fastmail.fm)
 
 The development of PyFLOSIC started with the master's thesis of Lenz Fiedler.  
-Over the last year, we had many updates and complete code rewrites by Sebastian Schwalbe (ase-backends, classes etc.) and Torsten Hahn (various speed-up techniques).  
-Our main testers are Kai Trepte, Sebastian Schwalbe, and Jakob Kraus.  
-Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.
+Over the last year, we had many updates and complete code rewrites by Sebastian Schwalbe (ase-backends, classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe, and Jakob Kraus. Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.  
+For more details on the individual contributions of the PyFLOSIC main developers and co-developers, see [here](CONTRIBUTING.md).
 
 ## Citing PyFLOSIC
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article: 
