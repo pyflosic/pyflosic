@@ -5,7 +5,7 @@ Core routines, code structure, and working examples.
 #### Sebastian Schwalbe, M. Sc.  
 email: theonov13@gmail.com 
 - different (unified) SIC Hamiltonians  
-- object-oriented aspects (e.g., class design for flosic_scf.py)   
+- object-oriented aspects (e.g. class design for flosic_scf.py)   
 - ase-pyflosic framework (ase_pyflosic_calculator.py, ase_pyflosic_optimizer.py)   
 - PyCOM 
 - G2-1 benchmark post-processing (see pyG21 code)    
