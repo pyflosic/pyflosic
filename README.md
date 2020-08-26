@@ -27,8 +27,6 @@ The following document will guide you through the setup and show you how to get 
 - *testing/*: Contains a version control test.
 - *LICENSE*: APACHE2 license file.
 
-Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
-
 The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the modern PySCF electronic structure code as basis.   
 
 #### Theoretical foundations  
@@ -53,6 +51,9 @@ We recommend the following package versions:
 
 ## Installation
 See [here](/INSTALL.md). 
+
+## Documentation
+See [here](/doc/pyflosic_manual.pdf)
 
 ## Authors 
 
