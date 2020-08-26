@@ -1,4 +1,4 @@
-# main developers: 
+# current main developers 
 
 Core routines, code structure, and working examples.   
 
@@ -35,7 +35,7 @@ email: susi.lehtola@helsinki.fi
 - recommendations for default settings (grid, unified Hamiltonian)
 
 
-# co-developers: 
+# current co-developers 
 
 Additional features, code testing and improvements.  
 
@@ -49,13 +49,7 @@ email: jens.kortus@physik.tu-freiberg.de
 - licence issues  
 
 
-# former developers:
-
-#### Torsten Hahn, PhD     
-email: torstenhahn@fastmail.fm    
-- FOD forces   
-- linearly scaling FLO-SIC SCF cycle and FOD forces   
-- MPI paralellization   
+# former developers
 
 #### Lenz Fiedler,  M. Sc.  
 email: fiedler.lenz@gmail.com  
@@ -63,4 +57,13 @@ email: fiedler.lenz@gmail.com
 - FOD visualization (e.g. cube files and density plots)  
 - basic and advanced tests   
 - documentation  
-- NRLMOL2pyflosic routine    
+- NRLMOL2pyflosic routine   
+
+
+#### Torsten Hahn, PhD     
+email: torstenhahn@fastmail.fm    
+- FOD forces   
+- linearly scaling FLO-SIC SCF cycle and FOD forces   
+- MPI paralellization   
+
+ 
