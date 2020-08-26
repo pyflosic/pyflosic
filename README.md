@@ -55,7 +55,7 @@ We recommend the following package versions:
 
 See here:
 
-![Installation](/INSTALL.md)
+[Installation](/INSTALL.md)
   
 
 ## Authors 
