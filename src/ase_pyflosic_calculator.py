@@ -122,7 +122,6 @@ class PYFLOSIC(Calculator):
                             label, atoms, directory, **kwargs)
         self.initialize()
         self.set_atoms(atoms)
-        self.ignored_changes=['cell','pbc']
 
     def initialize(self):
         for arg, val in self.parameters.items():
