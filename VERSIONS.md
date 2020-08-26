@@ -10,4 +10,4 @@ ALPHA_v02: @taurus:/projects/p_magmof/pyflosic_clean
 - code cleaning and testing   
 	
 # Freiberg, Germany 12.04.2019   
-BETA: gitversion from theo to github   
+BETA: git version from theo to github   
