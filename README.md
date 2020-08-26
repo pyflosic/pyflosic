@@ -53,7 +53,7 @@ We recommend the following package versions:
 See [INSTALL.md](/INSTALL.md). 
 
 ## Documentation
-See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf)
+See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 
 ## Authors 
 
