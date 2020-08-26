@@ -369,7 +369,7 @@ class PYFLOSIC(FileIOCalculator):
             mf.grids.prune = prune_dict[self.prune]
             e = mf.kernel()
             self.mf = mf
-            mf = flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,calc_forces=True)
+            mf = flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = False, print_dm_all = False,debug=self.debug,calc_forces=True,ham_sic=self.ham_sic)
             self.results['energy']= mf['etot_sic']*Ha
             # unit conversion from Ha/Bohr to eV/Ang 
             #self.results['fodforces'] = -1*mf['fforces']/(Ha/Bohr) 
