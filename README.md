@@ -84,12 +84,12 @@ Applications of the PyFLOSIC code:
 * [Interpretation and Automatic Generation of Fermi‐Orbital Descriptors](https://onlinelibrary.wiley.com/doi/full/10.1002/jcc.26062)
 * [Stretched or noded orbital densities and self-interaction correction in density functional theory](https://aip.scitation.org/doi/10.1063/1.5087065)
   
-## Milestones 
+## PyFLOSIC Milestones 
   * **April 30, 2020**   
 Thanks to all the people who have read our article! We are very happy that our Journal of Computational Chemistry (JCC) article "Interpretation and Automatic Generation of Fermi‐Orbital Descriptors", in which every result was produced using our PyFLOSIC code, was promoted to one of the top 10% downloaded articles. [twitter](https://twitter.com/theonov13) 
   * **August 24, 2020**  
 We are glad to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics (JCP)! 
 
-## Some remarks
+## Some remarks for PyFLOSIC users
 PyFLOSIC is still a relatively young code subject to regular significant changes.  
 If you discover any issues while working with PyFLOSIC, feel free to contact us or raise an issue [here](https://github.com/pyflosic/pyflosic/issues). 
