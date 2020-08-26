@@ -28,7 +28,7 @@
 - *testing/*: Contains a version control test.
 
 
-The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the highly modular PySCF electronic structure and quantum chemistry code as basis.   
+The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method in the PyFLOSIC code, using the highly modular PySCF electronic structure and quantum chemistry code as basis.   
 
 ### Theoretical foundations of FLO-SIC
 * **Communication: Self-interaction correction with unitary invariance in density functional theory**  
