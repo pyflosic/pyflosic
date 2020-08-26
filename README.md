@@ -17,15 +17,15 @@ The following document will guide you through the setup and show you how to get 
 
 #### Contents
 
-- *INSTALL.md*: Installation guide in Markdown (md) language. 
-- *AUTHORS.md*: The authors of PyFLOSIC along with contact information.
+- *INSTALL.md*: Installation guide. 
+- *AUTHORS.md*: The main developers and co-developers of PyFLOSIC along with contact information.
 - *VERSION.md*: The version of PyFLOSIC you have acquired.
 - *doc/*: It is strongly recommended to read this before using PyFLOSIC.
 - *src/*: Contains the source files for PyFLOSIC.
 - *examples/*: Contains useful examples to get started with PyFLOSIC. 
-- *utils/*: Utilities that are useful for PyFLOSIC.
-- *test/*: Contains a version control test.
-- *LICENSE*: APACHE2 licence file.
+- *utils/*: Contains utilities that are useful for PyFLOSIC.
+- *testing/*: Contains a version control test.
+- *LICENSE*: APACHE2 license file.
 
 Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
 
