@@ -3,7 +3,9 @@
 
 
 # PyFLOSIC   
-**Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC)**   
+**Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC)**
+
+  
 [![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
 [![language](https://img.shields.io/badge/language-Python3-blue)](https://www.python.org/)
 [![version](https://img.shields.io/badge/version-1.0.2-lightgrey)]()  
@@ -13,7 +15,7 @@
 [![youtube](https://img.shields.io/static/v1?label=YouTube&message=OpenSIC&logo=youtube&style=social)](https://www.youtube.com/watch?v=-1bxmCwn7Sw)
 [![twitter](https://img.shields.io/static/v1?label=twitter&message=OpenSIC&style=social&logo=twitter)](https://twitter.com/OpenSIC_project)
 
-#### Contents of the PyFLOSIC repository
+### Contents of the PyFLOSIC repository
 
 - *INSTALL.md*: Installation guide. 
 - *CONTRIBUTING.md*: The main developers and co-developers of PyFLOSIC along with contact information.
@@ -28,7 +30,7 @@
 
 The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the highly modular PySCF electronic structure and quantum chemistry code as basis.   
 
-#### Theoretical foundations of FLO-SIC
+### Theoretical foundations of FLO-SIC
 * Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
 * Zeng-hui Yang, Mark R. Pederson, and John P. Perdew. Full self-consistency in the Fermi-orbital self-interaction correction. Physical Review A, 95(5):052505, May 2017.  
 
