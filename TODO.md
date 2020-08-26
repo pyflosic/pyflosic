@@ -1,2 +1,0 @@
-- implementation of the atomic force correction (AF, theoretical concept: Prof. A. K. Jackson and Dr. K. Trepte)  
-- enable periodic boundary conditions for FLO-SIC 
