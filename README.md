@@ -56,7 +56,7 @@ See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 
 ## Authors 
 
-# current
+### current
 * Sebastian Schwalbe (theonov13@gmail.com) 
 * Lenz Fiedler (fiedler.lenz@gmail.com)
 * Jakob Kraus (jakob.kraus@physik.tu-freiberg.de) 
@@ -64,7 +64,7 @@ See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 * Susi Lehtola (susi.lehtola@helsinki.fi)
 * Jens Kortus (jens.kortus@physik.tu-freiberg.de)
 
-## former 
+### former 
 * Torsten Hahn (torstenhahn@fastmail.fm)
 
 The development of PyFLOSIC started with the master's thesis of Lenz Fiedler.  
