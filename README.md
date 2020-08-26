@@ -2,8 +2,7 @@
 ![GitHub Logo](/images/pyflosic_logo.png)
 
 
-# PyFLOSIC   
-### Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC)
+# PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction (FLO-SIC)
 
   
 [![license](https://img.shields.io/badge/license-APACHE2-green)](https://www.apache.org/licenses/LICENSE-2.0)
