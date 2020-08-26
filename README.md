@@ -18,7 +18,7 @@ The following document will guide you through the setup and show you how to get 
 #### Contents
 
 - *INSTALL.md*: Installation guide. 
-- *AUTHORS.md*: The main developers and co-developers of PyFLOSIC along with contact information.
+- *CONTRIBUTING.md*: The main developers and co-developers of PyFLOSIC along with contact information.
 - *VERSION.md*: The version of PyFLOSIC you have acquired.
 - *doc/*: It is strongly recommended to read this before using PyFLOSIC.
 - *src/*: Contains the source files for PyFLOSIC.
@@ -35,9 +35,6 @@ The self-interaction error (SIE) is one of the mayor drawbacks of one of the mos
 * Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
 * Zeng-hui Yang, Mark R. Pederson, and John P. Perdew. Full self-consistency in the Fermi-orbital self-interaction correction. Physical Review A, 95(5):052505, May 2017.  
 
-## Installation 
-You need a working pyscf installation on your system. 
-
 ## Dependencies (required)
 We recommend the following package versions: 
 
@@ -48,26 +45,17 @@ We recommend the following package versions:
 * numpy 1.19.1
 * pyscf 1.7.1
 
-In order to make sure you use the recommended package versions for your PyFLOSIC calculations, you can type the following shell command:
-
-```bash
-$ source init_venv.sh
-```
-This will create a virtual environment and install all of the required packages in the versions listed above.  
-Most importantly, your previous installations of ase, h5py, etc. outside the virtual environment are not affected at all by this procedure.
-If you want to leave the virtual environment, type the following shell command:
-
-```bash
-$ deactivate
-```
-
 ## Dependencies (optional)
 
 * matplotlib 
 * python3-tk
 * pyberny
 
+## Installation
 
+See here:
+
+![Installation](/INSTALL.md)
   
 
 ## Authors 
