@@ -19,7 +19,7 @@ The following document will guide you through the setup and show you how to get 
 
 - *INSTALL.md*: Installation guide. 
 - *CONTRIBUTING.md*: The main developers and co-developers of PyFLOSIC along with contact information.
-- *VERSION.md*: The version of PyFLOSIC you have acquired.
+- *ALPHA_VERSION.md*: A list of pre-GitHub PyFLOSIC code versions.
 - *doc/*: It is strongly recommended to read this before using PyFLOSIC.
 - *src/*: Contains the source files for PyFLOSIC.
 - *examples/*: Contains useful examples to get started with PyFLOSIC. 
