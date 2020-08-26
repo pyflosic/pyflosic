@@ -31,8 +31,12 @@
 The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the highly modular PySCF electronic structure and quantum chemistry code as basis.   
 
 ### Theoretical foundations of FLO-SIC
-* Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
-* Zeng-hui Yang, Mark R. Pederson, and John P. Perdew. Full self-consistency in the Fermi-orbital self-interaction correction. Physical Review A, 95(5):052505, May 2017.  
+* **Communication: Self-interaction correction with unitary invariance in density functional theory**  
+   Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew,  
+The Journal of Chemical Physics, 140(12):121103, March 2014. [DOI:10.1063/1.4869581](https://doi.org/10.1063/1.4869581)
+* **Full self-consistency in the Fermi-orbital self-interaction correction**  
+  Zeng-hui Yang, Mark R. Pederson, and John P. Perdew,  
+  Physical Review A, 95(5):052505, May 2017. [DOI:10.1103/PhysRevA.95.052505](https://doi.org/10.1103/PhysRevA.95.052505) 
 
 ## PyFLOSIC dependencies (required)
 We recommend the following package versions: 
@@ -78,9 +82,9 @@ If you use the PyFLOSIC code for a scientific article or contribution, please ci
 
 * **PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction**  
   Sebastian Schwalbe, Lenz Fiedler, Jakob Kraus, Jens Kortus, Kai Trepte, and Susi Lehtola,    
-  Journal of Chemical Physics 153:084104, August 2020. [DOI:10.1063/5.0012519](https://doi.org/10.1063/5.0012519) [arXiv:1905.02631](https://arxiv.org/abs/1905.02631)
+  The Journal of Chemical Physics 153:084104, August 2020. [DOI:10.1063/5.0012519](https://doi.org/10.1063/5.0012519) [arXiv:1905.02631](https://arxiv.org/abs/1905.02631)
   
-Applications of the PyFLOSIC code:     
+Applications of the PyFLOSIC code you might want to check out:     
 * [Interpretation and Automatic Generation of Fermi‐Orbital Descriptors](https://onlinelibrary.wiley.com/doi/full/10.1002/jcc.26062)
 * [Stretched or noded orbital densities and self-interaction correction in density functional theory](https://aip.scitation.org/doi/10.1063/1.5087065)
   
