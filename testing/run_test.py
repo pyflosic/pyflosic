@@ -44,7 +44,7 @@ class KnownValues(unittest.TestCase):
         mf.xc = 'LDA,PW'   # Exchange-correlation functional in the form: (exchange,correlation)
         mf.kernel() 
         # FLO-SIC OS
-        results = flosic(mol,mf,fod1,fod2)
+        results = flosic(mol,mf,fod1,fod2,ham_sic='HOO')
         e_calc = results['etot_sic']
         e_ref = -40.69057092300857
         self.assertAlmostEqual(e_calc, e_ref, 5)
@@ -54,7 +54,7 @@ class KnownValues(unittest.TestCase):
         xc = 'LDA,PW'      # Exchange-correlation functional in the form: (exchange,correlation)
         grid_level = 3     # Level of the numerical grid. 3 is the standard value
         vsic_every = 1     # Calculate VSIC after 3 iterations  
-        mf = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level,vsic_every=vsic_every)
+        mf = FLOSIC(mol,xc=xc,fod1=fod1,fod2=fod2,grid_level=grid_level,vsic_every=vsic_every,ham_sic='HOO')
         mf.max_cycle = 300 # Number of SCF iterations.
         mf.conv_tol = 1e-6 # Accuracy of the SCF cycle.
         mf.verbose = 4     # Amount of output. 4: full output.
@@ -64,7 +64,7 @@ class KnownValues(unittest.TestCase):
     def test_flosic_opt(self):
         # FLO-SIC SCF OPT 
         vsic_every=1
-        flosic = flosic_optimize('flosic-scf',molecule,0,0,'LDA,PW',get_dfo_basis(sysname),None,opt='FIRE',maxstep=0.1,fmax=0.1,conv_tol=1e-6,grid=7,vsic_every=vsic_every,verbose=4)
+        flosic = flosic_optimize('flosic-scf',molecule,0,0,'LDA,PW',get_dfo_basis(sysname),None,opt='FIRE',maxstep=0.1,fmax=0.1,conv_tol=1e-6,grid=7,vsic_every=vsic_every,verbose=4,ham_sic='HOO')
         f = open('OPT_FRMORB.log','r')
         e_calc = f.readlines()[-1].split()[-2]
         f.close()
