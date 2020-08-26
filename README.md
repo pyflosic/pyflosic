@@ -18,16 +18,17 @@
 - *INSTALL.md*: Installation guide. 
 - *CONTRIBUTING.md*: The main developers and co-developers of PyFLOSIC along with contact information.
 - *ALPHA_VERSIONS.md*: A list of pre-GitHub PyFLOSIC code versions.
+- *LICENSE*: APACHE2 license file.
 - *doc/*: It is strongly recommended to read this before using PyFLOSIC.
 - *src/*: Contains the source files for PyFLOSIC.
 - *examples/*: Contains useful examples to get started with PyFLOSIC. 
 - *utils/*: Contains utilities that are useful for PyFLOSIC.
 - *testing/*: Contains a version control test.
-- *LICENSE*: APACHE2 license file.
 
-The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the modern PySCF electronic structure code as basis.   
 
-#### Theoretical foundations  
+The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT).   Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC).   We implemented this method using the highly modular PySCF electronic structure and quantum chemistry code as basis.   
+
+#### Theoretical foundations of FLO-SIC
 * Mark R. Pederson, Adrienn Ruzsinszky, and John P. Perdew. Communication: Self-interaction correction with unitary invariance in density functional theory. The Journal of Chemical Physics, 140(12):121103, March 2014.
 * Zeng-hui Yang, Mark R. Pederson, and John P. Perdew. Full self-consistency in the Fermi-orbital self-interaction correction. Physical Review A, 95(5):052505, May 2017.  
 
@@ -67,7 +68,7 @@ See [doc/pyflosic_manual.pdf](/doc/pyflosic_manual.pdf).
 
 The development of PyFLOSIC started with the master's thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.
 
-## Referencing this code
+## Citing PyFLOSIC
 If you use the PyFLOSIC code for a scientific article or contribution, please cite the following article: 
 
 * **PyFLOSIC: Python-based Fermi-Löwdin orbital self-interaction correction**  
@@ -85,4 +86,4 @@ Thanks to all the people who have read our article! We are very happy that our J
 We are glad to announce that our PyFLOSIC article (see above) is now finally published in the Journal of Chemical Physics (JCP)! 
 
 ## Some Remarks
-PyFLOSIC is still a relatively young code subject to regular significant changes.  If you discover any issues while working with PyFLOSIC, feel free to contact us. 
+PyFLOSIC is still a relatively young code subject to regular significant changes.  If you discover any issues while working with PyFLOSIC, feel free to contact us or raise an issue [here](https://github.com/pyflosic/pyflosic/issues). 
