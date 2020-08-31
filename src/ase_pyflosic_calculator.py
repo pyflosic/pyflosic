@@ -464,7 +464,6 @@ class PYFLOSIC(Calculator):
 
 if __name__ == '__main__':
 
-    from ase.vibrations import Raman
 
     # define system
     atoms = Atoms('N3', [(0, 0, 0), (1, 0, 0), (0, 0, 1)])
@@ -478,12 +477,5 @@ if __name__ == '__main__':
         basis=basis,
         grid=grid,
         conv_tol=conv_tol)
-    atoms.set_calculator(calc)
-
-    ram = Raman(atoms, delta=0.005)
-    ram.run()
-    ram.summary()
-    ram.write_spectrum(
-        out='raman.dat',
-        quantity='raman',
-        intensity_unit='A^4/amu')
+    atoms.calc = calc
+    atoms.get_potential_energy()
