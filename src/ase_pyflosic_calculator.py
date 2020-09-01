@@ -464,9 +464,10 @@ class PYFLOSIC(Calculator):
 
 if __name__ == '__main__':
 
+    from raman import Raman
 
     # define system
-    atoms = Atoms('N3', [(0, 0, 0), (1, 0, 0), (0, 0, 1)])
+    atoms = Atoms('N2', [(0, 0, 0), (0, 0, 1)])
     basis = 'aug-cc-pVQZ'
     grid = 7
     conv_tol = 1e-8
@@ -478,4 +479,11 @@ if __name__ == '__main__':
         grid=grid,
         conv_tol=conv_tol)
     atoms.calc = calc
-    atoms.get_potential_energy()
+
+    ram = Raman(atoms, delta=0.005)
+    ram.run()
+    ram.summary()
+    ram.write_spectrum(
+        out='raman.dat',
+        quantity='raman',
+        intensity_unit='A^4/amu')
