@@ -8,4 +8,4 @@ pip3 install numba==0.48.0
 pip3 install scipy==1.5.2
 pip3 install numpy==1.19.1
 pip3 install pyscf==1.7.1
-echo 'To deactivate the virtualenv environment simple type "deactivate" in our bash.'
+echo 'To deactivate the virtualenv environment, simply type "deactivate" in your command line.'
