@@ -24,7 +24,14 @@ from pyscf.dft import numint
 from pyscf import dft
 from pyscf import lo
 from ase import neighborlist as NL
-from ase.utils import natural_cutoffs
+# this try/except passage is important!
+# it allows for compatibility with a wider range of ASE versions!
+try:
+    # older import
+    from ase.utils import natural_cutoffs
+except:
+    # newer import
+    from ase.neighborlist import natural_cutoffs
 from pyscf.lib import logger
 from pyscf import lib
 import multiprocessing as mp
