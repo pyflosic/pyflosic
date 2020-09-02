@@ -50,6 +50,15 @@ except:
     print(">> WARNING: no NUMBA package found, \
         FOD gradient evaluation will be *VERY* slow ! <<")
 
+
+def save_data(data,fname='save.npy'):
+    np.save(fname, data)
+
+def load_data(data,fname='save.npy'):
+    with open(fname, 'rb') as f:
+         data = np.load(f, allow_pickle=True)
+    return data
+
 @jit(nopython=True, parallel=True, cache=True)
 def D3_km_outer_loop(r, nfod, ttable, T_alpha, Q_alpha, Q_alpha_sqrt, TdST):
     #print('do_D3km_inner_loop', m)
@@ -1549,7 +1558,27 @@ class FLO(object):
             for m in range(nfod):
                 for k in range(nfod):
                     desic[m,r] += np.sum( D3_kmd[:,k,m,r]*eps[:,k] )
-
+        #print('T_alpha.shape: {}'.format(T_alpha.shape))
+        #print('T_alpha: {}'.format(T_alpha))
+        #print('Q_alpha.shape: {}'.format(Q_alpha.shape))
+        #print('Q_alpha: {}'.format(Q_alpha))
+        #print('gradovrlp.shape: {}'.format(gradovrlp.shape))
+        #print('gradovrlp: {}'.format(gradovrlp))
+        #print('TdST.shape: {}'.format(TdST.shape))
+        #print('TdST: {}'.format(TdST))
+        #print('M_tmp.shape: {}'.format(M_tmp.shape))
+        #print('M_tmp: {}'.format(M_tmp))
+        #print('D1_km.shape: {}'.format(D1_km.shape))
+        #print('D1_km: {}'.format(D1_km))
+        #print('D1_kmd.shape: {}'.format(D1_kmd.shape))
+        #print('D1_kmd: {}'.format(D1_kmd))
+        #print('D3_km.shape: {}'.format(D3_km.shape))
+        #print('D3_km: {}'.format(D3_km))
+        #print('D3_kmd.shape: {}'.format(D3_kmd.shape))
+        #print('D3_kmd: {}'.format(D3_kmd))
+        # save debug variables
+        data = [gradpsi_ai, grad_ai, gradfo, T_alpha, Q_alpha, gradovrlp, TdST, M_tmp, D1_km, D1_kmd, D3_km, D3_kmd, desic]
+        save_data(data)
         return desic
 
     def get_pedcond(self):
