@@ -3,17 +3,17 @@ from pyscf.grad import uks
 from ase.io import read 
 from nrlmol_basis import get_dfo_basis
 #from berny import optimize
-from pyscf.geomopt import *
+from pyscf.geomopt.berny_solver import optimize
 from flosic_os import xyz_to_nuclei_fod,ase2pyscf
 
-# This example shows how nuclei positions can be optimized with the pyberny solver. 
+# This example shows how nuclear positions can be optimized with the pyberny solver. 
 # Installation of pyberny 
 # pip3 install pyberny 
 
 # Read the structure. 
 # This starting structure includes both nuclei and FOD positions. 
 ase_atoms = read('LiH.xyz') 
-# We want only to optimize the nuclei positions. 
+# We want only to optimize the nuclear positions. 
 [geo,nuclei,fod1,fod2,included] =  xyz_to_nuclei_fod(ase_atoms)
 ase_atoms  = nuclei 
 # Calulation parameters. 
