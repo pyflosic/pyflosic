@@ -22,7 +22,7 @@ The following document will guide you through the setup and show you how to get 
 - *VERSION.md*: The version of PyFLOSIC you have acquired.
 - *src/*: Contains the source files for PyFLOSIC.
 - *examples/*: Contains useful examples to get started with PyFLOSIC.
-- *doc/*: Can provide additional information in addition to the examples. 
+- *doc/*: Can provide additional information on the code features. 
 - *utils/*: Utilities that are useful for PyFLOSIC.
 - *test/*: Contains a version control test.
 - *LICENSE*: APACHE2 license file.
