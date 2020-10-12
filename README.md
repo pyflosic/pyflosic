@@ -20,14 +20,14 @@ The following document will guide you through the setup and show you how to get 
 - *INSTALL.md*: Installation guide in Markdown (md) language. 
 - *AUTHORS.md*: The authors of PyFLOSIC along with contact information.
 - *VERSION.md*: The version of PyFLOSIC you have acquired.
-- *doc/*: It is strongly recommended to read this before using PyFLOSIC.
 - *src/*: Contains the source files for PyFLOSIC.
-- *examples/*: Contains useful examples to get started with PyFLOSIC. 
+- *examples/*: Contains useful examples to get started with PyFLOSIC.
+- *doc/*: Can provide additional information in addition to the examples. 
 - *utils/*: Utilities that are useful for PyFLOSIC.
 - *test/*: Contains a version control test.
-- *LICENSE*: APACHE2 licence file.
+- *LICENSE*: APACHE2 license file.
 
-Please see the PyFLOSIC manual in the folder doc for a detailed introduction.
+Please see the application examples in the folder examples for an in-depth introduction to the PyFLOSIC code.
 
 The self-interaction error (SIE) is one of the mayor drawbacks of one of the most widley used electronic structure methods - density functional theory (DFT). Pederson et al. proposed a unitarily invariant and numerically feasible method based on Fermi-Löwdin orbital self-interaction correction (FLO-SIC). We implemented this method using the modern PySCF electronic structure code as basis.   
 
