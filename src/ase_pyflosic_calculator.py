@@ -111,6 +111,7 @@ class PYFLOSIC(Calculator):
         prune='no'                  # grid pruning
     )
 
+
     def __init__(self, restart=None, label='PyFLOSIC', atoms=None, directory='.', **kwargs):
         """ Constructor """
         Calculator.__init__(self, restart=restart, label=label, atoms=atoms, directory=directory, **kwargs)
