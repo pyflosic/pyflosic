@@ -36,11 +36,7 @@
 # CHANGELOG 01.04.2020:     use_newton -> newton, newton(default) = False, added default values for charge (0), spin (0), basis (STO-3G)
 #                           removed argument mol, added argument df (default: False), changed default value for conv_tol to 1e-6, changed default value for verbose to 4
 #
-# FUTURELOG 01.04.2020:     include hyperpolarizability?
-#                           reintroduce mode 'both' in updated form?
-#                           include pbc for DFT?
-#                           include PCM for DFT
-#                           manage output via loggers
+# CHANGELOG 27.01.2021:     removed the deprecated 'ignore_bad_restart_file' keyword
 import os
 import numpy as np
 from ase.calculators.calculator import Calculator, all_changes, PropertyNotImplementedError
@@ -115,11 +111,9 @@ class PYFLOSIC(Calculator):
         prune='no'                  # grid pruning
     )
 
-    def __init__(self, restart=None, ignore_bad_restart_file=False,
-                 label='PyFLOSIC', atoms=None, directory='.', **kwargs):
+    def __init__(self, restart=None, label='PyFLOSIC', atoms=None, directory='.', **kwargs):
         """ Constructor """
-        Calculator.__init__(self, restart, ignore_bad_restart_file,
-                            label, atoms, directory, **kwargs)
+        Calculator.__init__(self, restart=restart, label=label, atoms=atoms, directory=directory, **kwargs)
         self.initialize()
         self.set_atoms(atoms)
 
