@@ -74,12 +74,12 @@ $ deactivate
 
 * Sebastian Schwalbe (theonov13@gmail.com) 
 * Lenz Fiedler (fiedler.lenz@gmail.com)
-* Jakob Kraus (jakob.kraus@physik.tu-freiberg.de) 
 * Kai Trepte (kai.trepte1987@gmail.com)
 * Susi Lehtola (susi.lehtola@helsinki.fi)
 * Jens Kortus (jens.kortus@physik.tu-freiberg.de)
 
 ### previously 
+* Jakob Kraus (jakob.kraus@physik.tu-freiberg.de) 
 * Torsten Hahn (torstenhahn@fastmail.fm)
 
 The development of PyFLOSIC started with the master's thesis of Lenz Fiedler. Over the last year, we had many updates and complete code re-writes by Sebastian Schwalbe (ase-backends,classes etc.) and Torsten Hahn (various speed-up techniques). Our main testers are Kai Trepte, Sebastian Schwalbe and Jakob Kraus. Jens Kortus is our overall theoretical guide and head of decisions, whereas Susi Lehtola has recently joined the team and provides new perspectives.
