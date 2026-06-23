@@ -471,7 +471,7 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
         fod = fod1
         if s == 1:
             fod = fod2
-        nfod[s] = fod.get_number_of_atoms()
+        nfod[s] = len(fod)
 
     # check if the calling object still has the required data structures
     sa_mode = False
@@ -827,7 +827,7 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
     # print("Total ESIC = {:9.6f}".format(esic_flo))
     # etot_sic_flo = etot_ks - esic_flo
     esic_flo = -1*(ecoul_sic_flo + exc_sic_flo)
-    print("ESIC = {:9.6f}".format(esic_flo))
+    #print("ESIC = {:9.6f}".format(esic_flo))
     etot_sic_flo = etot_ks + esic_flo
 
     # Next step is the energy eigenvalue correction / SIC Hamiltonian.
@@ -877,8 +877,8 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
                         for i in range(nfod[s]):
                                 bra[0,:] = np.transpose(flo[s,:,i])
                                 ket[:,0] = (flo[s,:,j])
-                                right = np.dot(vsics[s,j],ket)
-                                lambda_ij[s,i,j] = -np.dot(bra,right)
+                                right = np.dot(vsics[s,j],ket[:,0])
+                                lambda_ij[s,i,j] = -np.dot(bra[0,:],right)
 
     # Test lampda_ij as well input for the AF correction  
     cst = np.zeros((nspin,np.max(nfod),np.max(nfod)), dtype=datatype)
@@ -896,35 +896,35 @@ def flosic(mol,mf,fod1,fod2,sysname=None,datatype=np.float64, print_dm_one = Fal
                     #print np.dot(np.transpose(ket),ket)
                     delta = vsics[s,i]-vsics[s,j]
                     #delta = np.dot(np.transpose(sroot),vsics[s,i]-vsics[s,j])
-                    right = np.dot(delta,ket)
-                    right1 = np.dot(vsics[s,i],ket)
+                    right = np.dot(delta,ket[:,0])
+                    right1 = np.dot(vsics[s,i],ket[:,0])
                     #right1 = np.dot(np.transpose(sroot),right1)
                     right2 = np.dot(vsics[s,j],(flo[s,:,i]))
                     #right2 = np.dot(np.transpose(sroot),right2)
-                    kappa_ij[s,i,j] = 1*(np.dot(bra,right))
-                    #lambda_ij[s,i,j] = np.dot(bra,right1) - np.dot(np.transpose(flo[s,:,j]),right2) 
-                    # test 
-                    cst[s,i,j] = np.dot(bra,ket)
+                    kappa_ij[s,i,j] = np.dot(bra[0,:],right)
+                    #lambda_ij[s,i,j] = np.dot(bra[0,:],right1) - np.dot(np.transpose(flo[s,:,j]),right2)
+                    # test
+                    cst[s,i,j] = np.dot(bra[0,:],ket[:,0])
         for s in range(nspin):
             for i in range(nfod[s]):
                 for j in range(nfod[s]):
                     bra[0,:] = np.transpose(flo[s,:,i])
                     #print '<bra,bra>'
-                    #print np.dot(bra,sflo[s,:,i]) 
+                    #print np.dot(bra,sflo[s,:,i])
                     ket[:,0] = (flo[s,:,j])
                     #print '<ket|ket>'
                     #print np.dot(np.transpose(ket),ket)
                     delta = vsics[s,i]-vsics[s,j]
                     #delta = np.dot(np.transpose(sroot),vsics[s,i]-vsics[s,j])
-                    right = np.dot(delta,ket)
-                    right1 = np.dot(vsics[s,i],ket)
+                    right = np.dot(delta,ket[:,0])
+                    right1 = np.dot(vsics[s,i],ket[:,0])
                     #right1 = np.dot(np.transpose(sroot),right1)
                     right2 = np.dot(vsics[s,j],(flo[s,:,i]))
                     #right2 = np.dot(np.transpose(sroot),right2)
-                    kappa_ij[s,i,j] = lambda_ij[s,i,j] -1*(np.dot(bra,right))
-                    #lambda_ij[s,i,j] = np.dot(bra,right1) - np.dot(np.transpose(flo[s,:,j]),right2) 
-                    # test 
-                    cst[s,i,j] = np.dot(bra,ket)
+                    kappa_ij[s,i,j] = lambda_ij[s,i,j] - np.dot(bra[0,:],right)
+                    #lambda_ij[s,i,j] = np.dot(bra[0,:],right1) - np.dot(np.transpose(flo[s,:,j]),right2)
+                    # test
+                    cst[s,i,j] = np.dot(bra[0,:],ket[:,0])
 
     if l_ij == True:
         for s in range(nspin):

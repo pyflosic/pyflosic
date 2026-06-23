@@ -72,7 +72,7 @@ def apply_field(mol,mf,E):
     # update h1e with efield 
     mf.get_hcore = lambda *args: h
 
-class PYFLOSIC(FileIOCalculator):
+class PYFLOSIC(Calculator):
     """ PYFLOSIC calculator for atoms and molecules.
         by Sebastian Schwalbe
         Notes: ase.calculators -> units [eV,Angstroem,eV/Angstroem]
@@ -114,15 +114,23 @@ class PYFLOSIC(FileIOCalculator):
         ham_sic ='HOOOV',          # unified SIC Hamiltonian HOO or HOOOV 
         n_rad = None,           # radial grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
         n_ang = None,           # angular grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
-        prune = 'no'        # grid pruning
-        ) 
+        prune = 'no',       # grid pruning
+        uks_direct_scf_tol = None,      # ERI screening threshold for inner per-orbital UKS (None = PySCF default 1e-13)
+        uks_small_rho_cutoff = None,    # density grid-pruning cutoff for inner per-orbital UKS (None = disabled)
+        use_df = False,                 # use density fitting (RI-J) for inner per-orbital UKS Coulomb builds
+        df_auxbasis = None,             # auxiliary basis for DF (None = auto ETB from orbital basis)
+        level_shift = 0,                # level shift for outer FLOSIC SCF (0 = off)
+        damp = 0,                       # density matrix damping for outer FLOSIC SCF (0 = off)
+        diis_type = 'cdiis',            # DIIS variant for outer FLOSIC SCF: cdiis, adiis, ediis
+        esic_fix_th = 0,                # freeze SIC potential once |dE_SIC| < threshold (0 = off)
+        )
 
     def __init__(self, restart=None, ignore_bad_restart_file=False,
         label=os.curdir, atoms=None, **kwargs):
         """ Constructor """
-        FileIOCalculator.__init__(self, restart, ignore_bad_restart_file,
+        Calculator.__init__(self, restart, ignore_bad_restart_file,
                                   label, atoms, **kwargs)
-        valid_args = ('atoms','fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic','n_rad','n_ang','prune')
+        valid_args = ('atoms','fod1','fod2','mol','charge','spin','basis','ecp','xc','mode','efield','max_cycle','conv_tol','grid','ghost','mf','use_newton','use_chk','verbose','calc_forces','debug','l_ij','ods','fopt','fixed_vsic','num_iter','vsic_every','ham_sic','n_rad','n_ang','prune','uks_direct_scf_tol','uks_small_rho_cutoff','use_df','df_auxbasis','level_shift','damp','diis_type','esic_fix_th')
         # set any additional keyword arguments
         for arg, val in self.parameters.items():
             if arg in valid_args:
@@ -155,14 +163,14 @@ class PYFLOSIC(FileIOCalculator):
         self.out = os.path.join(label, 'pyflosic.out')
 
     def check_state(self, atoms):
-        system_changes = FileIOCalculator.check_state(self, atoms)
+        system_changes = Calculator.check_state(self, atoms)
         # Ignore boundary conditions until now 
         if 'pbc' in system_changes:
             system_changes.remove('pbc')
         return system_changes
 
     def set(self, **kwargs):
-        changed_parameters = FileIOCalculator.set(self, **kwargs)
+        changed_parameters = Calculator.set(self, **kwargs)
         if changed_parameters:
             self.reset()
                
@@ -305,8 +313,8 @@ class PYFLOSIC(FileIOCalculator):
         return self.results['evalues']
 
     def calculate(self, atoms, properties=['energy'], system_changes=['positions']):
-        self.num_iter += 1 
-        atoms = self.get_atoms()
+        self.num_iter += 1
+        atoms.calc = self
         self.atoms  = atoms
         Calculator.calculate(self, atoms, properties, system_changes)
         if self.mode == 'dft':
@@ -394,7 +402,7 @@ class PYFLOSIC(FileIOCalculator):
             if self.ecp != None:
                 mol = gto.M(atom=ase2pyscf(nuclei), basis=self.basis,spin=self.spin,charge=self.charge,ecp=self.ecp)
             if self.efield != None:
-                m0 = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
+                m0 = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic,uks_direct_scf_tol=self.uks_direct_scf_tol,uks_small_rho_cutoff=self.uks_small_rho_cutoff,use_df=self.use_df,df_auxbasis=self.df_auxbasis,level_shift=self.level_shift,damp=self.damp,diis_type=self.diis_type,esic_fix_th=self.esic_fix_th)
                 # test efield to enforce some pseudo chemical environment 
                 # and break symmetry of density 
                 m0.grids.level = self.grid
@@ -404,7 +412,7 @@ class PYFLOSIC(FileIOCalculator):
                 h= -0.0001 #-0.1
                 apply_field(mol,m0,E=(0,0,0+h))
                 m0.kernel()
-            mf = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,calc_forces=self.calc_forces,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic)
+            mf = FLOSIC(mol=mol,xc=self.xc,fod1=fod1,fod2=fod2,grid_level=self.grid,calc_forces=self.calc_forces,debug=self.debug,l_ij=self.l_ij,ods=self.ods,fixed_vsic=self.fixed_vsic,num_iter=self.num_iter,vsic_every=self.vsic_every,ham_sic=self.ham_sic,uks_direct_scf_tol=self.uks_direct_scf_tol,uks_small_rho_cutoff=self.uks_small_rho_cutoff,use_df=self.use_df,df_auxbasis=self.df_auxbasis,level_shift=self.level_shift,damp=self.damp,diis_type=self.diis_type,esic_fix_th=self.esic_fix_th)
             # Verbosity of the mol object (o lowest output, 4 might enough output for debugging) 
             mf.verbose = self.verbose 
             # Binary output format of pyscf. 

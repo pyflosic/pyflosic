@@ -17,7 +17,7 @@
 # task:  	optimzation of FOD positions/electronic geometry 
 # todo:		spearate core functions and tests
  
-from ase.optimize import LBFGS, BFGS, BFGSLineSearch, FIRE, GPMin
+from ase.optimize import LBFGS, BFGS, BFGSLineSearch, FIRE, GPMin, FIRE2, ODE12r
 from ase.optimize.sciopt import SciPyFminCG
 from ase_pyflosic_calculator import PYFLOSIC
 from flosic_os import xyz_to_nuclei_fod,ase2pyscf
@@ -25,7 +25,7 @@ from ase.io import read
 #from nrlmol_basis import get_dfo_basis
 from ase.constraints import FixAtoms 
 
-def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,force_consistent=False,fopt='force',fix_fods=False,ham_sic='HOOOV',vsic_every=1,n_rad=None,n_ang=None,prune='no'):
+def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=0.2,label='OPT_FRMORB',fmax=0.0001,steps=1000,max_cycle=300,conv_tol=1e-5,grid=7,ghost=False,use_newton=False,use_chk=False,verbose=0,debug=False,efield=None,l_ij=None,ods=None,force_consistent=False,fopt='force',fix_fods=False,ham_sic='HOOOV',vsic_every=1,n_rad=None,n_ang=None,prune='no',uks_direct_scf_tol=None,uks_small_rho_cutoff=None,use_df=False,df_auxbasis=None,level_shift=0,damp=0,diis_type='cdiis',esic_fix_th=0):
     # -----------------------------------------------------------------------------------
     # Input 
     # -----------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     # xc			... 	exchange correlation functional 
     # basis	 		... 	GTO basis set 
     # ecp			...	if a ECP basis set is used you must give this extra argument 
-    # opt 			...	optimizer (FIRE, LBFGS, ...) 
+    # opt 			...	optimizer (FIRE, LBFGS, BFGS, LineSearch, CG, GPMin, FIRE2, ABCFIRE, ODE12r)
     # ----------------------------------------------------------------------------------
     # Additional/optional input 
     # ----------------------------------------------------------------------------------
@@ -65,6 +65,14 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     # n_rad             ...     radial grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
     # n_ang             ...     angular grid; if both n_rad and n_ang are given, the value of grid is ignored by the code
     # prune             ...     grid pruning
+    # uks_direct_scf_tol    ... ERI screening threshold for the inner per-orbital UKS (None = PySCF default 1e-13)
+    # uks_small_rho_cutoff  ... density grid-pruning cutoff for the inner per-orbital UKS (None = disabled)
+    # use_df                ... use density fitting (RI-J) for inner per-orbital UKS Coulomb builds (default False)
+    # df_auxbasis           ... auxiliary basis for DF (None = auto ETB from orbital basis)
+    # level_shift           ... level shift for outer FLOSIC SCF in eV (0 = off)
+    # damp                  ... density matrix damping for outer FLOSIC SCF (0 = off, e.g. 0.2-0.5)
+    # diis_type             ... DIIS variant for outer FLOSIC SCF: 'cdiis' (default), 'adiis', 'ediis'
+    # esic_fix_th           ... freeze SIC potential once |dE_SIC| < threshold per cycle (0 = off, e.g. 1e-6)
 
     
     
@@ -81,13 +89,13 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
     if mode == 'dft':
         [geo,nuclei,fod1,fod2,included] = xyz_to_nuclei_fod(atoms)
         atoms = nuclei 
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='dft',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='dft',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune,uks_direct_scf_tol=uks_direct_scf_tol,uks_small_rho_cutoff=uks_small_rho_cutoff,use_df=use_df,df_auxbasis=df_auxbasis,level_shift=level_shift,damp=damp,diis_type=diis_type,esic_fix_th=esic_fix_th)
     # FLO-SIC one-shot (os) mode 
     if mode == 'flosic-os':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-os',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-os',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune,uks_direct_scf_tol=uks_direct_scf_tol,uks_small_rho_cutoff=uks_small_rho_cutoff,use_df=use_df,df_auxbasis=df_auxbasis,level_shift=level_shift,damp=damp,diis_type=diis_type,esic_fix_th=esic_fix_th)
     # FLO-SIC scf mode 
     if mode == 'flosic-scf':
-        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-scf',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune)
+        calc = PYFLOSIC(atoms=atoms,charge=charge,spin=spin,xc=xc,basis=basis,mode='flosic-scf',ecp=ecp,max_cycle=max_cycle,conv_tol=conv_tol,grid=grid,ghost=ghost,use_newton=use_newton,verbose=verbose,debug=debug,efield=efield,l_ij=l_ij,ods=ods,fopt=fopt,ham_sic=ham_sic,vsic_every=vsic_every,n_rad=n_rad,n_ang=n_ang,prune=prune,uks_direct_scf_tol=uks_direct_scf_tol,uks_small_rho_cutoff=uks_small_rho_cutoff,use_df=use_df,df_auxbasis=df_auxbasis,level_shift=level_shift,damp=damp,diis_type=diis_type,esic_fix_th=esic_fix_th)
 	
     # Assign the ase-calculator to the ase-atoms object. 
     atoms.set_calculator(calc)
@@ -132,14 +140,32 @@ def flosic_optimize(mode,atoms,charge,spin,xc,basis,ecp=None,opt='FIRE',maxstep=
                           master=None)
                           #force_consistent=force_consistent)
     if opt == 'gpmin':
-        from ase.optimize import GPMin 
+        from ase.optimize import GPMin
         dyn = GPMin(atoms,
                     logfile=label+'.log',
                     trajectory=label+'.traj',
                     update_prior_strategy='average',
                     update_hyperparams=True)
-        
-    # Run the actuall optimization. 
+
+    if opt == 'fire2':
+        dyn = FIRE2(atoms,
+                    logfile=label+'.log',
+                    trajectory=label+'.traj',
+                    maxstep=maxstep)
+
+    if opt == 'abcfire':
+        dyn = FIRE2(atoms,
+                    logfile=label+'.log',
+                    trajectory=label+'.traj',
+                    maxstep=maxstep,
+                    use_abc=True)
+
+    if opt == 'ode12r':
+        dyn = ODE12r(atoms,
+                     logfile=label+'.log',
+                     trajectory=label+'.traj')
+
+    # Run the actuall optimization.
     dyn.run(fmax=fmax, steps=steps)
     return atoms 
 
