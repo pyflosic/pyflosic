@@ -112,36 +112,52 @@ def get_flosic_veff(ks, mol=None, dm=None, dm_last=0, vhf_last=0, hermi=1):
     # (THa: the outer if ... clause was added to prevent the
     # sic potentials to be calculated during initialization)
     _t0 = time.time()
+    _esic_last = ks._esic_prev   # snapshot before this cycle may overwrite it
     #print('>> ks.fixed_vsic', ks.fixed_vsic)
     #print('>>', ks.neval_vsic)
     #sys.exit()
     if ks.neval_vsic > -1:
-        if ks.fixed_vsic != 0.0 and (ks.num_iter % ks.vsic_every) != 0:
+        if ks._esic_frozen:
+            # ESIC has converged below esic_fix_th: reuse cached SIC potential,
+            # skip the full flosic() call entirely.
+            flo_veff = ks._flo_veff_cached
+            if ks.verbose >= 4:
+                print('ESIC frozen (cycle = %i), reusing cached SIC potential' % ks.num_iter)
+        elif ks.fixed_vsic != 0.0 and (ks.num_iter % ks.vsic_every) != 0:
+            # vsic_every > 1: reuse fixed SIC potential for this cycle
             if ks.verbose >= 4:
                 print('Use fixed Vsic (cycle = %i)' % ks.num_iter)
             flo_veff = flosic(ks.mol, ks.calc_uks, ks.fod1, ks.fod2,\
             datatype=np.float64,calc_forces=ks.calc_forces,debug=ks.debug,\
             nuclei=ks.nuclei,l_ij=ks.l_ij,ods=ks.ods,\
             fixed_vsic=ks.fixed_vsic,ham_sic=ks.ham_sic)
-        
-        # If no Vsic values are present or the the Vsic values should be 
-        # updated calcualte new Vsic values.
-        
-        
-        # !! THa: Possible BUG 
-        # ks.fixed_vsic == 0.0 may never be 'True' because
-        # a float-value is amost never exactly zero
-        # better use: np.isclose(ks.fixed_vsic, 0.0)
-        # !!
-        if ks.fixed_vsic == 0.0 or (ks.num_iter % ks.vsic_every) == 0:
+        else:
+            # Full ESIC recomputation.
             if ks.verbose >= 4:
-                print('Calculate new Vsic (cycle = %i)' %ks.num_iter) 
+                print('Calculate new Vsic (cycle = %i)' % ks.num_iter)
             flo_veff = flosic(ks.mol,ks.calc_uks,ks.fod1,ks.fod2,\
             datatype=np.float64,calc_forces=ks.calc_forces,debug=ks.debug,\
             nuclei=ks.nuclei,l_ij=ks.l_ij,ods=ks.ods,ham_sic=ks.ham_sic)
             ks.fixed_vsic = flo_veff['fixed_vsic']
+            ks._flo_veff_cached = flo_veff
+            # Adaptive ESIC freeze: freeze once 3-cycle moving avg of |dE_SIC| < esic_fix_th.
+            if ks.esic_fix_th > 0:
+                esic_now = flo_veff['etot_sic'] - flo_veff['etot_dft']
+                if ks._esic_prev is not None:
+                    delta = abs(esic_now - ks._esic_prev)
+                    ks._esic_deltas.append(delta)
+                    if len(ks._esic_deltas) > 3:
+                        ks._esic_deltas.pop(0)
+                    if len(ks._esic_deltas) == 3:
+                        avg_delta = sum(ks._esic_deltas) / 3
+                        if avg_delta < ks.esic_fix_th:
+                            ks._esic_frozen = True
+                            if ks.verbose >= 3:
+                                print('ESIC frozen: avg|dE_SIC|(3) = %.2e < %.2e Ha (cycle %i)' %
+                                      (avg_delta, ks.esic_fix_th, ks.num_iter))
+                ks._esic_prev = esic_now
     else:
-        flo_veff = veff 
+        flo_veff = veff
     
     _t1 = time. time()
     if mol.verbose > 3:
@@ -201,7 +217,16 @@ def get_flosic_veff(ks, mol=None, dm=None, dm_last=0, vhf_last=0, hermi=1):
     # Return the exchange-correlation energy and the FLO-SIC energy correction.
     ks.exc = veff.exc
     ks.esic = sic_back
-    
+
+    if ks.verbose >= 3 and ks.neval_vsic > -1:
+        if _esic_last is not None:
+            delta = sic_back - _esic_last
+            freeze_flag = ' [ESIC frozen]' if ks._esic_frozen else ''
+            print('FLO-SIC E_SIC = %+.10f Ha   delta_ESIC = %+.3e Ha  (cycle %i)%s' %
+                  (sic_back, delta, ks.num_iter, freeze_flag))
+        else:
+            print('FLO-SIC E_SIC = %+.10f Ha  (cycle %i)' % (sic_back, ks.num_iter))
+
     # increase another magic counter ;-)
     ks.neval_vsic += 1
     
@@ -250,9 +275,10 @@ class FLOSIC(uhf.UHF):
     '''FLOSIC 
     See pyscf/dft/rks.py RKS class for the usage of the attributes
     Rewritten UKS class. ''' # This part is directly taken from the RKS class.
-    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid_level=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOOOV',vsic_every=1, init_dm=None):
+    def __init__(self, mol, xc, fod1, fod2, ldax=False, grid_level=3, calc_forces = False,debug=False,nuclei=None,l_ij=None,ods=None,fixed_vsic=None,num_iter=0,ham_sic='HOOOV',vsic_every=1, init_dm=None,uks_direct_scf_tol=None,uks_small_rho_cutoff=None,use_df=False,df_auxbasis=None,level_shift=0,damp=0,diis_type='cdiis',esic_fix_th=0):
         uhf.UHF.__init__(self, mol)
-        rks._dft_common_init_(self)
+        rks.KohnShamDFT.__init__(self)
+        self.small_rho_cutoff = rks.KohnShamDFT.small_rho_cutoff
         
         # Give the input variables to the SIC object.
         self.mol = mol # Molecular geometry.
@@ -280,13 +306,20 @@ class FLOSIC(uhf.UHF):
         calc_uks.max_cycle = 0
         calc_uks.grids.level = grid_level
         calc_uks.grids.prune = None
-        
+        if use_df:
+            from pyscf import df as pyscf_df
+            calc_uks = pyscf_df.density_fit(calc_uks, auxbasis=df_auxbasis)
+
         # if an initial density matrix is given
         # initialize the subclass with it
         if init_dm is not None:
             calc_uks.kernel(init_dm)
         else:
             calc_uks.kernel()
+        if uks_direct_scf_tol is not None:
+            calc_uks.direct_scf_tol = uks_direct_scf_tol
+        if uks_small_rho_cutoff is not None:
+            calc_uks.small_rho_cutoff = uks_small_rho_cutoff
         self.calc_uks = calc_uks
         
         # initialize var to store the FLO's
@@ -339,6 +372,12 @@ class FLOSIC(uhf.UHF):
         self.homo_flosic = 0.0 # Will hold the FLO-SIC HOMO value.
         self.esic = 0.0 # Will hold the total energy correction.
         self.exc = 0.0	# Will hold the FLO-SIC exchange-correlation energy.
+        # Adaptive ESIC freeze: skip flosic() once moving avg of |dE_SIC| < esic_fix_th.
+        self.esic_fix_th = esic_fix_th
+        self._esic_prev = None
+        self._esic_deltas = []   # rolling window of last 3 |dE_SIC| values
+        self._esic_frozen = False
+        self._flo_veff_cached = None
         self.evalues = 0.0 # Will hold the FLO-SIC evalues. 	
         self.AF = 0.0
         self.num_iter = num_iter # Number of iteration
@@ -349,9 +388,23 @@ class FLOSIC(uhf.UHF):
             'fforces','fod2','ldax','calc_forces','is_first','debug','nuclei','AF','l_ij','ods','lambda_ij',
             'num_iter','vsic_every','fixed_vsic','ham_sic','preopt_fix1s','cesicc','nspin','opt_mxstep','preopt',
             'opt_init_mxstep','pflo','preopt_start_cycle','preopt_conv_tol','on','preopt_fmin',
-            'nfod','use_mpi'])
+            'nfod','use_mpi','uks_direct_scf_tol','uks_small_rho_cutoff',
+            'xc','grids','nlc','nlcgrids','small_rho_cutoff',
+            'use_df','df_auxbasis','level_shift','damp','diis_type',
+            'esic_fix_th','_esic_prev','_esic_deltas','_esic_frozen','_flo_veff_cached'])
 
-        # make sure initial mo_coeff's are in synch with the 
+        # apply outer SCF convergence settings
+        self.level_shift = level_shift
+        self.damp = damp
+        if diis_type.lower() == 'adiis':
+            from pyscf.scf import diis as pyscf_diis
+            self.diis = pyscf_diis.ADIIS()
+        elif diis_type.lower() == 'ediis':
+            from pyscf.scf import diis as pyscf_diis
+            self.diis = pyscf_diis.EDIIS()
+        # 'cdiis' = PySCF default, no change needed
+
+        # make sure initial mo_coeff's are in synch with the
         # helper - subclass
         self.mo_coeff = np.asarray(calc_uks.mo_coeff)
         
@@ -387,10 +440,37 @@ class FLOSIC(uhf.UHF):
                 comm.send(info, dest=inode, tag=12)
             comm.Barrier()
         
-        return super().kernel(*args, **kwargs)
-        
-        
-    
+        result = super().kernel(*args, **kwargs)
+
+        # After SCF convergence, re-evaluate ESIC once on the fully converged
+        # density to get accurate energy and FOD forces.
+        if self._esic_frozen and self.esic_fix_th > 0:
+            if self.verbose >= 3:
+                print('FLOSIC: final ESIC evaluation on converged density')
+            esic_frozen = self._esic_prev   # value used in all frozen SCF cycles
+            flo_final = flosic(self.mol, self.calc_uks, self.fod1, self.fod2,
+                datatype=np.float64, calc_forces=self.calc_forces, debug=self.debug,
+                nuclei=self.nuclei, l_ij=self.l_ij, ods=self.ods, ham_sic=self.ham_sic)
+            self.fixed_vsic = flo_final['fixed_vsic']
+            self._flo_veff_cached = flo_final
+            self._esic_frozen = False
+            self.flo = flo_final['flo']
+            self.fforces = flo_final['fforces']
+            self.homo_flosic = flo_final['homo_sic']
+            self.evalues = flo_final['evalues']
+            self.lambda_ij = flo_final['lambda_ij']
+            esic_final = flo_final['etot_sic'] - flo_final['etot_dft']
+            self.esic = esic_final
+            # Correct total energy: result used the frozen ESIC, patch the difference.
+            self.e_tot = result + (esic_final - esic_frozen)
+            if self.verbose >= 3:
+                print('FLOSIC: E_SIC(final) = %.10f Ha  dE_SIC(correction) = %+.3e Ha' %
+                      (esic_final, esic_final - esic_frozen))
+            return self.e_tot
+
+        return result
+
+
     #def kernel(self, dm):
 #    def pre_kernel(self, envs):
 #        # start the mpi_worker if requested

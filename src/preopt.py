@@ -891,7 +891,9 @@ class FLO(object):
         #    print("Lurg")
         #    sys.exit()
 
+        _grids_save = mf.grids
         veff_work_flo = mf.get_veff(mol=mol,dm=_dm_on)
+        mf.grids = _grids_save
         self.vsic[fod_id] = veff_work_flo[self.s]
 
 
@@ -1131,7 +1133,9 @@ class FLO(object):
                 # call the veff code, put in all one electron dm's at once
                 #_dm = [np.random.random((1,self.nks,self.nks)),
                 #  np.random.random((1,self.nks,self.nks))]
+                _grids_save = self.mf.grids
                 _veff = self.mf.get_veff(mol=self.mol, dm=_dm)
+                self.mf.grids = _grids_save
 
             # restore original grid size (if needed)
             if self.mf.on is not None:
@@ -1172,8 +1176,8 @@ class FLO(object):
             for i in range(self.nfod):
                 bra[0,:] = np.transpose(self.flo[i])
                 ket[:,0] = (self.flo[j])
-                right = np.dot(self.vsic[j],ket)
-                self.lambda_ij[i,j] = -np.dot(bra,right)
+                right = np.dot(self.vsic[j],ket[:,0])
+                self.lambda_ij[i,j] = -np.dot(bra[0,:],right)
 
         return
 
@@ -1228,7 +1232,7 @@ class FLO(object):
         # calculation of dphi/dai for very small sic potential
         # matrix elements
         eps_cutoff = 0.0
-        ttable = np.eye(self.lambda_ij.shape[0], dtype=np.bool)
+        ttable = np.eye(self.lambda_ij.shape[0], dtype=bool)
         if self.mf.on is not None:
             eps_cutoff = self.mf.on.eps_cutoff
             #if rank == 0: print("eps_cutoff {0}".format(eps_cutoff))
